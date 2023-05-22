@@ -2,6 +2,7 @@ class Ball {
   //change these if necessary
   public final static int size = 20; //diameter
   public final static int mass = 1; //for physics
+  
   public final static color[] ballColors = new color[] {#FFFFFF, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000,
                                                         #000000, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000}; //ball colors by number, 0 is white
   
@@ -20,7 +21,11 @@ class Ball {
     ballColor = ballColors[number];
     
     //assign type
-    
+    if(n == 0) {type = "white";}
+    else if (n < 8) {type = "solid";}
+    else if (n == 8) {type = "eight";}
+    else {type = "striped";}
+
     //assign vectors
     
     //assign booleans
