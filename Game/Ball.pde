@@ -2,7 +2,8 @@ class Ball {
   //change these if necessary
   public final static int size = 20; //diameter
   public final static int mass = 1; //for physics
-  public final static color[] ballColors = new color[] {}; //insert colors
+  public final static color[] ballColors = new color[] {#FFFFFF, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000,
+                                                        #000000, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000}; //ball colors by number, 0 is white
   
   private int number;
   private color ballColor;
