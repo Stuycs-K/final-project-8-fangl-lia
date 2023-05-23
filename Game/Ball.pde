@@ -1,7 +1,7 @@
-class Ball {
+public class Ball {
   //change these if necessary
-  public final static int size = 20; //diameter
-  public final static int mass = 1; //for physics
+  public static final int size = 20; //diameter
+  public static final int mass = 1; //for physics
   
   public color[] ballColors = new color[] {#FFFFFF, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000,
                                                         #000000, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000}; //ball colors by number, 0 is white
@@ -9,6 +9,7 @@ class Ball {
   private int number;
   private color ballColor;
   private String type;
+  
   public PVector position;
   public PVector velocity;
   public PVector acceleration;
@@ -34,5 +35,18 @@ class Ball {
     //assign booleans
     isPotted = false;
     isMoving = false;
+  }
+  
+  public void show() {
+    noStroke();
+    fill(ballColor);
+    ellipse(position.x, position.y, size, size);
+    textSize(15);
+    if(number != 8 && number != 7 && number != 15) {
+      fill(0);
+    } else {
+      fill(255);
+    }
+    text("" + number, position.x - 5, position.y + 5);
   }
 }
