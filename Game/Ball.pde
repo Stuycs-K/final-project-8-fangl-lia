@@ -48,6 +48,10 @@ public class Ball {
     ellipse(position.x, position.y, size, size);
     textSize(15);
     fill(255);
-    text("" + number, position.x - 5, position.y + 5);
+    if (number < 10) {
+      text("" + number, position.x - 4, position.y + 5);
+    } else {
+      text("" + number, position.x - 7.5, position.y + 5);
     }
   }
+}
