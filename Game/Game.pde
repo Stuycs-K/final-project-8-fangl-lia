@@ -1,25 +1,57 @@
-void setup () {
-  size(500, 500);
-  Ball one = new Ball(1, 100, 100);
-  one.show();
-  Ball two = new Ball(2, 100, 200);
-  two.show();
-  Ball three = new Ball(3, 200, 100);
-  three.show();
-  Ball four = new Ball(4, 300, 100);
-  four.show();
-  Ball five = new Ball(5, 400, 100);
-  five.show();
-  Ball six = new Ball(6, 200, 200);
-  six.show();
-  Ball seven = new Ball(7, 200, 300);
-  seven.show();
-  Ball eight = new Ball(8, 150, 150);
-  eight.show();
-  Ball nine = new Ball(9, 300, 300);
-  nine.show();
-  Ball ten = new Ball(10, 250, 250);
-  ten.show();
-  Ball fifteen = new Ball(15, 50, 50);
-  fifteen.show();
+int cornerX;
+int cornerY;
+int rectRadius;
+int pocketDiam;
+int centerOffset;
+int edgeThickness;
+
+void setup() {
+  // basic pool table dimensions layout
+  size(1000, 500);
+  cornerX = 100;
+  cornerY = 75;
+  rectRadius = 16;
+  pocketDiam = 40;
+  centerOffset = 25;
+  edgeThickness = 12;
+
+  // walls
+  rect(cornerX, cornerY, width - 2 * cornerX, height - 2 * cornerY, rectRadius);
+  circle(cornerX + centerOffset, cornerY + centerOffset, pocketDiam);
+  circle(width - cornerX - centerOffset, cornerY + centerOffset, pocketDiam);
+  circle(cornerX + centerOffset, height - cornerY - centerOffset, pocketDiam);
+  circle(width - cornerX - centerOffset, height - cornerY - centerOffset, pocketDiam);
+
+  fill(115, 147, 179);
+  beginShape();
+  vertex(cornerX + centerOffset + pocketDiam / 2, cornerY + centerOffset);
+  vertex(width - cornerX - centerOffset - pocketDiam / 2, cornerY + centerOffset);
+  vertex(width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness, cornerY + centerOffset + edgeThickness);
+  vertex(cornerX + centerOffset + pocketDiam / 2 + edgeThickness, cornerY + centerOffset + edgeThickness);
+  vertex(cornerX + centerOffset + pocketDiam / 2, cornerY + centerOffset);
+  endShape();
+
+  beginShape();
+  vertex(cornerX + centerOffset + pocketDiam / 2, height - cornerY - centerOffset);
+  vertex(width - cornerX - centerOffset - pocketDiam / 2, height - cornerY - centerOffset);
+  vertex(width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness, height - cornerY - centerOffset - edgeThickness);
+  vertex(cornerX + centerOffset + pocketDiam / 2 + edgeThickness, height - cornerY - centerOffset - edgeThickness);
+  vertex(cornerX + centerOffset + pocketDiam / 2, height - cornerY - centerOffset);
+  endShape();
+
+  beginShape();
+  vertex(cornerX + centerOffset, cornerY + centerOffset + pocketDiam / 2);
+  vertex(cornerX + centerOffset, height - cornerY - centerOffset - pocketDiam / 2);
+  vertex(cornerX + centerOffset + edgeThickness, height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness);
+  vertex(cornerX + centerOffset + edgeThickness, cornerY + centerOffset + pocketDiam / 2 + edgeThickness);
+  vertex(cornerX + centerOffset, cornerY + centerOffset + pocketDiam / 2);
+  endShape();
+
+  beginShape();
+  vertex(width - cornerX - centerOffset, cornerY + centerOffset + pocketDiam / 2);
+  vertex(width - cornerX - centerOffset, height - cornerY - centerOffset - pocketDiam / 2);
+  vertex(width - cornerX - centerOffset - edgeThickness, height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness);
+  vertex(width - cornerX - centerOffset - edgeThickness, cornerY + centerOffset + pocketDiam / 2 + edgeThickness);
+  vertex(width - cornerX - centerOffset, cornerY + centerOffset + pocketDiam / 2);
+  endShape();
 }
