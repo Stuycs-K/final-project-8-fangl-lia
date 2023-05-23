@@ -45,13 +45,20 @@ public class Ball {
   public void show() {
     noStroke();
     fill(ballColor);
-    ellipse(position.x, position.y, size, size);
-    textSize(15);
+    circle(position.x, position.y, size);
+    textSize(12.5);
     fill(255);
     if (number < 10) {
-      text("" + number, position.x - 4, position.y + 5);
+      text("" + number, position.x - 4, position.y + 4);
     } else {
-      text("" + number, position.x - 7.5, position.y + 5);
+      text("" + number, position.x - 7, position.y + 4);
+    }
+    
+    if(type == "striped") {
+      fill(255);
+      noStroke();
+      arc(position.x, position.y, size, size, PI/5, 4*PI/5, CHORD);
+      arc(position.x, position.y, size, size, 6*PI/5, 9*PI/5, CHORD);
     }
   }
 }

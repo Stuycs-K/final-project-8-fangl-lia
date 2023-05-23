@@ -16,6 +16,10 @@ void setup () {
   seven.show();
   Ball eight = new Ball(8, 150, 150);
   eight.show();
+  Ball nine = new Ball(9, 300, 300);
+  nine.show();
+  Ball ten = new Ball(10, 250, 250);
+  ten.show();
   Ball fifteen = new Ball(15, 50, 50);
   fifteen.show();
 }
