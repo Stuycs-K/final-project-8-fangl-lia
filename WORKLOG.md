@@ -1,10 +1,10 @@
 # Work Log
 
-## GROUP MEMBER 1
+## LINGJIE FANG
 
-### date x
+### 05-22
 
-info
+Worked on initial setup of rectangular pool table and dimensions
 
 ### date y
 
