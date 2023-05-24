@@ -52,7 +52,7 @@ public class Ball {
     textSize(12.5);
     fill(255);
     if (number < 10) {
-      text("" + number, position.x - 4, position.y + 4);
+      text("" + number, position.x - 3.5, position.y + 4);
     } else {
       text("" + number, position.x - 7, position.y + 4);
     }

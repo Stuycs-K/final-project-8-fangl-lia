@@ -4,6 +4,7 @@ int rectRadius;
 int pocketDiam;
 int centerOffset;
 int edgeThickness;
+Ball eight;
 
 void setup() {
   // basic pool table dimensions layout
@@ -16,12 +17,21 @@ void setup() {
   edgeThickness = 12;
   
   //to test ball physics
-  
+  eight = new Ball(8, 300, 200);
+  eight.show();
 }
 
 void draw() {
   background(200);
   drawTable();
+  eight.move();
+  eight.show();
+}
+
+void accelerateTest(Ball b) {
+  b.isMoving = true;
+  b.acceleration = new PVector(10, 0); //changeable
+  b.friction = b.acceleration.copy().setMag(Ball.frictionMagnitude).rotate(PI);
 }
 
 void drawTable() {
