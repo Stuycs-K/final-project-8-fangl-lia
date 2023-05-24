@@ -2,7 +2,7 @@ public class Ball {
   //change these if necessary
   public static final int size = 20; //diameter
   public static final int mass = 1; //for physics
-  public static final float frictionMagnitude = 0.1; //for physics
+  public static final float slidingFrictionMagnitude = 0.2; //for physics
 
   public color[] ballColors = new color[] {#FFFFFF, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000,
     #000000, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000}; //ball colors by number, 0 is white
@@ -15,6 +15,7 @@ public class Ball {
   public PVector velocity;
   public PVector acceleration;
   public PVector friction; //SET IN GAME, NOT HERE
+  public float rollingFrictionMagnitude = 0;
 
   public boolean isPotted; //consider in pot()
   public boolean isMoving; //consider in collide() and bounce()?
@@ -70,7 +71,10 @@ public class Ball {
       position.add(velocity);
       velocity.add(acceleration);
       //apply friction, which should be assigned at the start of each turn
-      if (velocity.mag() >= frictionMagnitude) {
+      if (velocity.mag() >= slidingFrictionMagnitude * 8) {
+        acceleration.add(friction);
+      } else if (velocity.mag() >= slidingFrictionMagnitude) {
+        friction = acceleration.copy().div(2).rotate(PI);
         acceleration.add(friction);
       } else {
         velocity = new PVector(0, 0);
