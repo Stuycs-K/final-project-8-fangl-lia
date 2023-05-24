@@ -15,9 +15,9 @@ public class Ball {
   public PVector velocity;
   public PVector acceleration;
   public PVector friction; //SET IN GAME, NOT HERE
-  
-  public boolean isPotted;
-  public boolean isMoving;
+
+  public boolean isPotted; //consider in pot()
+  public boolean isMoving; //consider in collide() and bounce()?
 
   public Ball(int n, float x, float y) {
     //assign appearance
@@ -56,23 +56,28 @@ public class Ball {
     } else {
       text("" + number, position.x - 7, position.y + 4);
     }
-    
-    if(type == "striped") {
+
+    if (type == "striped") {
       fill(255);
       noStroke();
       arc(position.x, position.y, size, size, PI/5, 4*PI/5, CHORD);
       arc(position.x, position.y, size, size, 6*PI/5, 9*PI/5, CHORD);
     }
   }
-  
+
   public void move() {
-    position.add(velocity);
-    velocity.add(acceleration);
-    //apply friction, which should be assigned at the start of each turn
-    if(velocity.mag() >= frictionMagnitude) {
-      acceleration.add(friction);
-    } else {
-      velocity = new PVector(0, 0);
+    if (isMoving) {
+      position.add(velocity);
+      velocity.add(acceleration);
+      //apply friction, which should be assigned at the start of each turn
+      if (velocity.mag() >= frictionMagnitude) {
+        acceleration.add(friction);
+      } else {
+        velocity = new PVector(0, 0);
+        acceleration = new PVector(0, 0);
+        friction = new PVector(0, 0);
+        isMoving = false;
+      }
     }
   }
 }
