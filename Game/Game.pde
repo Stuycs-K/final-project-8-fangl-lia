@@ -22,8 +22,7 @@ void setup() {
 }
 
 void draw() {
-  background(200);
-  drawTable();
+  background(250);
   eight.move();
   eight.show();
 }
@@ -41,6 +40,7 @@ void accelerateTest(Ball b, float x, float y) {
 void drawTable() {
   //pockets
   fill(255);
+  stroke(2);
   rect(cornerX, cornerY, width - 2 * cornerX, height - 2 * cornerY, rectRadius);
   circle(cornerX + centerOffset, cornerY + centerOffset, pocketDiam);
   circle(width - cornerX - centerOffset, cornerY + centerOffset, pocketDiam);
