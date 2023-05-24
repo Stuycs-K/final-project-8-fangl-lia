@@ -14,14 +14,26 @@ void setup() {
   pocketDiam = 40;
   centerOffset = 25;
   edgeThickness = 12;
+  
+  //to test ball physics
+  
+}
 
-  // walls
+void draw() {
+  background(200);
+  drawTable();
+}
+
+void drawTable() {
+  //pockets
+  fill(255);
   rect(cornerX, cornerY, width - 2 * cornerX, height - 2 * cornerY, rectRadius);
   circle(cornerX + centerOffset, cornerY + centerOffset, pocketDiam);
   circle(width - cornerX - centerOffset, cornerY + centerOffset, pocketDiam);
   circle(cornerX + centerOffset, height - cornerY - centerOffset, pocketDiam);
   circle(width - cornerX - centerOffset, height - cornerY - centerOffset, pocketDiam);
-
+  
+  //walls
   fill(115, 147, 179);
   beginShape();
   vertex(cornerX + centerOffset + pocketDiam / 2, cornerY + centerOffset);
