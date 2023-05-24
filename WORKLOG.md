@@ -18,6 +18,13 @@ info
 Started on the Ball class; set up all fields and currently
 working on constructor. Colors, type, and number are finalized.
 
-### date y
+### 05-23
 
-info
+Finished Ball constructor and show() method based on number, type,
+and color. The only inaccuracy is that the number is colored white
+and there is no white circle in the middle of the ball. This is
+so the number is more readable.
+
+Future status of rotating visuals is unclear.
+
+### 05-24
