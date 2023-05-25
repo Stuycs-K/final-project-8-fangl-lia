@@ -4,6 +4,7 @@ int rectRadius;
 int pocketDiam;
 int centerOffset;
 int edgeThickness;
+Ball eight;
 
 void setup() {
   // basic pool table dimensions layout
@@ -14,10 +15,28 @@ void setup() {
   pocketDiam = 40;
   centerOffset = 25;
   edgeThickness = 12;
+  
+  //to test ball physics
+  eight = new Ball(8, 300, 200);
+  eight.show();
+}
 
-  // table
+void draw() {
+  background(250);
+  drawTable();
+  eight.move();
+  eight.show();
+}
+
+void mouseClicked() {
+  eight.applyForce(new PVector(mouseX - eight.position.x, mouseY - eight.position.y).setMag(1.8));
+}
+
+void drawTable() {
+  //pockets
   background(255);
   fill(192);
+  
   rect(cornerX, cornerY, width - 2 * cornerX, height - 2 * cornerY, rectRadius);
   fill(106, 182, 99); // fuzz green
   rect(cornerX + centerOffset, cornerY + centerOffset, width - 2 * cornerX - 2 * centerOffset, height - 2 * cornerY - 2 * centerOffset);
@@ -26,6 +45,7 @@ void setup() {
   circle(width - cornerX - centerOffset, cornerY + centerOffset, pocketDiam);
   circle(cornerX + centerOffset, height - cornerY - centerOffset, pocketDiam);
   circle(width - cornerX - centerOffset, height - cornerY - centerOffset, pocketDiam);
+  
   circle(width / 2, cornerY + centerOffset, pocketDiam);
   circle(width / 2, height - cornerY - centerOffset, pocketDiam);
   
