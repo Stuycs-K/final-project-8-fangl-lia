@@ -28,3 +28,10 @@ so the number is more readable.
 Future status of rotating visuals is unclear.
 
 ### 05-24
+
+Made significant progress on Ball physics, specifically movement and
+friction on the table. Currently only implemented sliding friction, meaning
+that the movement stops abruptly rather than lightly. Will implement
+rolling friction soon.
+
+### 05-25
