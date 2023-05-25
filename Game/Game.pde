@@ -28,13 +28,6 @@ void draw() {
 }
 
 void mouseClicked() {
-  accelerateTest(eight, mouseX - eight.position.x, mouseY - eight.position.y);
-}
-
-void accelerateTest(Ball b, float x, float y) {
-  b.isMoving = true;
-  b.acceleration = new PVector(x, y).setMag(2); //changeable
-  b.friction = b.acceleration.copy().setMag(Ball.slidingFrictionMagnitude).rotate(PI);
 }
 
 void drawTable() {
