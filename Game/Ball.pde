@@ -1,7 +1,7 @@
 public class Ball {
   //change these if necessary
   public static final int size = 20; //diameter for appearance
-  
+
   //for physics
   public static final float mass = 0.17; //kg
   public static final float slidingMu = 0.2; //ball to table initial
@@ -12,7 +12,7 @@ public class Ball {
   //for ball colors
   public color[] ballColors = new color[] {#FFFFFF, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000,
     #000000, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000}; //ball colors by number, 0 is white
-  
+
   //for ball identification
   private int number;
   private color ballColor;
@@ -22,8 +22,8 @@ public class Ball {
   public PVector position;
   public PVector velocity;
   public PVector acceleration;
-  public PVector friction; //?
-  
+  public PVector force; //for movement
+
   //for pool logic
   public boolean isPotted; //consider in pot()
   public boolean isMoving; //consider in collide() and bounce() and move()
@@ -74,14 +74,22 @@ public class Ball {
     }
   }
 
+  public void applyForce(PVector f) {
+    force = f;
+    isMoving = true;
+  }
+
   public void move() {
     if (isMoving) {
       position.add(velocity);
       velocity.add(acceleration);
-      /*velocity = new PVector(0, 0);
-      acceleration = new PVector(0, 0);
-      friction = new PVector(0, 0);
-      isMoving = false;*/
     }
+  }
+
+  public void reset() {
+    velocity = new PVector(0, 0);
+    acceleration = new PVector(0, 0);
+    force = new PVector(0, 0);
+    isMoving = false;
   }
 }
