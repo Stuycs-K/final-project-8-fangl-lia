@@ -8,6 +8,8 @@ public class Ball {
   public static final float rollingMu = 0.01; //ball to table rolling
   public static final float ballRestitution = 0.95; //ball to ball collision (collide())
   public static final float railRestitution = 0.75; //ball to rail collision (bounce())
+  
+  public static final float gravity = 9.81;
 
   //for ball colors
   public color[] ballColors = new color[] {#FFFFFF, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000,
@@ -81,8 +83,18 @@ public class Ball {
 
   public void move() {
     if (isMoving) {
-      position.add(velocity);
+      acceleration = force.copy().div(mass);
       velocity.add(acceleration);
+      position.add(velocity);
+      
+      //apply friction
+      PVector frictionForce = velocity.copy().setMag(gravity * mass * slidingMu).rotate(PI); //!! need a way to differentiate which type of friction to use
+      force.add(frictionForce);
+      
+      //check for stop moving
+      if(velocity.mag() < 10) {
+        reset();
+      }
     }
   }
 
