@@ -1,25 +1,29 @@
 public class Ball {
   //change these if necessary
-  public static final int size = 20; //diameter
+  public static final int size = 20; //diameter for appearance
+  
   //for physics
-  public static final int mass = 1;
+  public static final float mass = 0.17; //kg
   public static final float slidingMu = 0.2; //ball to table
 
-
+  //for ball colors
   public color[] ballColors = new color[] {#FFFFFF, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000,
     #000000, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000}; //ball colors by number, 0 is white
-
+  
+  //for ball identification
   private int number;
   private color ballColor;
   private String type;
 
+  //for physical properties of the ball
   public PVector position;
   public PVector velocity;
   public PVector acceleration;
-  public PVector friction; //SET IN GAME, NOT HERE
-
+  public PVector friction; //?
+  
+  //for pool logic
   public boolean isPotted; //consider in pot()
-  public boolean isMoving; //consider in collide() and bounce()?
+  public boolean isMoving; //consider in collide() and bounce() and move()
 
   public Ball(int n, float x, float y) {
     //assign appearance
