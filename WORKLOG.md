@@ -1,10 +1,15 @@
 # Work Log
 
-## LINGJIE FANG
+## Lingjie Fang
 
 ### 05-22
 
 Worked on initial setup of rectangular pool table and dimensions
+
+### 05-24
+
+Added colors to the base pool table.
+Added middle pockets to the pool table. 
 
 ### date y
 
