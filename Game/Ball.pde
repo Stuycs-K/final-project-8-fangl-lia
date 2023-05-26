@@ -86,12 +86,8 @@ public class Ball {
       acceleration = force.copy().div(mass);
       PVector vcop = velocity.copy();
       vcop.add(acceleration);
-      if (Math.abs(vcop.heading() - velocity.heading()) < 0.1) { //check for stop moving
-        velocity.add(acceleration);
-        position.add(velocity);
-      } else {
-        reset();
-      }
+      velocity.add(acceleration);
+      position.add(velocity);
       //apply friction
       PVector frictionForce = velocity.copy().setMag(gravity * mass * slidingMu).rotate(PI); //!! need a way to differentiate which type of friction to use
       force.add(frictionForce);
@@ -108,8 +104,34 @@ public class Ball {
   
   public void collide() {
     // top left 
-    if (position.y < cornerY + centerOffset + edgeThickness) {
+    if (position.y <= cornerY + centerOffset + edgeThickness && position.x >= cornerX + centerOffset + edgeThickness 
+    && position.x <= width / 2 - pocketDiam / 2 - edgeThickness) {
       velocity.set(velocity.x, -velocity.y);
+    } 
+    // top right
+    if (position.y <= cornerY + centerOffset + edgeThickness && position.x <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness
+    && position.x >= width / 2 + pocketDiam / 2 + edgeThickness) {
+      velocity.set(velocity.x, -velocity.y);
+    } 
+    
+    // bottom left 
+    if (position.y >= height - cornerY - centerOffset - edgeThickness && position.x >= cornerX + centerOffset + edgeThickness 
+    && position.x <= width / 2 - pocketDiam / 2 - edgeThickness) {
+      velocity.set(velocity.x, -velocity.y);
+    } 
+    // bottom right
+    if (position.y >= height - cornerY - centerOffset - edgeThickness && position.x <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness
+    && position.x >= width / 2 + pocketDiam / 2 + edgeThickness) {
+      velocity.set(-velocity.x, velocity.y);
+    } 
+    
+    // left 
+    if (position.x <= cornerX + centerOffset + edgeThickness && position.y >= cornerY + centerOffset + pocketDiam / 2 + edgeThickness 
+    && position.y <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness) {
+      velocity.set(-velocity.x, velocity.y);
     }
+    
   }
+  
+  
 }
