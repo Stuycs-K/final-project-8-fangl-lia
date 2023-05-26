@@ -95,7 +95,7 @@ public class Ball {
       println(position.x + ", " + position.y);
       
       //check for stop moving
-      if(velocity.mag() < acceleration.mag() * 2 && Math.abs(velocity.mag() - acceleration.mag()) > 0.1) {//DIFFERENT PER FORCE
+      if(velocity.mag() < acceleration.mag() * 0.51 && Math.abs(velocity.mag() - acceleration.mag()) > 0.1) {//requires velocity and acceleration directions to be different
         reset();
       }
       
