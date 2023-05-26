@@ -25,6 +25,7 @@ void draw() {
   background(250);
   drawTable();
   eight.move();
+  eight.collide();
   eight.show();
 }
 
