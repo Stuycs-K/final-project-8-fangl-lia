@@ -9,7 +9,7 @@ Worked on initial setup of rectangular pool table and dimensions
 ### 05-24
 
 Added colors to the base pool table.
-Added middle pockets to the pool table. 
+Added middle pockets to the pool table.
 
 ### date y
 
@@ -40,3 +40,12 @@ that the movement stops abruptly rather than lightly. Will implement
 rolling friction soon.
 
 ### 05-25
+
+Implemented rolling friction with a time delay, which is not technically correct
+but it achieves approximately the correct realistic behavior of a rolling ball.
+Currently, the thresholds for stopping and switching frictions are constant,
+but they should not be; will fix that soon. Most realistic simulation is probably
+achievable with non-constant rolling friction coefficient, which may also be
+implemented.
+
+### 05-26
