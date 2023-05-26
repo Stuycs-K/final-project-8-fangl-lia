@@ -50,6 +50,7 @@ public class Ball {
     position = new PVector(x, y);
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
+    force = new PVector(0, 0);
 
     //assign booleans
     isPotted = false;
@@ -77,24 +78,25 @@ public class Ball {
   }
 
   public void applyForce(PVector f) {
-    force = f;
+    force.add(f);
     isMoving = true;
   }
 
   public void move() {
-    if (isMoving) {
+    if (isMoving) {      
       acceleration = force.copy().div(mass);
       velocity.add(acceleration);
+      
+      //check for stop moving
+      if(velocity.mag() < 1) {
+        reset();
+      }
+      
       position.add(velocity);
       
       //apply friction
       PVector frictionForce = velocity.copy().setMag(gravity * mass * slidingMu).rotate(PI); //!! need a way to differentiate which type of friction to use
       force.add(frictionForce);
-      
-      //check for stop moving
-      if(velocity.mag() < 10) {
-        reset();
-      }
     }
   }
 
