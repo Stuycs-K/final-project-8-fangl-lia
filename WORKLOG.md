@@ -11,9 +11,10 @@ Worked on initial setup of rectangular pool table and dimensions
 Added colors to the base pool table.
 Added middle pockets to the pool table.
 
-### date y
+### 05-25
 
-info
+Tested out edge detection for collisions and bouncing off the edges of the pool table.
+Tested checking for the ball stopping if velocity reverses direction after acceleration is applied.
 
 
 ## Andrew Li
