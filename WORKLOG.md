@@ -9,9 +9,9 @@ Worked on initial setup of rectangular pool table and dimensions
 ### 05-24
 
 Added colors to the base pool table.
-Added middle pockets to the pool table. 
+Added middle pockets to the pool table.
 
-### date y
+### 05-25
 
 info
 
