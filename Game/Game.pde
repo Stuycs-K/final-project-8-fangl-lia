@@ -29,7 +29,7 @@ void draw() {
 }
 
 void mouseClicked() {
-  eight.applyForce(new PVector(mouseX - eight.position.x, mouseY - eight.position.y).setMag(1.9));
+  eight.applyForce(new PVector(mouseX - eight.position.x, mouseY - eight.position.y).setMag(1.7));
 }
 
 void drawTable() {
