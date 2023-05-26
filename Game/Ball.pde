@@ -91,10 +91,11 @@ public class Ball {
       hitTime++;
       acceleration = force.copy().div(mass);
       velocity.add(acceleration);
+      
       println(position.x + ", " + position.y);
       
       //check for stop moving
-      if(velocity.mag() < 1) {//DIFFERENT PER FORCE
+      if(velocity.mag() < force.mag() * 2) {//DIFFERENT PER FORCE
         reset();
       }
       
