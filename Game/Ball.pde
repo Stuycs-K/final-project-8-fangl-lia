@@ -5,7 +5,7 @@ public class Ball {
   //for physics
   public static final float mass = 0.17; //kg
   public static final float slidingMu = 0.2; //ball to table initial
-  public static final float rollingMu = 0.01; //ball to table rolling
+  public static final float rollingMu = 0.01; //ball to table rolling, maybe change based on time
   public static final float ballRestitution = 0.95; //ball to ball collision (collide())
   public static final float railRestitution = 0.75; //ball to rail collision (bounce())
   
@@ -94,7 +94,7 @@ public class Ball {
       println(position.x + ", " + position.y);
       
       //check for stop moving
-      if(velocity.mag() < 1) {
+      if(velocity.mag() < 1) {//DIFFERENT PER FORCE
         reset();
       }
       
@@ -102,7 +102,7 @@ public class Ball {
       
       //apply friction
       PVector frictionForce;
-      if(hitTime < 6) {//CHANGE TO CHANGE WITH FORCE APPLIED
+      if(hitTime < 6) {//DIFFERENT PER FORCE
         frictionForce = velocity.copy().setMag(gravity * mass * slidingMu).rotate(PI);
       } else {
         frictionForce = velocity.copy().setMag(gravity * mass * rollingMu).rotate(PI);
