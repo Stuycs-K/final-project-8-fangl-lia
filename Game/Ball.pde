@@ -25,6 +25,8 @@ public class Ball {
   public PVector velocity;
   public PVector acceleration;
   public PVector force; //for movement
+  
+  public float originalAcceleration; //to change friction
 
   //for pool logic
   public boolean isPotted; //consider in pot()
@@ -51,6 +53,7 @@ public class Ball {
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
     force = new PVector(0, 0);
+    originalAcceleration = acceleration.mag();
 
     //assign booleans
     isPotted = false;
@@ -80,6 +83,7 @@ public class Ball {
   public void applyForce(PVector f) {
     force.add(f);
     isMoving = true;
+    originalAcceleration = acceleration.mag();
   }
 
   public void move() {
@@ -88,14 +92,20 @@ public class Ball {
       velocity.add(acceleration);
       
       //check for stop moving
-      if(velocity.mag() < 1) {
+      if(velocity.mag() < 5) {
         reset();
       }
       
       position.add(velocity);
       
       //apply friction
-      PVector frictionForce = velocity.copy().setMag(gravity * mass * slidingMu).rotate(PI); //!! need a way to differentiate which type of friction to use
+      PVector frictionForce;
+      if(acceleration.mag() > originalAcceleration/1.1) {
+        frictionForce = velocity.copy().setMag(gravity * mass * slidingMu).rotate(PI);
+      } else {
+        frictionForce = velocity.copy().setMag(gravity * mass * rollingMu).rotate(PI);
+      }
+      
       force.add(frictionForce);
     }
   }
