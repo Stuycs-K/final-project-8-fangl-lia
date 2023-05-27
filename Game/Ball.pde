@@ -24,7 +24,6 @@ public class Ball {
   public PVector position;
   public PVector velocity;
   public PVector acceleration;
-  public PVector force; //for movement
   
   public int hitTime; //to change friction; in frames
 
@@ -52,7 +51,6 @@ public class Ball {
     position = new PVector(x, y);
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
-    force = new PVector(0, 0);
     hitTime = 0;
 
     //assign booleans
@@ -100,8 +98,7 @@ public class Ball {
       position.add(velocity);
       
       //apply friction (INCORPORATE HIT TIME)
-      force = velocity.copy().setMag(gravity * mass * slidingMu).rotate(PI);
-      acceleration = force.copy().div(mass);
+      acceleration = velocity.copy().setMag(gravity * slidingMu).rotate(PI);
       hitTime++;
     }
   }
@@ -109,7 +106,6 @@ public class Ball {
   public void reset() {
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
-    force = new PVector(0, 0);
     isMoving = false;
   }
 }
