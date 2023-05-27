@@ -5,7 +5,7 @@ public class Ball {
   //for physics
   public static final float mass = 0.17; //kg
   public static final float slidingMu = 0.2; //ball to table initial
-  public static final float rollingMu = 0.0001; //ball to table rolling, maybe change based on time
+  public static final float rollingMu = 0.01; //ball to table rolling threshold
   public static final float ballRestitution = 0.95; //ball to ball collision (collide())
   public static final float railRestitution = 0.75; //ball to rail collision (bounce())
   
@@ -81,15 +81,13 @@ public class Ball {
   }
 
   public void applyForce(PVector f) {
-    force.add(f);
+    acceleration = f.copy().div(mass);
     isMoving = true;
     hitTime = 0;
   }
 
   public void move() {
     if (isMoving) {
-      hitTime++;
-      acceleration = force.copy().div(mass);
       velocity.add(acceleration);
       
       println(position.x + ", " + position.y);
@@ -110,6 +108,7 @@ public class Ball {
       }
       
       force.add(frictionForce);
+      hitTime++;
     }
   }
 
