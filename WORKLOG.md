@@ -50,3 +50,12 @@ achievable with non-constant rolling friction coefficient, which may also be
 implemented.
 
 ### 05-26
+Fixed movement/friction physics, which ended up being way too overcomplicated.
+- Removed force variable (field), resetting acceleration after the first frame.
+- Friction coefficient varies between initial slidingMu (large) and final
+rollingMu (small) proportionally with time. Setting rollingMu to a value 10x
+smaller than in real life produces anaccurate yet non-ideal (realistic) simulation.
+
+As a result, collide() and bounce() should now be easier to code/understand.
+
+### 05-27
