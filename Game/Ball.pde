@@ -81,7 +81,7 @@ public class Ball {
   public void applyForce(PVector f) {
     acceleration = f.copy().div(mass);
     isMoving = true;
-    hitTime = 0;
+    hitTime = round(f.mag());
   }
 
   public void move() {
@@ -97,9 +97,11 @@ public class Ball {
       
       position.add(velocity);
       
-      //apply friction (INCORPORATE HIT TIME)
-      acceleration = velocity.copy().setMag(gravity * slidingMu).rotate(PI);
-      hitTime++;
+      //apply friction (INCORPORATES HIT TIME)
+      acceleration = velocity.copy().setMag(gravity * (rollingMu + (slidingMu - rollingMu) * hitTime/(hitTime + 1))).rotate(PI);
+      if(hitTime > 0) {
+        hitTime--;
+      }
     }
   }
 
