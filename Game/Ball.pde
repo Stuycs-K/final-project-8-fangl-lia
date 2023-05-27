@@ -5,7 +5,7 @@ public class Ball {
   //for physics
   public static final float mass = 0.17; //kg
   public static final float slidingMu = 0.2; //ball to table initial
-  public static final float rollingMu = 0.01; //ball to table rolling
+  public static final float rollingMu = 0.0001; //ball to table rolling, maybe change based on time
   public static final float ballRestitution = 0.95; //ball to ball collision (collide())
   public static final float railRestitution = 0.75; //ball to rail collision (bounce())
   
@@ -25,6 +25,8 @@ public class Ball {
   public PVector velocity;
   public PVector acceleration;
   public PVector force; //for movement
+  
+  public int hitTime; //to change friction; in frames
 
   //for pool logic
   public boolean isPotted; //consider in pot()
@@ -50,6 +52,8 @@ public class Ball {
     position = new PVector(x, y);
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
+    force = new PVector(0, 0);
+    hitTime = 0;
 
     //assign booleans
     isPotted = false;
@@ -77,24 +81,35 @@ public class Ball {
   }
 
   public void applyForce(PVector f) {
-    force = f;
+    force.add(f);
     isMoving = true;
+    hitTime = 0;
   }
 
   public void move() {
     if (isMoving) {
+      hitTime++;
       acceleration = force.copy().div(mass);
       velocity.add(acceleration);
+      
+      println(position.x + ", " + position.y);
+      
+      //check for stop moving
+      if(velocity.mag() < acceleration.mag() * 0.51 && Math.abs(velocity.mag() - acceleration.mag()) > 0.1) {//requires velocity and acceleration directions to be different
+        reset();
+      }
+      
       position.add(velocity);
       
       //apply friction
-      PVector frictionForce = velocity.copy().setMag(gravity * mass * slidingMu).rotate(PI); //!! need a way to differentiate which type of friction to use
-      force.add(frictionForce);
-      
-      //check for stop moving
-      if(velocity.mag() < 10) {
-        reset();
+      PVector frictionForce;
+      if(hitTime < 5) {//DIFFERENT PER FORCE
+        frictionForce = velocity.copy().setMag(gravity * mass * slidingMu).rotate(PI);
+      } else {
+        frictionForce = velocity.copy().setMag(gravity * mass * rollingMu).rotate(PI);
       }
+      
+      force.add(frictionForce);
     }
   }
 
