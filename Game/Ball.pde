@@ -93,21 +93,15 @@ public class Ball {
       println(position.x + ", " + position.y);
       
       //check for stop moving
-      if(velocity.mag() < acceleration.mag() * 0.51 && Math.abs(velocity.mag() - acceleration.mag()) > 0.1) {//requires velocity and acceleration directions to be different
+      if(velocity.mag() < acceleration.mag() * 0.51 && Math.abs(velocity.heading() - acceleration.heading()) < 0.1) {//requires velocity and acceleration directions to be the same
         reset();
       }
       
       position.add(velocity);
       
-      //apply friction
-      PVector frictionForce;
-      if(hitTime < 5) {//DIFFERENT PER FORCE
-        frictionForce = velocity.copy().setMag(gravity * mass * slidingMu).rotate(PI);
-      } else {
-        frictionForce = velocity.copy().setMag(gravity * mass * rollingMu).rotate(PI);
-      }
-      
-      force.add(frictionForce);
+      //apply friction (INCORPORATE HIT TIME)
+      force = velocity.copy().setMag(gravity * mass * slidingMu).rotate(PI);
+      acceleration = force.copy().div(mass);
       hitTime++;
     }
   }
