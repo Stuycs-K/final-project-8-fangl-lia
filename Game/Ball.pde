@@ -5,7 +5,7 @@ public class Ball {
   //for physics
   public static final float mass = 0.17; //kg
   public static final float slidingMu = 0.2; //ball to table initial
-  public static final float rollingMu = 0.01; //ball to table rolling threshold
+  public static final float rollingMu = 0.001; //ball to table rolling threshold
   public static final float ballRestitution = 0.95; //ball to ball collision (collide())
   public static final float railRestitution = 0.75; //ball to rail collision (bounce())
   
@@ -26,6 +26,7 @@ public class Ball {
   public PVector acceleration;
   
   public int hitTime; //to change friction; in frames
+  public int originalHitTime;
 
   //for pool logic
   public boolean isPotted; //consider in pot()
@@ -52,6 +53,7 @@ public class Ball {
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
     hitTime = 0;
+    originalHitTime = hitTime;
 
     //assign booleans
     isPotted = false;
@@ -81,7 +83,8 @@ public class Ball {
   public void applyForce(PVector f) {
     acceleration = f.copy().div(mass);
     isMoving = true;
-    hitTime = round(f.mag());
+    hitTime = round(f.mag()*2);
+    originalHitTime = hitTime;
   }
 
   public void move() {
@@ -98,7 +101,7 @@ public class Ball {
       position.add(velocity);
       
       //apply friction (INCORPORATES HIT TIME)
-      acceleration = velocity.copy().setMag(gravity * (rollingMu + (slidingMu - rollingMu) * hitTime/(hitTime + 1))).rotate(PI);
+      acceleration = velocity.copy().setMag(gravity * (rollingMu + (slidingMu - rollingMu) * hitTime/originalHitTime)).rotate(PI);
       if(hitTime > 0) {
         hitTime--;
       }
