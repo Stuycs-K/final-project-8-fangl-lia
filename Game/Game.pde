@@ -41,6 +41,7 @@ void draw() {
   drawTable();
   white.move();
   white.show();
+  white.pot();
 }
 
 void mouseClicked() {
