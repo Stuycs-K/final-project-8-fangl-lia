@@ -19,10 +19,10 @@ void setup() {
   cornerY = 35;
   rectRadius = 16;
   // pocketDiam = 2 * Ball.size;
-  pocketDiam = 100;
+  pocketDiam = 50;
   centerOffset = 5 * pocketDiam / 8;
   // edgeThickness = 2 * centerOffset / 3;
-  edgeThickness = 60;
+  edgeThickness = 100;
   
   //to make pot() easier
   pocketXs = new float[3];
@@ -36,7 +36,7 @@ void setup() {
   pocketYs[1] = height - pocketYs[0];
   
   //to test ball physics
-  white = new WhiteBall(250, 250);
+  white = new WhiteBall(cornerX + centerOffset + pocketDiam / 2 + edgeThickness + 80, cornerY + centerOffset + edgeThickness + 80);
   white.show();
 }
 
@@ -46,26 +46,11 @@ void draw() {
   white.move();
   white.show();
   white.collide();
-  // white.pot();
+  white.pot();
 }
 
 void mouseClicked() {
   white.applyForce(new PVector(mouseX - white.position.x, mouseY - white.position.y).setMag(1));
-}
-
-void keyPressed() { // FOR DEBUGGING PURPOSES
-  if (keyCode == 'W') {
-    white.position.set(white.position.x, white.position.y - 1);
-  }
-  if (keyCode == 'S') {
-    white.position.set(white.position.x, white.position.y + 1);
-  }
-  if (keyCode == 'A') {
-    white.position.set(white.position.x - 1, white.position.y);
-  }
-  if (keyCode == 'D') {
-    white.position.set(white.position.x + 1, white.position.y);
-  }
 }
 
 void drawTable() {

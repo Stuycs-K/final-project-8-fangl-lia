@@ -168,10 +168,13 @@ public class Ball {
       && position.y <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness) {
       velocity.rotate(-PI - 2 * velocity.heading());
     }
-
-    int threshold = 7;
-
+    
+    
+    
+    
+    
     // CORNER WALLS
+    int threshold = 7;
     
     // top left: left
     if (position.y - size / (2 * Math.sqrt(2)) <= position.x + size / (2 * Math.sqrt(2)) - (cornerX + centerOffset + pocketDiam / 2) +  (cornerY + centerOffset) 
@@ -180,7 +183,6 @@ public class Ball {
       println(true);
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
     }
-    
     // top right: left
     if (position.y - size / (2 * Math.sqrt(2)) <= position.x + size / (2 * Math.sqrt(2)) - (width/2 + pocketDiam / 2) +  (cornerY + centerOffset) 
       && position.x + size / (2 * Math.sqrt(2)) >= width/2 + pocketDiam / 2 - threshold
@@ -188,7 +190,6 @@ public class Ball {
       println(true);
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
     }
-    
     // bottom left: left
     if (position.y + size / (2 * Math.sqrt(2)) - (height - cornerY - centerOffset) >= -(position.x + size / (2 * Math.sqrt(2))) + (cornerX + centerOffset + pocketDiam / 2)  
       && position.x + size / (2 * Math.sqrt(2)) >= cornerX + centerOffset + pocketDiam / 2 - threshold
@@ -196,7 +197,6 @@ public class Ball {
       println(true);
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
     }
-    
     // bottom right: left
     if (position.y + size / (2 * Math.sqrt(2)) - (height - cornerY - centerOffset) >= -(position.x + size / (2 * Math.sqrt(2))) + (width/2 + pocketDiam / 2)  
       && position.x + size / (2 * Math.sqrt(2)) >= width/2 + pocketDiam / 2 - threshold
@@ -204,6 +204,95 @@ public class Ball {
       println(true);
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
     }
+    
+    
+    // top left: right
+    double y = position.y - size / (2 * Math.sqrt(2));
+    double x = position.x - size / (2 * Math.sqrt(2));
+    double y0 = cornerY + centerOffset;
+    double x0 = width / 2 - pocketDiam / 2;
+    if (y - y0 <= -(x - x0) 
+      && x >= x0 - edgeThickness - threshold
+      && x <= x0 + threshold) {
+      println(true);
+      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+    }
+    // top right: right
+    y0 = cornerY + centerOffset;
+    x0 = width - cornerX - centerOffset - pocketDiam / 2;
+    if (y - y0 <= -(x - x0) 
+      && x >= x0 - edgeThickness - threshold
+      && x <= x0 + threshold) {
+      println(false);
+      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+    }
+    // bottom left: right
+    y = position.y + size / (2 * Math.sqrt(2));
+    x = position.x - size / (2 * Math.sqrt(2));
+    y0 = width / 2 - cornerY - centerOffset;
+    x0 = width / 2 - pocketDiam / 2;
+    if (y - y0 >= x - x0 
+      && x >= x0 - edgeThickness - threshold
+      && x <= x0 + threshold) {
+      println(true);
+      velocity.rotate(2 * (PI / 4 - velocity.heading()));
+    }
+    // bottom right: right
+    y0 = width / 2 - cornerY - centerOffset;
+    x0 = width - cornerX - centerOffset - pocketDiam / 2;
+    if (y - y0 >= x - x0 
+      && x >= x0 - edgeThickness - threshold
+      && x <= x0 + threshold) {
+      println(true);
+      velocity.rotate(2 * (PI / 4 - velocity.heading()));
+    }
+    
+    
+    // left: top
+    y0 = cornerY + centerOffset + pocketDiam / 2;
+    x0 = cornerX + centerOffset;
+    if (y - y0 >= x - x0 
+      && y >= y0 - threshold
+      && y <= y0 + edgeThickness + threshold) {
+      println(true);
+      velocity.rotate(2 * (PI / 4 - velocity.heading()));
+    }
+    // left: bottom
+    y = position.y - size / (2 * Math.sqrt(2));
+    x = position.x - size / (2 * Math.sqrt(2));
+    y0 = height - cornerY - centerOffset - pocketDiam / 2;
+    x0 = cornerX + centerOffset;
+    if (y - y0 <= -(x - x0) 
+      && y >= y0 - edgeThickness - threshold
+      && y <= y0 + threshold) {
+      println(true);
+      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+    }
+    // right: top
+    y = position.y + size / (2 * Math.sqrt(2));
+    x = position.x + size / (2 * Math.sqrt(2));
+    y0 = cornerY + centerOffset + pocketDiam / 2;
+    x0 = width - cornerX - centerOffset;
+    if (y - y0 >= -(x - x0)
+      && y >= y0 - threshold
+      && y <= y0 + edgeThickness + threshold) {
+      println(true);
+      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+    }
+    // right: bottom
+    y = position.y - size / (2 * Math.sqrt(2));
+    x = position.x + size / (2 * Math.sqrt(2));
+    y0 = height - cornerY - centerOffset - pocketDiam / 2;
+    x0 = width - cornerX - centerOffset;
+    if (y - y0 <= x - x0 
+      && y >= y0 - edgeThickness - threshold
+      && y <= y0 + threshold) {
+      println(true);
+      velocity.rotate(2 * (PI / 4 - velocity.heading()));
+    }
+    
+    
+    
     
   }
   
