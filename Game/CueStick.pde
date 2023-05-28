@@ -19,12 +19,13 @@ public class CueStick {
       
       translate(white.position.x, white.position.y);
       
-      rotate(direction.heading() - PI);
+      rotate(direction.heading());
       imageMode(CENTER);
-      image(stick, 0, 0); //correct position to the ball
+      image(stick, -165, 0); //correct position to the ball
       
       //reverse transformations of the plane
-      
+      rotate(-1 * direction.heading());
+      translate(-1 * white.position.x, -1 * white.position.y);
     }
   }
 }
