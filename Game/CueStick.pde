@@ -13,6 +13,9 @@ public class CueStick {
   }
   
   public void show() {
+    //to test disappearance and appearance of the cue
+    isShowing = !white.isMoving;
+    
     if(isShowing) {
       //to rotate
       direction = new PVector(mouseX - white.position.x, mouseY - white.position.y); //towards the mouse as well as the cue
