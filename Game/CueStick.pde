@@ -14,10 +14,16 @@ public class CueStick {
   
   public void show() {
     if(isShowing) {
-      imageMode(CENTER);
-      image(stick, white.position.x - 165, white.position.y); //correct position to the ball
-      
       //to rotate
+      direction = new PVector(mouseX - white.position.x, mouseY - white.position.y); //towards the mouse as well as the cue
+      
+      translate(white.position.x, white.position.y);
+      
+      rotate(direction.heading() - PI);
+      imageMode(CENTER);
+      image(stick, 0, 0); //correct position to the ball
+      
+      //reverse transformations of the plane
       
     }
   }

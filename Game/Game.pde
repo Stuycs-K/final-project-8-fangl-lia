@@ -51,7 +51,7 @@ void draw() {
 }
 
 void mouseClicked() {
-  white.applyForce(new PVector(mouseX - white.position.x, mouseY - white.position.y).setMag(1));
+  white.applyForce(new PVector(mouseX - white.position.x, mouseY - white.position.y).setMag(2));
 }
 
 void drawTable() {
