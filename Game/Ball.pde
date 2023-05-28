@@ -131,11 +131,4 @@ public class Ball {
     acceleration = new PVector(0, 0);
     isMoving = false;
   }
-  
-  public void collide() {
-    // top left 
-    if (position.y < cornerY + centerOffset + edgeThickness) {
-      velocity.set(velocity.x, -velocity.y);
-    }
-  }
 }
