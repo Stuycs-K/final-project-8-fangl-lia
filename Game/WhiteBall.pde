@@ -7,5 +7,11 @@ public class WhiteBall extends Ball {
     isMovable = false;
   }
   
+  public void show() {
+    noStroke();
+    fill(#F5ECCD);
+    circle(position.x, position.y, size);
+  }
+  
   
 }

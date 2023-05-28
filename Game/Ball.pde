@@ -12,7 +12,7 @@ public class Ball {
   public static final float gravity = 9.81;
 
   //for ball colors
-  public color[] ballColors = new color[] {#FFFFFF, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000,
+  public color[] ballColors = new color[] {#F5ECCD, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000,
     #000000, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000}; //ball colors by number, 0 is white
 
   //for ball identification
