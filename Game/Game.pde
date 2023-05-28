@@ -13,8 +13,10 @@ Ball white;
 void setup() {
   // basic pool table dimensions layout
   size(1000, 500);
-  cornerX = 100;
-  cornerY = 75;
+  //cornerX = 100;
+  cornerX = 40;
+  //cornerY = 75;
+  cornerY = 35;
   rectRadius = 16;
   // pocketDiam = 2 * Ball.size;
   pocketDiam = 100;
@@ -135,4 +137,7 @@ void drawTable() {
   vertex(width - cornerX - centerOffset - edgeThickness, cornerY + centerOffset + pocketDiam / 2 + edgeThickness);
   vertex(width - cornerX - centerOffset, cornerY + centerOffset + pocketDiam / 2);
   endShape();
+  
+  PVector v = new PVector(1, -1);
+  println(v.heading());
 }
