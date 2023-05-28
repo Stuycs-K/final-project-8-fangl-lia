@@ -59,3 +59,9 @@ smaller than in real life produces anaccurate yet non-ideal (realistic) simulati
 As a result, collide() and bounce() should now be easier to code/understand.
 
 ### 05-27
+Started WhiteBall skeleton class. Will override pot() soon.
+Modified how pockets are drawn; stored their x-coordinates in two arrays
+in order to make things easier.
+Wrote a preliminary pot() method. It is not complete, because the ball does not
+disappear and slide onto the rack, and the WhiteBall does not have special
+pot() rules.
