@@ -84,17 +84,18 @@ public class Ball {
   public void move() {
     if (isMoving) {
       acceleration = force.copy().div(mass);
-      velocity.add(acceleration);
-      position.add(velocity);
-      
+      PVector vcop = velocity.copy();
+      vcop.add(acceleration);
+      if (velocity.mag() < 1 || Math.abs(vcop.heading() - velocity.heading()) < 0.1) { //check for stop moving
+        velocity.add(acceleration).add(acceleration);
+        position.add(velocity);
+      } else {
+        reset();
+      }
       //apply friction
       PVector frictionForce = velocity.copy().setMag(gravity * mass * slidingMu).rotate(PI); //!! need a way to differentiate which type of friction to use
       force.add(frictionForce);
       
-      //check for stop moving
-      if(velocity.mag() < 10) {
-        reset();
-      }
     }
   }
 
@@ -103,5 +104,12 @@ public class Ball {
     acceleration = new PVector(0, 0);
     force = new PVector(0, 0);
     isMoving = false;
+  }
+  
+  public void collide() {
+    // top left 
+    if (position.y < cornerY + centerOffset + edgeThickness) {
+      velocity.set(velocity.x, -velocity.y);
+    }
   }
 }
