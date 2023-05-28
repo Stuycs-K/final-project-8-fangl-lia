@@ -13,5 +13,5 @@ public class WhiteBall extends Ball {
     circle(position.x, position.y, size);
   }
   
-  
+  //override pot later
 }

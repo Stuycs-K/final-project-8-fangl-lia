@@ -17,7 +17,7 @@ void setup() {
   edgeThickness = 12;
   
   //to test ball physics
-  white = new WhiteBall(300, 200);
+  white = new WhiteBall(250, 250);
   white.show();
 }
 
