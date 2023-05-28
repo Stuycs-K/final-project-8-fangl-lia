@@ -16,6 +16,10 @@ Added middle pockets to the pool table.
 Tested out edge detection for collisions and bouncing off the edges of the pool table.
 Tested checking for the ball stopping if velocity reverses direction after acceleration is applied.
 
+### 05-27
+Worked on debugging collisions and new physics
+
+### 05-28
 
 ## Andrew Li
 
