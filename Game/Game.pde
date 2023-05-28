@@ -9,6 +9,7 @@ float[] pocketXs;
 float[] pocketYs;
 
 Ball white;
+CueStick cue;
 
 void setup() {
   // basic pool table dimensions layout
@@ -34,6 +35,9 @@ void setup() {
   //to test ball physics
   white = new WhiteBall(250, 250);
   white.show();
+  
+  //to test CueStick
+  cue = new CueStick();
 }
 
 void draw() {
@@ -42,6 +46,8 @@ void draw() {
   white.move();
   white.show();
   white.pot();
+  
+  cue.show();
 }
 
 void mouseClicked() {
