@@ -14,7 +14,11 @@ public class CueStick {
   
   public void show() {
     if(isShowing) {
-      image(stick, 500, 250);
+      imageMode(CENTER);
+      image(stick, white.position.x - 165, white.position.y); //correct position to the ball
+      
+      //to rotate
+      
     }
   }
 }
