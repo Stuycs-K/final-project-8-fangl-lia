@@ -4,7 +4,11 @@ int rectRadius;
 int pocketDiam;
 int centerOffset;
 int edgeThickness;
-Ball eight;
+
+float[] pocketXs;
+float[] pocketYs;
+
+Ball white;
 
 void setup() {
   // basic pool table dimensions layout
@@ -16,38 +20,49 @@ void setup() {
   centerOffset = 25;
   edgeThickness = 12;
   
+  //to make pot() easier
+  pocketXs = new float[3];
+  pocketYs = new float[2];
+  
+  pocketXs[0] = cornerX + centerOffset;
+  pocketXs[1] = width/2;
+  pocketXs[2] = width - pocketXs[0];
+  
+  pocketYs[0] = cornerY + centerOffset;
+  pocketYs[1] = height - pocketYs[0];
+  
   //to test ball physics
-  eight = new Ball(8, 300, 200);
-  eight.show();
+  white = new WhiteBall(250, 250);
+  white.show();
 }
 
 void draw() {
   background(250);
   drawTable();
-  eight.move();
-  eight.show();
+  white.move();
+  white.show();
+  white.pot();
 }
 
 void mouseClicked() {
-  eight.applyForce(new PVector(mouseX - eight.position.x, mouseY - eight.position.y).setMag(1));
+  white.applyForce(new PVector(mouseX - white.position.x, mouseY - white.position.y).setMag(1));
 }
 
 void drawTable() {
-  //pockets
+  //table
   background(255);
   fill(192);
   
   rect(cornerX, cornerY, width - 2 * cornerX, height - 2 * cornerY, rectRadius);
   fill(106, 182, 99); // fuzz green
   rect(cornerX + centerOffset, cornerY + centerOffset, width - 2 * cornerX - 2 * centerOffset, height - 2 * cornerY - 2 * centerOffset);
-  fill(0); // black for pots
-  circle(cornerX + centerOffset, cornerY + centerOffset, pocketDiam);
-  circle(width - cornerX - centerOffset, cornerY + centerOffset, pocketDiam);
-  circle(cornerX + centerOffset, height - cornerY - centerOffset, pocketDiam);
-  circle(width - cornerX - centerOffset, height - cornerY - centerOffset, pocketDiam);
+  fill(0); // black for pockets
   
-  circle(width / 2, cornerY + centerOffset, pocketDiam);
-  circle(width / 2, height - cornerY - centerOffset, pocketDiam);
+  for(float x: pocketXs) {
+    for(float y: pocketYs) {
+      circle(x, y, pocketDiam);
+    }
+  }
   
   // top left
   fill(115, 147, 179);

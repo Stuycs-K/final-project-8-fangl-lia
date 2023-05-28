@@ -12,7 +12,7 @@ public class Ball {
   public static final float gravity = 9.81;
 
   //for ball colors
-  public color[] ballColors = new color[] {#FFFFFF, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000,
+  public color[] ballColors = new color[] {#F5ECCD, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000,
     #000000, #FFD700, #0000FF, #FF0000, #800080, #FFA500, #228B22, #800000}; //ball colors by number, 0 is white
 
   //for ball identification
@@ -104,6 +104,24 @@ public class Ball {
       acceleration = velocity.copy().setMag(gravity * (rollingMu + (slidingMu - rollingMu) * hitTime/originalHitTime)).rotate(PI);
       if(hitTime > 0) {
         hitTime--;
+      }
+    }
+  }
+  
+  public void pot() {
+    //detect corners
+    for(float x: pocketXs) {
+      for(float y: pocketYs) {
+        float d = dist(position.x, position.y, x, y);
+        if(d < 0.1) {//equals threshold
+          isPotted = true;
+          //animate and slide
+        } else if(d < pocketDiam/2) {//in pocket?
+          reset();
+          PVector shift = new PVector(x - position.x, y - position.y);
+          shift.setMag(min(shift.mag(), 1));
+          position.add(shift);//move into pocket
+        }
       }
     }
   }
