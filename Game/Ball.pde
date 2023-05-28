@@ -107,6 +107,11 @@ public class Ball {
       }
     }
   }
+  
+  public void pot() {
+    //detect corners
+    
+  }
 
   public void reset() {
     velocity = new PVector(0, 0);
