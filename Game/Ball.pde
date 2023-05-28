@@ -8,7 +8,7 @@ public class Ball {
   public static final float rollingMu = 0.001; //ball to table rolling threshold
   public static final float ballRestitution = 0.95; //ball to ball collision (collide())
   public static final float railRestitution = 0.75; //ball to rail collision (bounce())
-  
+
   public static final float gravity = 9.81;
 
   //for ball colors
@@ -24,7 +24,7 @@ public class Ball {
   public PVector position;
   public PVector velocity;
   public PVector acceleration;
-  
+
   public int hitTime; //to change friction; in frames
   public int originalHitTime;
 
@@ -90,33 +90,33 @@ public class Ball {
   public void move() {
     if (isMoving) {
       velocity.add(acceleration);
-      
+
       println(position.x + ", " + position.y);
-      
+
       //check for stop moving
-      if(velocity.mag() < acceleration.mag() * 0.51 && Math.abs(velocity.heading() - acceleration.heading()) < 0.1) {//requires velocity and acceleration directions to be the same
+      if (velocity.mag() < acceleration.mag() * 0.51 && Math.abs(velocity.heading() - acceleration.heading()) < 0.1) {//requires velocity and acceleration directions to be the same
         reset();
       }
-      
+
       position.add(velocity);
-      
+
       //apply friction (INCORPORATES HIT TIME)
       acceleration = velocity.copy().setMag(gravity * (rollingMu + (slidingMu - rollingMu) * hitTime/originalHitTime)).rotate(PI);
-      if(hitTime > 0) {
+      if (hitTime > 0) {
         hitTime--;
       }
     }
   }
-  
+
   public void pot() {
     //detect corners
-    for(float x: pocketXs) {
-      for(float y: pocketYs) {
+    for (float x : pocketXs) {
+      for (float y : pocketYs) {
         float d = dist(position.x, position.y, x, y);
-        if(d < 0.1) {//equals threshold
+        if (d < 0.1) {//equals threshold
           isPotted = true;
           //animate and slide
-        } else if(d < pocketDiam/2) {//in pocket?
+        } else if (d < pocketDiam/2) {//in pocket?
           reset();
           PVector shift = new PVector(x - position.x, y - position.y);
           shift.setMag(min(shift.mag(), 1));
@@ -131,36 +131,51 @@ public class Ball {
     acceleration = new PVector(0, 0);
     isMoving = false;
   }
-  
+
   public void collide() {
-    // top left 
-    if (position.y <= cornerY + centerOffset + edgeThickness && position.x >= cornerX + centerOffset + edgeThickness 
-    && position.x <= width / 2 - pocketDiam / 2 - edgeThickness) {
+    // HORIZONTAL AND VERTICAL WALLS
+
+    // top left
+    if (position.y - size / 2 <= cornerY + centerOffset + edgeThickness && position.x >= cornerX + centerOffset + pocketDiam / 2 + edgeThickness
+      && position.x <= width / 2 - pocketDiam / 2 - edgeThickness) {
       velocity.set(velocity.x, -velocity.y);
-    } 
+    }
     // top right
-    if (position.y <= cornerY + centerOffset + edgeThickness && position.x <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness
-    && position.x >= width / 2 + pocketDiam / 2 + edgeThickness) {
+    if (position.y - size / 2 <= cornerY + centerOffset + edgeThickness && position.x <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness
+      && position.x >= width / 2 + pocketDiam / 2 + edgeThickness) {
       velocity.set(velocity.x, -velocity.y);
-    } 
-    
-    // bottom left 
-    if (position.y >= height - cornerY - centerOffset - edgeThickness && position.x >= cornerX + centerOffset + edgeThickness 
-    && position.x <= width / 2 - pocketDiam / 2 - edgeThickness) {
+    }
+
+    // bottom left
+    if (position.y + size / 2 >= height - cornerY - centerOffset - edgeThickness && position.x >= cornerX + centerOffset + + pocketDiam / 2 + edgeThickness
+      && position.x <= width / 2 - pocketDiam / 2 - edgeThickness) {
       velocity.set(velocity.x, -velocity.y);
-    } 
+    }
     // bottom right
-    if (position.y >= height - cornerY - centerOffset - edgeThickness && position.x <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness
-    && position.x >= width / 2 + pocketDiam / 2 + edgeThickness) {
-      velocity.set(-velocity.x, velocity.y);
-    } 
-    
-    // left 
-    if (position.x <= cornerX + centerOffset + edgeThickness && position.y >= cornerY + centerOffset + pocketDiam / 2 + edgeThickness 
-    && position.y <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness) {
+    if (position.y + size / 2 >= height - cornerY - centerOffset - edgeThickness && position.x <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness
+      && position.x >= width / 2 + pocketDiam / 2 + edgeThickness) {
+      velocity.set(velocity.x, -velocity.y);
+    }
+
+    // left
+    if (position.x - size / 2 <= cornerX + centerOffset + edgeThickness && position.y >= cornerY + centerOffset + pocketDiam / 2 + edgeThickness
+      && position.y <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness) {
       velocity.set(-velocity.x, velocity.y);
     }
-    
+
+    // right
+    if (position.x + size / 2 >= width - cornerX - centerOffset - edgeThickness && position.y >= cornerY + centerOffset + pocketDiam / 2 + edgeThickness
+      && position.y <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness) {
+      velocity.set(-velocity.x, velocity.y);
+    }
+
+    // CORNER WALLS
+    if (position.y - size / (2 * Math.sqrt(2)) <= position.x + size / (2 * Math.sqrt(2)) - (cornerX + centerOffset + pocketDiam / 2) +  (cornerY + centerOffset) 
+      && position.x + size / (2 * Math.sqrt(2)) >= cornerX + centerOffset + pocketDiam / 2
+      && position.x + size / (2 * Math.sqrt(2)) <= cornerX + centerOffset + pocketDiam / 2 + edgeThickness) {
+      println(true);
+      velocity.set(-velocity.y, -velocity.x);
+    }
   }
   
   
