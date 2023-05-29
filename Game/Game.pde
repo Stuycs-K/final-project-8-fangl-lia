@@ -18,8 +18,7 @@ void setup() {
   //cornerY = 75;
   cornerY = 35;
   rectRadius = 16;
-  // pocketDiam = 2 * Ball.size;
-  pocketDiam = 50;
+  pocketDiam = 2 * Ball.size + 20;
   centerOffset = 5 * pocketDiam / 8;
   // edgeThickness = 2 * centerOffset / 3;
   edgeThickness = 100;
@@ -36,7 +35,7 @@ void setup() {
   pocketYs[1] = height - pocketYs[0];
   
   //to test ball physics
-  white = new WhiteBall(cornerX + centerOffset + pocketDiam / 2 + edgeThickness + 80, cornerY + centerOffset + edgeThickness + 80);
+  white = new WhiteBall(700, 183);
   white.show();
 }
 
