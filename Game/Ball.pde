@@ -134,7 +134,7 @@ public class Ball {
 
   public void collide() {
     // HORIZONTAL AND VERTICAL WALLS
-
+    
     // top left
     if (position.y - size / 2 <= cornerY + centerOffset + edgeThickness && position.x >= cornerX + centerOffset + pocketDiam / 2 + edgeThickness
       && position.x <= width / 2 - pocketDiam / 2 - edgeThickness) {
@@ -174,7 +174,7 @@ public class Ball {
     
     
     // CORNER WALLS
-    int threshold = 7;
+    int threshold = 0;
     
     // top left: left
     if (position.y - size / (2 * Math.sqrt(2)) <= position.x + size / (2 * Math.sqrt(2)) - (cornerX + centerOffset + pocketDiam / 2) +  (cornerY + centerOffset) 
