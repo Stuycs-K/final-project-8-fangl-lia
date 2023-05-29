@@ -20,6 +20,7 @@ Tested checking for the ball stopping if velocity reverses direction after accel
 Worked on debugging collisions and new physics
 
 ### 05-28
+Mostly completed the logic for collisions for the 12 corner walls. A minor issue is that wall glitches when the ball hits the wall at certain locations at certain angles, which I tried to deal with using a line segment threshold extension. This was unsuccessful.
 
 ## Andrew Li
 
@@ -69,3 +70,9 @@ in order to make things easier.
 Wrote a preliminary pot() method. It is not complete, because the ball does not
 disappear and slide onto the rack, and the WhiteBall does not have special
 pot() rules.
+
+### 05-28
+Started the CueStick class today. Appearance and rotation about the WhiteBall
+was achieved, as were disappearance with movement. This has to be updated later, however,
+with the custom WhiteBall pot rule and more balls. Will add a gamestate variable
+later to synchronize the game. 
