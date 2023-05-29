@@ -20,6 +20,7 @@ Tested checking for the ball stopping if velocity reverses direction after accel
 Worked on debugging collisions and new physics
 
 ### 05-28
+Mostly completed the logic for collisions for the 12 corner walls. A minor issue is that wall glitches when the ball hits the wall at certain locations at certain angles, which I tried to deal with using a line segment threshold extension. This was unsuccessful.
 
 ## Andrew Li
 
