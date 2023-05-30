@@ -65,7 +65,6 @@ void draw() {
     
   } else if (game == AIM) {
     drawPower();
-    cue.power = 0.5 + 3.5 * (height - cornerY - 10 - mouseY)/(height - 2*cornerY - 20);
     if(mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
       extend = (height - cornerY - 10 - mouseY)/2;
     }
@@ -74,6 +73,11 @@ void draw() {
       white.applyForce(cue.direction.setMag(cue.power));
     }
     if(extend > -5) {extend-=10;}
+    
+    if(extend <= -5 && !white.isMoving) {//the second boolean is changeable, only runs after applying force
+      game = READY;
+      extend = 0;
+    }
   }
   println(mouseX + ", " + mouseY);
 }
@@ -84,9 +88,11 @@ void mouseClicked() {
   } else if(game == AIM) {
     //inside power?
     if(mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
+      cue.power = 0.5 + 3.5 * (height - cornerY - 10 - mouseY)/(height - 2*cornerY - 20);
       game = FIRE;
     } else {
       game = READY;
+      extend = 0;
     }
   }
 }
