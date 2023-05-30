@@ -176,15 +176,23 @@ public class Ball {
       velocity.rotate(-PI - 2 * velocity.heading());
     }
     
+    
+    
+    
     // CORNER WALLS
     
+    
     // top left: left
-    if (position.y - size / (2 * Math.sqrt(2)) <= position.x + size / (2 * Math.sqrt(2)) - (cornerX + centerOffset + pocketDiam / 2) +  (cornerY + centerOffset) 
-      && position.x + size / (2 * Math.sqrt(2)) >= cornerX + centerOffset + pocketDiam / 2 
-      && position.x + size / (2 * Math.sqrt(2)) <= cornerX + centerOffset + pocketDiam / 2 + edgeThickness ) {
-      
-      velocity.rotate(2 * (PI / 4 - velocity.heading()));
-    }
+    float y0 = cornerY + centerOffset;
+    float x0 = cornerX + centerOffset + pocketDiam / 2;
+    float y1 = cornerY + centerOffset + edgeThickness;
+    float x1 = cornerX + centerOffset + pocketDiam / 2 + edgeThickness;
+    float y = y.position - size / (2 * Math.sqrt(2));
+    float x = x.position + size / (2 * Math.sqrt(2));
+    
+    PVector v0 = rot45Neg(x0, y0);
+    
+    
     // top right: left
     if (position.y - size / (2 * Math.sqrt(2)) <= position.x + size / (2 * Math.sqrt(2)) - (width/2 + pocketDiam / 2) +  (cornerY + centerOffset) 
       && position.x + size / (2 * Math.sqrt(2)) >= width/2 + pocketDiam / 2 
@@ -207,12 +215,11 @@ public class Ball {
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
     }
     
-    
     // top left: right
-    double y = position.y - size / (2 * Math.sqrt(2));
-    double x = position.x - size / (2 * Math.sqrt(2));
-    double y0 = cornerY + centerOffset;
-    double x0 = width / 2 - pocketDiam / 2;
+    y = position.y - size / (2 * Math.sqrt(2));
+    x = position.x - size / (2 * Math.sqrt(2));
+    y0 = cornerY + centerOffset;
+    x0 = width / 2 - pocketDiam / 2;
     if (y - y0 <= -(x - x0) 
       && x >= x0 - edgeThickness 
       && x <= x0 ) {
@@ -292,5 +299,13 @@ public class Ball {
       
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
     }
+  }
+  
+  public PVector rot45Neg(float i, float j) {
+    return new PVector((i + j) / Math.sqrt(2), (j - i) / Math.sqrt(2));
+  }
+  
+  public PVector rot45Pos(float i, float j) {
+    return new PVector((i - j) / Math.sqrt(2), (i + j) / Math.sqrt(2));
   }
 }
