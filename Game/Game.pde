@@ -82,7 +82,10 @@ void drawPower() {
   rect(20, cornerY, cornerX - 40, height - 2 * cornerY, rectRadius);
   fill(150);
   rect(30, cornerY + 10, cornerX - 60, height - 2 * cornerY - 20);
-  
+  for(int y = cornerY + 10; y <= height - cornerY - 10; y++) {
+    stroke(255, y - (cornerY + 10), 0);
+    line(30, y, cornerX - 30, y);
+  }
 }
 
 void drawTable() {
