@@ -5,11 +5,18 @@ float pocketDiam;
 float centerOffset;
 float edgeThickness;
 
-Ball white;
-
 float[] pocketXs;
 float[] pocketYs;
 
+WhiteBall white;
+CueStick cue;
+
+int game;
+final static int READY = 0;
+final static int AIM = 1;
+final static int FIRE = 2;
+
+float extend;
 void setup() {
   // basic pool table dimensions layout
   size(1000, 500);
@@ -34,6 +41,13 @@ void setup() {
   //to test ball physics
   white = new WhiteBall(700, 183);
   white.show();
+  
+  //to test CueStick
+  cue = new CueStick();
+  
+  //game state
+  game = READY;
+  extend = 0;
 }
 
 void draw() {
@@ -43,14 +57,66 @@ void draw() {
   white.show();
   white.collide();
   white.pot();
+  
+  cue.show();
+  
+  //game state
+  if(game == READY) {
+    if(white.isMovable && mousePressed && dist(mouseX, mouseY, white.position.x, white.position.y) < Ball.size) {//move the white ball
+      white.position = new PVector(mouseX, mouseY);
+    }
+  } else if (game == AIM) {
+    drawPower();
+    if(mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
+      extend = (height - cornerY - 10 - mouseY)/2;
+    }
+  } else if (game == FIRE) {
+    if(extend > -5 && extend <= 5) {//runs once
+      white.applyForce(cue.direction.setMag(cue.power));
+      white.isMovable = false; //resets movability
+    }
+    if(extend > -5) {extend-=10;}
+    
+    if(extend <= -5 && !white.isMoving && !white.isPotted) {//the second boolean is changeable, only runs after applying force
+      game = READY;
+      extend = 0;
+    }
+  }
+  println(mouseX + ", " + mouseY);
 }
 
 void mouseClicked() {
-  white.applyForce(new PVector(mouseX - white.position.x, mouseY - white.position.y).setMag(1));
+  if(game == READY) {
+    if(dist(mouseX, mouseY, white.position.x, white.position.y) >= Ball.size) {
+       game = AIM;
+    }
+  } else if(game == AIM) {
+    //inside power?
+    if(mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
+      cue.power = 0.5 + 3.5 * (height - cornerY - 10 - mouseY)/(height - 2*cornerY - 20);
+      game = FIRE;
+    } else {
+      game = READY;
+      extend = 0;
+    }
+  }
+}
+
+void drawPower() {
+  stroke(1);
+  fill(100);
+  rect(20, cornerY, cornerX - 40, height - 2 * cornerY, rectRadius);
+  fill(150);
+  rect(30, cornerY + 10, cornerX - 60, height - 2 * cornerY - 20);
+  for(int y = cornerY + 10; y <= height - cornerY - 10; y++) {
+    stroke(255, y - (cornerY + 10), 0);
+    line(30, y, cornerX - 30, y);
+  }
 }
 
 void drawTable() {
   //table
+  noStroke();
   background(255);
   fill(192);
   

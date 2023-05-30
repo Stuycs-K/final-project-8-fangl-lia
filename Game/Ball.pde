@@ -113,10 +113,10 @@ public class Ball {
     for (float x : pocketXs) {
       for (float y : pocketYs) {
         float d = dist(position.x, position.y, x, y);
-        if (d < 0.1) {//equals threshold
-          isPotted = true;
+        if(d < 0.1) {//equals threshold
           //animate and slide
-        } else if (d < pocketDiam/2) {//in pocket?
+        } else if(d < pocketDiam/2) {//in pocket?
+          isPotted = true;
           reset();
           PVector shift = new PVector(x - position.x, y - position.y);
           shift.setMag(min(shift.mag(), 1));
@@ -134,39 +134,45 @@ public class Ball {
 
   public void collide() {
     // HORIZONTAL AND VERTICAL WALLS
-    
     // top left
     if (position.y + velocity.y / 2.0 - size / 2 <= cornerY + centerOffset + edgeThickness && position.x + velocity.x / 2.0 >= cornerX + centerOffset + pocketDiam / 2 + edgeThickness
       && position.x + velocity.x / 2.0 <= width / 2 - pocketDiam / 2 - edgeThickness) {
       velocity.rotate(-2 * velocity.heading());
+      velocity.mult(railRestitution);
     }
+    
     // top right
     if (position.y + velocity.y / 2.0 - size / 2 <= cornerY + centerOffset + edgeThickness && position.x + velocity.x / 2.0 <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness
       && position.x + velocity.x / 2.0 >= width / 2 + pocketDiam / 2 + edgeThickness) {
       velocity.rotate(-2 * velocity.heading());
+      velocity.mult(railRestitution);
     }
 
     // bottom left
     if (position.y + velocity.y / 2.0 + size / 2 >= height - cornerY - centerOffset - edgeThickness && position.x + velocity.x / 2.0 >= cornerX + centerOffset + + pocketDiam / 2 + edgeThickness
       && position.x + velocity.x / 2.0 <= width / 2 - pocketDiam / 2 - edgeThickness) {
       velocity.rotate(-2 * velocity.heading());
+      velocity.mult(railRestitution);
     }
     // bottom right
     if (position.y + velocity.y / 2.0 + size / 2 >= height - cornerY - centerOffset - edgeThickness && position.x + velocity.x / 2.0 <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness
       && position.x + velocity.x / 2.0 >= width / 2 + pocketDiam / 2 + edgeThickness) {
       velocity.rotate(-2 * velocity.heading());
+      velocity.mult(railRestitution);
     }
 
     // left
     if (position.x + velocity.x / 2.0 - size / 2 <= cornerX + centerOffset + edgeThickness && position.y + velocity.y / 2.0 >= cornerY + centerOffset + pocketDiam / 2 + edgeThickness
       && position.y + velocity.y / 2.0 <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness) {
       velocity.rotate(PI - 2 * velocity.heading());
+      velocity.mult(railRestitution);
     }
 
     // right
     if (position.x + velocity.x / 2.0 + size / 2 >= width - cornerX - centerOffset - edgeThickness && position.y + velocity.y / 2.0 >= cornerY + centerOffset + pocketDiam / 2 + edgeThickness
       && position.y + velocity.y / 2.0 <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness) {
       velocity.rotate(-PI - 2 * velocity.heading());
+      velocity.mult(railRestitution);
     }
     
     // CORNER WALLS
@@ -178,29 +184,35 @@ public class Ball {
       && position.x + velocity.x / 2.0 + size / (2 * Math.sqrt(2)) <= cornerX + centerOffset + pocketDiam / 2 + edgeThickness + threshold) {
       println(true);
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
+      velocity.mult(railRestitution);
     }
+    
     // top right: left
     if (position.y + velocity.y / 2.0 - size / (2 * Math.sqrt(2)) <= position.x + velocity.x / 2.0 + size / (2 * Math.sqrt(2)) - (width/2 + pocketDiam / 2) +  (cornerY + centerOffset) 
       && position.x + velocity.x / 2.0 + size / (2 * Math.sqrt(2)) >= width/2 + pocketDiam / 2 - threshold
       && position.x + velocity.x / 2.0 + size / (2 * Math.sqrt(2)) <= width/2 + pocketDiam / 2 + edgeThickness + threshold) {
       println(true);
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
+      velocity.mult(railRestitution);
     }
+    
     // bottom left: left
     if (position.y + velocity.y / 2.0 + size / (2 * Math.sqrt(2)) - (height - cornerY - centerOffset) >= -(position.x + velocity.x / 2.0 + size / (2 * Math.sqrt(2))) + (cornerX + centerOffset + pocketDiam / 2)  
       && position.x + velocity.x / 2.0 + size / (2 * Math.sqrt(2)) >= cornerX + centerOffset + pocketDiam / 2 - threshold
       && position.x + velocity.x / 2.0 + size / (2 * Math.sqrt(2)) <= cornerX + centerOffset + pocketDiam / 2 + edgeThickness + threshold) {
       println(true);
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+      velocity.mult(railRestitution);
     }
+    
     // bottom right: left
     if (position.y + velocity.y / 2.0 + size / (2 * Math.sqrt(2)) - (height - cornerY - centerOffset) >= -(position.x + velocity.x / 2.0 + size / (2 * Math.sqrt(2))) + (width/2 + pocketDiam / 2)  
       && position.x + velocity.x / 2.0 + size / (2 * Math.sqrt(2)) >= width/2 + pocketDiam / 2 - threshold
       && position.x + velocity.x / 2.0 + size / (2 * Math.sqrt(2)) <= width/2 + pocketDiam / 2 + edgeThickness + threshold) {
       println(true);
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+      velocity.mult(railRestitution);
     }
-    
     
     // top left: right
     double y = position.y + velocity.y / 2.0 - size / (2 * Math.sqrt(2));
@@ -212,7 +224,9 @@ public class Ball {
       && x <= x0 + threshold) {
       println(true);
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+      velocity.mult(railRestitution);
     }
+    
     // top right: right
     y0 = cornerY + centerOffset;
     x0 = width - cornerX - centerOffset - pocketDiam / 2;
@@ -221,7 +235,9 @@ public class Ball {
       && x <= x0 + threshold) {
       println(false);
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+      velocity.mult(railRestitution);
     }
+    
     // bottom left: right
     y = position.y + velocity.y / 2.0 + size / (2 * Math.sqrt(2));
     x = position.x + velocity.x / 2.0 - size / (2 * Math.sqrt(2));
@@ -232,7 +248,9 @@ public class Ball {
       && x <= x0 + threshold) {
       println(true);
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
+      velocity.mult(railRestitution);
     }
+    
     // bottom right: right
     y0 = width / 2 - cornerY - centerOffset;
     x0 = width - cornerX - centerOffset - pocketDiam / 2;
@@ -241,8 +259,8 @@ public class Ball {
       && x <= x0 + threshold) {
       println(true);
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
+      velocity.mult(railRestitution);
     }
-    
     
     // left: top
     y0 = cornerY + centerOffset + pocketDiam / 2;
@@ -252,7 +270,9 @@ public class Ball {
       && y <= y0 + edgeThickness + threshold) {
       println(true);
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
+      velocity.mult(railRestitution);
     }
+    
     // left: bottom
     y = position.y + velocity.y / 2.0 - size / (2 * Math.sqrt(2));
     x = position.x + velocity.x / 2.0 - size / (2 * Math.sqrt(2));
@@ -263,7 +283,9 @@ public class Ball {
       && y <= y0 + threshold) {
       println(true);
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+      velocity.mult(railRestitution);
     }
+    
     // right: top
     y = position.y + velocity.y / 2.0 + size / (2 * Math.sqrt(2));
     x = position.x + velocity.x / 2.0 + size / (2 * Math.sqrt(2));
@@ -274,6 +296,7 @@ public class Ball {
       && y <= y0 + edgeThickness + threshold) {
       println(true);
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+      velocity.mult(railRestitution);
     }
     // right: bottom
     y = position.y + velocity.y / 2.0 - size / (2 * Math.sqrt(2));
@@ -285,6 +308,7 @@ public class Ball {
       && y <= y0 + threshold) {
       println(true);
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
+      velocity.mult(railRestitution);
     }
   }
 }

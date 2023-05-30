@@ -1,4 +1,4 @@
-public class WhiteBall extends Ball {
+  public class WhiteBall extends Ball {
   public boolean isMovable; //can the player move the white ball?
   
   //constructor
@@ -13,5 +13,26 @@ public class WhiteBall extends Ball {
     circle(position.x, position.y, size);
   }
   
-  //override pot later
+  //override pot
+  public void pot() {
+    //detect corners
+    for(float x: pocketXs) {
+      for(float y: pocketYs) {
+        float d = dist(position.x, position.y, x, y);
+        if(d < 0.1) {//equals threshold, take it out
+          if(true) {//change boolean to when all balls stop moving
+            isPotted = false;
+            position = new PVector(250, 250);
+            isMovable = true;
+          }
+        } else if(d < pocketDiam/2) {//in pocket?
+          isPotted = true;
+          reset();
+          PVector shift = new PVector(x - position.x, y - position.y);
+          shift.setMag(min(shift.mag(), 1));
+          position.add(shift);//move into pocket
+        }
+      }
+    }
+  }
 }
