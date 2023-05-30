@@ -8,7 +8,7 @@ int edgeThickness;
 float[] pocketXs;
 float[] pocketYs;
 
-Ball white;
+WhiteBall white;
 CueStick cue;
 
 int game;
@@ -62,7 +62,9 @@ void draw() {
   
   //game state
   if(game == READY) {
-    
+    if(white.isMovable && mousePressed && dist(mouseX, mouseY, white.position.x, white.position.y) < Ball.size) {//move the white ball
+      white.position = new PVector(mouseX, mouseY);
+    }
   } else if (game == AIM) {
     drawPower();
     if(mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
@@ -71,6 +73,7 @@ void draw() {
   } else if (game == FIRE) {
     if(extend > -5 && extend <= 5) {//runs once
       white.applyForce(cue.direction.setMag(cue.power));
+      white.isMovable = false; //resets movability
     }
     if(extend > -5) {extend-=10;}
     
@@ -84,7 +87,9 @@ void draw() {
 
 void mouseClicked() {
   if(game == READY) {
-    game = AIM;
+    if(dist(mouseX, mouseY, white.position.x, white.position.y) >= Ball.size) {
+       game = AIM;
+    }
   } else if(game == AIM) {
     //inside power?
     if(mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
