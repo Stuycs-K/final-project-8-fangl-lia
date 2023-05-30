@@ -42,7 +42,7 @@ void draw() {
   white.move();
   white.show();
   white.collide();
-  white.pot();
+  // white.pot();
 }
 
 void mouseClicked() {
