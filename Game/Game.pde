@@ -5,8 +5,6 @@ float pocketDiam;
 float centerOffset;
 float edgeThickness;
 
-Ball white;
-
 float[] pocketXs;
 float[] pocketYs;
 
