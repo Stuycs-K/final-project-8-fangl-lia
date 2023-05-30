@@ -1,9 +1,11 @@
 int cornerX;
 int cornerY;
 int rectRadius;
-int pocketDiam;
-int centerOffset;
-int edgeThickness;
+float pocketDiam;
+float centerOffset;
+float edgeThickness;
+
+Ball white;
 
 float[] pocketXs;
 float[] pocketYs;
@@ -17,7 +19,6 @@ final static int AIM = 1;
 final static int FIRE = 2;
 
 float extend;
-
 void setup() {
   // basic pool table dimensions layout
   size(1000, 500);
@@ -40,7 +41,7 @@ void setup() {
   pocketYs[1] = height - pocketYs[0];
   
   //to test ball physics
-  white = new WhiteBall(250, 250);
+  white = new WhiteBall(700, 183);
   white.show();
   
   //to test CueStick
@@ -56,6 +57,7 @@ void draw() {
   drawTable();
   white.move();
   white.show();
+  white.collide();
   white.pot();
   
   cue.show();

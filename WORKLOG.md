@@ -22,6 +22,11 @@ Worked on debugging collisions and new physics
 ### 05-28
 Mostly completed the logic for collisions for the 12 corner walls. A minor issue is that wall glitches when the ball hits the wall at certain locations at certain angles, which I tried to deal with using a line segment threshold extension. This was unsuccessful.
 
+### 05-29
+Started bounce method. Added position offsets, removed threshold, met with Andrew to made collide() smoother. 
+
+### 05-30
+
 ## Andrew Li
 
 ### 05-22
@@ -75,4 +80,10 @@ pot() rules.
 Started the CueStick class today. Appearance and rotation about the WhiteBall
 was achieved, as were disappearance with movement. This has to be updated later, however,
 with the custom WhiteBall pot rule and more balls. Will add a gamestate variable
-later to synchronize the game. 
+later to synchronize the game.
+
+### 05-29
+Finished the preliminary draft of how the CueStick will be used to effect force
+on the white ball. Discussed ways to improve collide() with Jack.
+
+### 05-30
