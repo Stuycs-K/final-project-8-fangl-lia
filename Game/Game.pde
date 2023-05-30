@@ -56,7 +56,16 @@ void draw() {
   white.pot();
   
   cue.show();
-  println(game);
+  
+  //game state
+  if(game == READY) {
+    
+  } else if (game == AIM) {
+    drawPower();
+  } else if (game == FIRE) {
+    
+  }
+  println(mouseX + ", " + mouseY);
 }
 
 void mouseClicked() {
@@ -68,7 +77,7 @@ void mouseClicked() {
 }
 
 void drawPower() {
-  
+  rect(20, cornerY, cornerX - 40, height - 2 * cornerY, rectRadius);
 }
 
 void drawTable() {
