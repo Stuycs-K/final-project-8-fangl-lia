@@ -182,28 +182,28 @@ public class Ball {
     if (position.y - size / (2 * Math.sqrt(2)) <= position.x + size / (2 * Math.sqrt(2)) - (cornerX + centerOffset + pocketDiam / 2) +  (cornerY + centerOffset) 
       && position.x + size / (2 * Math.sqrt(2)) >= cornerX + centerOffset + pocketDiam / 2 
       && position.x + size / (2 * Math.sqrt(2)) <= cornerX + centerOffset + pocketDiam / 2 + edgeThickness ) {
-      println(true);
+      
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
     }
     // top right: left
     if (position.y - size / (2 * Math.sqrt(2)) <= position.x + size / (2 * Math.sqrt(2)) - (width/2 + pocketDiam / 2) +  (cornerY + centerOffset) 
       && position.x + size / (2 * Math.sqrt(2)) >= width/2 + pocketDiam / 2 
       && position.x + size / (2 * Math.sqrt(2)) <= width/2 + pocketDiam / 2 + edgeThickness ) {
-      println(true);
+      
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
     }
     // bottom left: left
     if (position.y + size / (2 * Math.sqrt(2)) - (height - cornerY - centerOffset) >= -(position.x + size / (2 * Math.sqrt(2))) + (cornerX + centerOffset + pocketDiam / 2)  
       && position.x + size / (2 * Math.sqrt(2)) >= cornerX + centerOffset + pocketDiam / 2 
       && position.x + size / (2 * Math.sqrt(2)) <= cornerX + centerOffset + pocketDiam / 2 + edgeThickness ) {
-      println(true);
+      
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
     }
     // bottom right: left
     if (position.y + size / (2 * Math.sqrt(2)) - (height - cornerY - centerOffset) >= -(position.x + size / (2 * Math.sqrt(2))) + (width/2 + pocketDiam / 2)  
       && position.x + size / (2 * Math.sqrt(2)) >= width/2 + pocketDiam / 2 
       && position.x + size / (2 * Math.sqrt(2)) <= width/2 + pocketDiam / 2 + edgeThickness ) {
-      println(true);
+      
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
     }
     
@@ -216,7 +216,7 @@ public class Ball {
     if (y - y0 <= -(x - x0) 
       && x >= x0 - edgeThickness 
       && x <= x0 ) {
-      println(true);
+      
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
     }
     // top right: right
@@ -236,7 +236,7 @@ public class Ball {
     if (y - y0 >= x - x0 
       && x >= x0 - edgeThickness 
       && x <= x0 ) {
-      println(true);
+      
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
     }
     // bottom right: right
@@ -245,7 +245,7 @@ public class Ball {
     if (y - y0 >= x - x0 
       && x >= x0 - edgeThickness 
       && x <= x0 ) {
-      println(true);
+      
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
     }
     
@@ -256,7 +256,7 @@ public class Ball {
     if (y - y0 >= x - x0 
       && y >= y0 
       && y <= y0 + edgeThickness ) {
-      println(true);
+      
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
     }
     // left: bottom
@@ -267,7 +267,7 @@ public class Ball {
     if (y - y0 <= -(x - x0) 
       && y >= y0 - edgeThickness 
       && y <= y0 ) {
-      println(true);
+      
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
     }
     // right: top
@@ -278,7 +278,7 @@ public class Ball {
     if (y - y0 >= -(x - x0)
       && y >= y0 
       && y <= y0 + edgeThickness ) {
-      println(true);
+      
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
     }
     // right: bottom
@@ -289,7 +289,7 @@ public class Ball {
     if (y - y0 <= x - x0 
       && y >= y0 - edgeThickness 
       && y <= y0 ) {
-      println(true);
+      
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
     }
   }
