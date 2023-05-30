@@ -11,6 +11,11 @@ float[] pocketYs;
 Ball white;
 CueStick cue;
 
+int game;
+final static int READY = 0;
+final static int AIM = 1;
+final static int FIRE = 2;
+
 void setup() {
   // basic pool table dimensions layout
   size(1000, 500);
@@ -38,6 +43,9 @@ void setup() {
   
   //to test CueStick
   cue = new CueStick();
+  
+  //game state
+  game = READY;
 }
 
 void draw() {
