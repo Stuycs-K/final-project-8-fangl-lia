@@ -1,14 +1,15 @@
 int cornerX;
 int cornerY;
 int rectRadius;
-int pocketDiam;
-int centerOffset;
-int edgeThickness;
+float pocketDiam;
+float centerOffset;
+float edgeThickness;
 
 float[] pocketXs;
 float[] pocketYs;
 
 Ball white;
+Ball[] balls = new Ball[16];
 
 void setup() {
   // basic pool table dimensions layout
@@ -32,8 +33,20 @@ void setup() {
   pocketYs[1] = height - pocketYs[0];
   
   //to test ball physics
-  white = new WhiteBall(250, 250);
+  white = new WhiteBall(700, 183);
   white.show();
+  
+  balls[0] = white;
+  for (int i = 1; i < balls.length; i++) {
+    if (i < 8) {
+      balls[i] = new Ball(i, 600, 150 + 30 * i);
+    } else {
+      balls[i] = new Ball(i, 650, -100 + 30 * i);
+    }
+    balls[i].show();
+  }
+  
+  
 }
 
 void draw() {
@@ -41,6 +54,7 @@ void draw() {
   drawTable();
   white.move();
   white.show();
+  white.collide();
   white.pot();
 }
 
@@ -117,4 +131,7 @@ void drawTable() {
   vertex(width - cornerX - centerOffset - edgeThickness, cornerY + centerOffset + pocketDiam / 2 + edgeThickness);
   vertex(width - cornerX - centerOffset, cornerY + centerOffset + pocketDiam / 2);
   endShape();
+  
+  PVector v = new PVector(1, -1);
+  println(v.heading());
 }
