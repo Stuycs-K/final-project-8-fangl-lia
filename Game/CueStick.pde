@@ -2,23 +2,20 @@ public class CueStick {
   public PImage stick;
   public PVector direction;
   public float power;
-  public boolean isShowing;
   
   public CueStick() {
     stick = loadImage("cue-stick.png");
     stick.resize(300, 35);
     direction = new PVector(0, 0);
     power = 0;
-    isShowing = true;
   }
   
   public void show() {
-    //to test disappearance and appearance of the cue
-    isShowing = !white.isMoving;
-    
-    if(isShowing) {
-      //to rotate
-      direction = new PVector(mouseX - white.position.x, mouseY - white.position.y); //towards the mouse as well as the cue
+    if(game != FIRE) {//things are not moving
+      //to rotate, if aiming, don't move the cue
+      if(game == READY) {
+        direction = new PVector(mouseX - white.position.x, mouseY - white.position.y); //towards the mouse as well as the cue
+      }
       
       translate(white.position.x, white.position.y);
       
