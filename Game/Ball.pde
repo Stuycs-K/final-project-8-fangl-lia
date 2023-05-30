@@ -1,6 +1,6 @@
 public class Ball {
   //change these if necessary
-  public static final int size = 20; //diameter for appearance
+  public static final float size = 20; //diameter for appearance
 
   //for physics
   public static final float mass = 0.17; //kg
@@ -131,4 +131,14 @@ public class Ball {
     acceleration = new PVector(0, 0);
     isMoving = false;
   }
+  
+  // helper method for bounce()
+  public boolean ballsOverlap(Ball other) {
+    return (position.x - other.position.x) * (position.x - other.position.x) + (position.y - other.position.y) * (position.y - other.position.y) <= size * size;
+  }
+  
+  public void bounce() {
+    println(ballsOverlap(balls[1]));
+  }
+  
 }

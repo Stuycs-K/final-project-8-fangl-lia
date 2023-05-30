@@ -9,6 +9,7 @@ float[] pocketXs;
 float[] pocketYs;
 
 Ball white;
+Ball[] balls = new Ball[16];
 
 void setup() {
   // basic pool table dimensions layout
@@ -34,14 +35,31 @@ void setup() {
   //to test ball physics
   white = new WhiteBall(250, 250);
   white.show();
+  
+  balls[0] = white;
+  for (int i = 1; i < balls.length; i++) {
+    if (i < 8) {
+      balls[i] = new Ball(i, 600, 150 + 30 * i);
+    } else {
+      balls[i] = new Ball(i, 650, -100 + 30 * i);
+    }
+    balls[i].show();
+  }
+  
+  
 }
 
 void draw() {
   background(250);
   drawTable();
-  white.move();
-  white.show();
-  white.pot();
+  
+  for (int i = 0; i < balls.length; i++) {
+    balls[i].move();
+    balls[i].show();
+    balls[i].pot();
+  }
+  white.bounce();
+  print(white.velocity.mag());
 }
 
 void mouseClicked() {
