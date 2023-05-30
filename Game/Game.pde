@@ -56,10 +56,19 @@ void draw() {
   white.pot();
   
   cue.show();
+  println(game);
 }
 
 void mouseClicked() {
-  white.applyForce(new PVector(mouseX - white.position.x, mouseY - white.position.y).setMag(2));
+  if(game == READY) {
+    game = AIM;
+  } else if(game == AIM) {
+    game = READY;
+  }
+}
+
+void drawPower() {
+  
 }
 
 void drawTable() {
