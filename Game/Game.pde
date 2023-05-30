@@ -77,11 +77,17 @@ void mouseClicked() {
 }
 
 void drawPower() {
+  stroke(1);
+  fill(100);
   rect(20, cornerY, cornerX - 40, height - 2 * cornerY, rectRadius);
+  fill(150);
+  rect(30, cornerY + 10, cornerX - 60, height - 2 * cornerY - 20);
+  
 }
 
 void drawTable() {
   //table
+  noStroke();
   background(255);
   fill(192);
   
