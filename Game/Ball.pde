@@ -114,9 +114,9 @@ public class Ball {
       for(float y: pocketYs) {
         float d = dist(position.x, position.y, x, y);
         if(d < 0.1) {//equals threshold
-          isPotted = true;
           //animate and slide
         } else if(d < pocketDiam/2) {//in pocket?
+          isPotted = true;
           reset();
           PVector shift = new PVector(x - position.x, y - position.y);
           shift.setMag(min(shift.mag(), 1));
