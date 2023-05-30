@@ -138,34 +138,41 @@ public class Ball {
     // top left
     if (position.y - size / 2 <= cornerY + centerOffset + edgeThickness && position.x >= cornerX + centerOffset + pocketDiam / 2 + edgeThickness
       && position.x <= width / 2 - pocketDiam / 2 - edgeThickness) {
+      position.y = cornerY + centerOffset + edgeThickness + size / 2;
       velocity.rotate(-2 * velocity.heading());
     }
+    
     // top right
     if (position.y - size / 2 <= cornerY + centerOffset + edgeThickness && position.x <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness
       && position.x >= width / 2 + pocketDiam / 2 + edgeThickness) {
+      position.y = cornerY + centerOffset + edgeThickness + size / 2;
       velocity.rotate(-2 * velocity.heading());
     }
 
     // bottom left
     if (position.y + size / 2 >= height - cornerY - centerOffset - edgeThickness && position.x >= cornerX + centerOffset + + pocketDiam / 2 + edgeThickness
       && position.x <= width / 2 - pocketDiam / 2 - edgeThickness) {
+      position.y = height - cornerY - centerOffset - edgeThickness - size / 2;
       velocity.rotate(-2 * velocity.heading());
     }
     // bottom right
     if (position.y + size / 2 >= height - cornerY - centerOffset - edgeThickness && position.x <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness
       && position.x >= width / 2 + pocketDiam / 2 + edgeThickness) {
+        position.y = height - cornerY - centerOffset - edgeThickness - size / 2;
       velocity.rotate(-2 * velocity.heading());
     }
 
     // left
     if (position.x - size / 2 <= cornerX + centerOffset + edgeThickness && position.y >= cornerY + centerOffset + pocketDiam / 2 + edgeThickness
       && position.y <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness) {
+      position.x = cornerX + centerOffset + edgeThickness + size / 2;
       velocity.rotate(PI - 2 * velocity.heading());
     }
 
     // right
     if (position.x + size / 2 >= width - cornerX - centerOffset - edgeThickness && position.y >= cornerY + centerOffset + pocketDiam / 2 + edgeThickness
       && position.y <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness) {
+      position.x = width - cornerX - centerOffset - edgeThickness - size / 2;
       velocity.rotate(-PI - 2 * velocity.heading());
     }
     

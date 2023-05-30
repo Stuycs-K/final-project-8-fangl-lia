@@ -16,9 +16,11 @@ void setup() {
   cornerX = 100;
   cornerY = 75;
   rectRadius = 16;
-  pocketDiam = 40;
+  // pocketDiam = 40;
+  pocketDiam = 50;
   centerOffset = 25;
-  edgeThickness = 12;
+  // edgeThickness = 12;
+  edgeThickness = 100;
   
   //to make pot() easier
   pocketXs = new float[3];
@@ -32,7 +34,7 @@ void setup() {
   pocketYs[1] = height - pocketYs[0];
   
   //to test ball physics
-  white = new WhiteBall(700, 183);
+  white = new WhiteBall(500, 253);
   white.show();
 }
 
@@ -40,8 +42,10 @@ void draw() {
   background(250);
   drawTable();
   white.move();
+  if (!white.isPotted) {
+    white.collide();
+  }
   white.show();
-  white.collide();
   // white.pot();
 }
 
