@@ -75,4 +75,10 @@ pot() rules.
 Started the CueStick class today. Appearance and rotation about the WhiteBall
 was achieved, as were disappearance with movement. This has to be updated later, however,
 with the custom WhiteBall pot rule and more balls. Will add a gamestate variable
-later to synchronize the game. 
+later to synchronize the game.
+
+### 05-29
+Finished the preliminary draft of how the CueStick will be used to effect force
+on the white ball. Discussed ways to improve collide() with Jack.
+
+### 05-30
