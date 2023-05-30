@@ -21,7 +21,7 @@ public class CueStick {
       
       rotate(direction.heading());
       imageMode(CENTER);
-      image(stick, -165, 0); //correct position to the ball
+      image(stick, -165 - extend, 0); //correct position to the ball
       
       //reverse transformations of the plane
       rotate(-1 * direction.heading());

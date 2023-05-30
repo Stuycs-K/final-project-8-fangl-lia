@@ -16,6 +16,8 @@ final static int READY = 0;
 final static int AIM = 1;
 final static int FIRE = 2;
 
+float extend;
+
 void setup() {
   // basic pool table dimensions layout
   size(1000, 500);
@@ -46,6 +48,7 @@ void setup() {
   
   //game state
   game = READY;
+  extend = 0;
 }
 
 void draw() {
@@ -62,6 +65,9 @@ void draw() {
     
   } else if (game == AIM) {
     drawPower();
+    if(mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
+      extend = (height - cornerY - 10 - mouseY)/2;
+    }
   } else if (game == FIRE) {
     
   }
@@ -72,7 +78,13 @@ void mouseClicked() {
   if(game == READY) {
     game = AIM;
   } else if(game == AIM) {
-    game = READY;
+    //inside power?
+    if(mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
+      game = FIRE;
+      //apply force
+    } else {
+      game = READY;
+    }
   }
 }
 
