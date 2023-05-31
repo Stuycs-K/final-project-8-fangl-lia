@@ -10,11 +10,14 @@ float[] pocketYs;
 
 WhiteBall white;
 CueStick cue;
+Ball[] balls;
 
 int game;
 final static int READY = 0;
 final static int AIM = 1;
 final static int FIRE = 2;
+
+boolean allDone;
 
 float extend;
 void setup() {
@@ -39,8 +42,13 @@ void setup() {
   pocketYs[1] = height - pocketYs[0];
   
   //to test ball physics
-  white = new WhiteBall(700, 183);
-  white.show();
+  white = new WhiteBall(250, 250);
+  
+  //CHANGE LATER TO INCLUDE ALL BALLS
+  balls = new Ball[2];
+  balls[0] = white;
+  balls[1] = new Ball(1, 500, 250);
+  allDone = true;
   
   //to test CueStick
   cue = new CueStick();
@@ -53,10 +61,15 @@ void setup() {
 void draw() {
   background(250);
   drawTable();
-  white.move();
-  white.show();
-  white.collide();
-  white.pot();
+  
+  allDone = true;
+  for(Ball b: balls) {
+    b.show();
+    b.move();
+    b.collide();
+    b.pot();
+    allDone = allDone && !b.isMoving; //to check if everything is no longer moving
+  }
   
   cue.show();
   
@@ -77,7 +90,7 @@ void draw() {
     }
     if(extend > -5) {extend-=10;}
     
-    if(extend <= -5 && !white.isMoving && !white.isPotted) {//the second boolean is changeable, only runs after applying force
+    if(extend <= -5 && allDone && !white.isPotted) {//the second boolean is changeable, only runs after applying force
       game = READY;
       extend = 0;
     }

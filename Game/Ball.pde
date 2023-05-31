@@ -136,7 +136,7 @@ public class Ball {
     if(dist(position.x, position.y, other.position.x, other.position.y) <= size) {//touching
       //offset positions
       PVector off = position.copy().sub(other.position.copy()); //other to this
-      off.setMag((size - off.mag())/2)
+      off.setMag((size - off.mag())/2);
       position.add(off);
       other.position.sub(off);
     }
