@@ -131,6 +131,16 @@ public class Ball {
     acceleration = new PVector(0, 0);
     isMoving = false;
   }
+  
+  public void bounce(Ball other) {
+    if(dist(position.x, position.y, other.position.x, other.position.y) <= size) {//touching
+      //offset positions
+      PVector off = position.copy().sub(other.position.copy()); //other to this
+      off.setMag((size - off.mag())/2)
+      position.add(off);
+      other.position.sub(off);
+    }
+  }
 
   public void collide() {
     // HORIZONTAL AND VERTICAL WALLS
