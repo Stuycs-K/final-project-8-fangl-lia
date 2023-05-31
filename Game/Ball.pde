@@ -31,6 +31,17 @@ public class Ball {
   //for pool logic
   public boolean isPotted; //consider in pot()
   public boolean isMoving; //consider in collide() and bounce() and move()
+  
+  // for collision logic 
+  private double y0;
+  private double x0;
+  private double y1;
+  private double x1;
+  private double y;
+  private double x;
+  private PVector v0;
+  private PVector v1;
+  private PVector v;
 
   public Ball(int n, float x, float y) {
     //assign appearance
@@ -177,135 +188,166 @@ public class Ball {
     }
     
     
-    
+    // --------------------------------------------------------
     
     // CORNER WALLS
     
     
-    // top left: left
-    float y0 = cornerY + centerOffset;
-    float x0 = cornerX + centerOffset + pocketDiam / 2;
-    float y1 = cornerY + centerOffset + edgeThickness;
-    float x1 = cornerX + centerOffset + pocketDiam / 2 + edgeThickness;
-    float y = y.position - size / (2 * Math.sqrt(2));
-    float x = x.position + size / (2 * Math.sqrt(2));
-    
-    PVector v0 = rot45Neg(x0, y0);
-    
-    
-    // top right: left
-    if (position.y - size / (2 * Math.sqrt(2)) <= position.x + size / (2 * Math.sqrt(2)) - (width/2 + pocketDiam / 2) +  (cornerY + centerOffset) 
-      && position.x + size / (2 * Math.sqrt(2)) >= width/2 + pocketDiam / 2 
-      && position.x + size / (2 * Math.sqrt(2)) <= width/2 + pocketDiam / 2 + edgeThickness ) {
-      
-      velocity.rotate(2 * (PI / 4 - velocity.heading()));
-    }
-    // bottom left: left
-    if (position.y + size / (2 * Math.sqrt(2)) - (height - cornerY - centerOffset) >= -(position.x + size / (2 * Math.sqrt(2))) + (cornerX + centerOffset + pocketDiam / 2)  
-      && position.x + size / (2 * Math.sqrt(2)) >= cornerX + centerOffset + pocketDiam / 2 
-      && position.x + size / (2 * Math.sqrt(2)) <= cornerX + centerOffset + pocketDiam / 2 + edgeThickness ) {
-      
-      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
-    }
-    // bottom right: left
-    if (position.y + size / (2 * Math.sqrt(2)) - (height - cornerY - centerOffset) >= -(position.x + size / (2 * Math.sqrt(2))) + (width/2 + pocketDiam / 2)  
-      && position.x + size / (2 * Math.sqrt(2)) >= width/2 + pocketDiam / 2 
-      && position.x + size / (2 * Math.sqrt(2)) <= width/2 + pocketDiam / 2 + edgeThickness ) {
-      
-      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
-    }
-    
-    // top left: right
-    y = position.y - size / (2 * Math.sqrt(2));
-    x = position.x - size / (2 * Math.sqrt(2));
+    // top left: left (1)
     y0 = cornerY + centerOffset;
-    x0 = width / 2 - pocketDiam / 2;
-    if (y - y0 <= -(x - x0) 
-      && x >= x0 - edgeThickness 
-      && x <= x0 ) {
-      
-      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
-    }
-    // top right: right
-    y0 = cornerY + centerOffset;
-    x0 = width - cornerX - centerOffset - pocketDiam / 2;
-    if (y - y0 <= -(x - x0) 
-      && x >= x0 - edgeThickness 
-      && x <= x0 ) {
-      println(false);
-      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
-    }
-    // bottom left: right
-    y = position.y + size / (2 * Math.sqrt(2));
-    x = position.x - size / (2 * Math.sqrt(2));
-    y0 = width / 2 - cornerY - centerOffset;
-    x0 = width / 2 - pocketDiam / 2;
-    if (y - y0 >= x - x0 
-      && x >= x0 - edgeThickness 
-      && x <= x0 ) {
-      
-      velocity.rotate(2 * (PI / 4 - velocity.heading()));
-    }
-    // bottom right: right
-    y0 = width / 2 - cornerY - centerOffset;
-    x0 = width - cornerX - centerOffset - pocketDiam / 2;
-    if (y - y0 >= x - x0 
-      && x >= x0 - edgeThickness 
-      && x <= x0 ) {
-      
-      velocity.rotate(2 * (PI / 4 - velocity.heading()));
-    }
-    
-    
-    // left: top
-    y0 = cornerY + centerOffset + pocketDiam / 2;
-    x0 = cornerX + centerOffset;
-    if (y - y0 >= x - x0 
-      && y >= y0 
-      && y <= y0 + edgeThickness ) {
-      
-      velocity.rotate(2 * (PI / 4 - velocity.heading()));
-    }
-    // left: bottom
-    y = position.y - size / (2 * Math.sqrt(2));
-    x = position.x - size / (2 * Math.sqrt(2));
-    y0 = height - cornerY - centerOffset - pocketDiam / 2;
-    x0 = cornerX + centerOffset;
-    if (y - y0 <= -(x - x0) 
-      && y >= y0 - edgeThickness 
-      && y <= y0 ) {
-      
-      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
-    }
-    // right: top
-    y = position.y + size / (2 * Math.sqrt(2));
-    x = position.x + size / (2 * Math.sqrt(2));
-    y0 = cornerY + centerOffset + pocketDiam / 2;
-    x0 = width - cornerX - centerOffset;
-    if (y - y0 >= -(x - x0)
-      && y >= y0 
-      && y <= y0 + edgeThickness ) {
-      
-      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
-    }
-    // right: bottom
+    x0 = cornerX + centerOffset + pocketDiam / 2;
+    y1 = cornerY + centerOffset + edgeThickness;
+    x1 = cornerX + centerOffset + pocketDiam / 2 + edgeThickness;
     y = position.y - size / (2 * Math.sqrt(2));
     x = position.x + size / (2 * Math.sqrt(2));
+    
+    v0 = rot45Neg((float)x0, (float)y0);
+    v1 = rot45Neg((float)x1, (float)y1);
+    v = rot45Neg((float)x, (float)y);
+    
+    if (v.x >= v0.x && v.x <= v1.x && v.y <= v0.y) { // ball is in the region
+      v.set(v.x, v0.y + size / 2);
+      position.set(rot45Pos(v.x, v.y));
+      velocity.rotate(2 * (PI / 4 - velocity.heading()));
+    } 
+    
+    // --------------------------------------------------------
+    
+    // top right: left (2)
+    y0 = cornerY + centerOffset;
+    x0 = width / 2 + pocketDiam / 2;
+    y1 = cornerY + centerOffset + edgeThickness;
+    x1 = width / 2 + pocketDiam / 2 + edgeThickness;
+    y = position.y - size / (2 * Math.sqrt(2));
+    x = position.x + size / (2 * Math.sqrt(2));
+    
+    v0 = rot45Neg((float)x0, (float)y0);
+    v1 = rot45Neg((float)x1, (float)y1);
+    v = rot45Neg((float)x, (float)y);
+    
+    if (v.x >= v0.x && v.x <= v1.x && v.y <= v0.y) { // ball is in the region
+      v.set(v.x, v0.y + size / 2);
+      position.set(rot45Pos(v.x, v.y));
+      velocity.rotate(2 * (PI / 4 - velocity.heading()));
+    } 
+    
+    // --------------------------------------------------------
+    
+    // left: bottom (3)
     y0 = height - cornerY - centerOffset - pocketDiam / 2;
     x0 = width - cornerX - centerOffset;
-    if (y - y0 <= x - x0 
-      && y >= y0 - edgeThickness 
-      && y <= y0 ) {
-      
+    y1 = y0 - edgeThickness;
+    x1 = x0 - edgeThickness;
+    y = position.y - size / (2 * Math.sqrt(2));
+    x = position.x + size / (2 * Math.sqrt(2));
+    
+    v0 = rot45Neg((float)x0, (float)y0);
+    v1 = rot45Neg((float)x1, (float)y1);
+    v = rot45Neg((float)x, (float)y);
+    
+    //
+    if (v.x >= v1.x && v.x <= v0.x && v.y <= v0.y) { // ball is in the region
+      v.set(v.x, v0.y + size / 2);
+      position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
+    } 
+    
+    
+    // --------------------------------------------------------  
+    
+    // bottom right: right (4)
+    y0 = height - cornerY - centerOffset;
+    x0 = width - cornerX - centerOffset - pocketDiam / 2;
+    y1 = y0 - edgeThickness;
+    x1 = x0 - edgeThickness;
+    y = position.y + size / (2 * Math.sqrt(2));
+    x = position.x - size / (2 * Math.sqrt(2));
+    
+    v0 = rot45Neg((float)x0, (float)y0);
+    v1 = rot45Neg((float)x1, (float)y1);
+    v = rot45Neg((float)x, (float)y);
+    
+    //
+    if (v.x >= v1.x && v.x <= v0.x && v.y >= v0.y) { // ball is in the region
+      v.set(v.x, v0.y - size / 2);
+      position.set(rot45Pos(v.x, v.y));
+      velocity.rotate(2 * (PI / 4 - velocity.heading()));
+    } 
+    println(velocity.mag());
+    
+    
+    // --------------------------------------------------------  
+    
+    // bottom left: right (5)
+    y0 = height - cornerY - centerOffset;
+    x0 = width / 2 - pocketDiam / 2;
+    y1 = y0 - edgeThickness;
+    x1 = x0 - edgeThickness;
+    y = position.y + size / (2 * Math.sqrt(2));
+    x = position.x - size / (2 * Math.sqrt(2));
+    
+    v0 = rot45Neg((float)x0, (float)y0);
+    v1 = rot45Neg((float)x1, (float)y1);
+    v = rot45Neg((float)x, (float)y);
+    
+    //
+    if (v.x >= v1.x && v.x <= v0.x && v.y >= v0.y) { // ball is in the region
+      v.set(v.x, v0.y - size / 2);
+      position.set(rot45Pos(v.x, v.y));
+      velocity.rotate(2 * (PI / 4 - velocity.heading()));
+    } 
+    println(velocity.mag());
+    
+    // --------------------------------------------------------  
+    
+    // left: top (6)
+    y0 = cornerY + centerOffset + pocketDiam / 2;
+    x0 = cornerX + centerOffset;
+    y1 = y0 + edgeThickness;
+    x1 = x0 + edgeThickness;
+    y = position.y + size / (2 * Math.sqrt(2));
+    x = position.x - size / (2 * Math.sqrt(2));
+    
+    v0 = rot45Neg((float)x0, (float)y0);
+    v1 = rot45Neg((float)x1, (float)y1);
+    v = rot45Neg((float)x, (float)y);
+    
+    /*
+    // RECTANGULAR REGION
+    fill(255, 0, 0);
+    for (int i = 0; i < width; i++) {
+      for (int j = 0; j < height; j++) {
+        PVector w = rot45Neg((float)i, (float)j);
+         if (w.x >= v0.x && w.x <= v1.x && w.y >= v0.y) { // ball is in the region
+           circle(i, j, 1);
+           
+           w.set(w.x, v0.y - size / 2);
+           PVector a = rot45Pos(w.x, w.y);
+           circle(a.x, a.y, 1);
+         }
+      }
     }
+    */
+    
+    //
+    if (v.x >= v0.x && v.x <= v1.x && v.y >= v0.y) { // ball is in the region
+      v.set(v.x, v0.y - size / 2);
+      position.set(rot45Pos(v.x, v.y));
+      velocity.rotate(2 * (PI / 4 - velocity.heading()));
+    } 
+    println(velocity.mag());
+    
+    // --------------------------------------------------------  
+    
+    
+    
   }
   
   public PVector rot45Neg(float i, float j) {
-    return new PVector((i + j) / Math.sqrt(2), (j - i) / Math.sqrt(2));
+    return new PVector((float)((i + j) / Math.sqrt(2)), (float)((j - i) / Math.sqrt(2)));
   }
   
   public PVector rot45Pos(float i, float j) {
-    return new PVector((i - j) / Math.sqrt(2), (i + j) / Math.sqrt(2));
+    return new PVector((float)((i - j) / Math.sqrt(2)), (float)((i + j) / Math.sqrt(2)));
   }
 }
