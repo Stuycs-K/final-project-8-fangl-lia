@@ -312,28 +312,163 @@ public class Ball {
     v1 = rot45Neg((float)x1, (float)y1);
     v = rot45Neg((float)x, (float)y);
     
-    /*
-    // RECTANGULAR REGION
-    fill(255, 0, 0);
-    for (int i = 0; i < width; i++) {
-      for (int j = 0; j < height; j++) {
-        PVector w = rot45Neg((float)i, (float)j);
-         if (w.x >= v0.x && w.x <= v1.x && w.y >= v0.y) { // ball is in the region
-           circle(i, j, 1);
-           
-           w.set(w.x, v0.y - size / 2);
-           PVector a = rot45Pos(w.x, w.y);
-           circle(a.x, a.y, 1);
-         }
-      }
-    }
-    */
-    
     //
     if (v.x >= v0.x && v.x <= v1.x && v.y >= v0.y) { // ball is in the region
       v.set(v.x, v0.y - size / 2);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
+    } 
+    println(velocity.mag());
+    
+    // --------------------------------------------------------  
+    
+    // top left: right (7)
+    y0 = cornerY + centerOffset;
+    x0 = width / 2 - pocketDiam / 2;
+    y1 = y0 + edgeThickness;
+    x1 = x0 - edgeThickness;
+    y = position.y - size / (2 * Math.sqrt(2));
+    x = position.x - size / (2 * Math.sqrt(2));
+    
+    v0 = rot45Neg((float)x0, (float)y0);
+    v1 = rot45Neg((float)x1, (float)y1);
+    v = rot45Neg((float)x, (float)y);
+    
+    //
+    if (v.y >= v0.y && v.y <= v1.y && v.x <= v0.x) { // ball is in the region
+      v.set(v0.x + size / 2, v.y);
+      position.set(rot45Pos(v.x, v.y));
+      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+    } 
+    println(velocity.mag());
+    
+    // --------------------------------------------------------  
+    
+    // top right: right (8)
+    y0 = cornerY + centerOffset;
+    x0 = width - cornerX - centerOffset - pocketDiam / 2;
+    y1 = y0 + edgeThickness;
+    x1 = x0 - edgeThickness;
+    y = position.y - size / (2 * Math.sqrt(2));
+    x = position.x - size / (2 * Math.sqrt(2));
+    
+    v0 = rot45Neg((float)x0, (float)y0);
+    v1 = rot45Neg((float)x1, (float)y1);
+    v = rot45Neg((float)x, (float)y);
+    
+    //
+    if (v.y >= v0.y && v.y <= v1.y && v.x <= v0.x) { // ball is in the region
+      v.set(v0.x + size / 2, v.y);
+      position.set(rot45Pos(v.x, v.y));
+      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+    } 
+    println(velocity.mag());
+    
+    // --------------------------------------------------------
+    
+    // top right: right (8)
+    y0 = cornerY + centerOffset;
+    x0 = width - cornerX - centerOffset - pocketDiam / 2;
+    y1 = y0 + edgeThickness;
+    x1 = x0 - edgeThickness;
+    y = position.y + size / (2 * Math.sqrt(2));
+    x = position.x + size / (2 * Math.sqrt(2));
+    
+    v0 = rot45Neg((float)x0, (float)y0);
+    v1 = rot45Neg((float)x1, (float)y1);
+    v = rot45Neg((float)x, (float)y);
+    
+    //
+    if (v.y >= v0.y && v.y <= v1.y && v.x <= v0.x) { // ball is in the region
+      v.set(v0.x + size / 2, v.y);
+      position.set(rot45Pos(v.x, v.y));
+      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+    } 
+    println(velocity.mag());
+    
+    // -------------------------------------------------------- 
+    
+    // left: bottom (9)
+    y0 = height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness;
+    x0 = cornerX + centerOffset + edgeThickness;
+    y1 = y0 + edgeThickness;
+    x1 = x0 - edgeThickness;
+    y = position.y - size / (2 * Math.sqrt(2));
+    x = position.x - size / (2 * Math.sqrt(2));
+    
+    v0 = rot45Neg((float)x0, (float)y0);
+    v1 = rot45Neg((float)x1, (float)y1);
+    v = rot45Neg((float)x, (float)y);
+    
+    //
+    if (v.y >= v0.y && v.y <= v1.y && v.x <= v0.x) { // ball is in the region
+      v.set(v0.x + size / 2, v.y);
+      position.set(rot45Pos(v.x, v.y));
+      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+    } 
+    println(velocity.mag());
+    
+    // --------------------------------------------------------  
+    
+    // bottom left: left (10)
+    y0 = height - cornerY - centerOffset - edgeThickness;
+    x0 = cornerX + centerOffset + pocketDiam / 2 + edgeThickness;
+    y1 = y0 + edgeThickness;
+    x1 = x0 - edgeThickness;
+    y = position.y + size / (2 * Math.sqrt(2));
+    x = position.x + size / (2 * Math.sqrt(2));
+    
+    v0 = rot45Neg((float)x0, (float)y0);
+    v1 = rot45Neg((float)x1, (float)y1);
+    v = rot45Neg((float)x, (float)y);
+    
+    //
+    if (v.y >= v0.y && v.y <= v1.y && v.x >= v0.x) { // ball is in the region
+      v.set(v0.x - size / 2, v.y);
+      position.set(rot45Pos(v.x, v.y));
+      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+    } 
+    println(velocity.mag());
+    
+    // --------------------------------------------------------  
+    
+    // bottom right: left (11)
+    y0 = height - cornerY - centerOffset - edgeThickness;
+    x0 = width / 2 + pocketDiam / 2 + edgeThickness;
+    y1 = y0 + edgeThickness;
+    x1 = x0 - edgeThickness;
+    y = position.y + size / (2 * Math.sqrt(2));
+    x = position.x + size / (2 * Math.sqrt(2));
+    
+    v0 = rot45Neg((float)x0, (float)y0);
+    v1 = rot45Neg((float)x1, (float)y1);
+    v = rot45Neg((float)x, (float)y);
+    
+    if (v.y >= v0.y && v.y <= v1.y && v.x >= v0.x) { // ball is in the region
+      v.set(v0.x - size / 2, v.y);
+      position.set(rot45Pos(v.x, v.y));
+      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
+    } 
+    println(velocity.mag());
+    
+    // --------------------------------------------------------  
+    
+    // left: top (12)
+    y0 = cornerY + centerOffset + pocketDiam / 2;
+    x0 = width - cornerX - centerOffset;
+    y1 = y0 + edgeThickness;
+    x1 = x0 - edgeThickness;
+    y = position.y + size / (2 * Math.sqrt(2));
+    x = position.x + size / (2 * Math.sqrt(2));
+    
+    v0 = rot45Neg((float)x0, (float)y0);
+    v1 = rot45Neg((float)x1, (float)y1);
+    v = rot45Neg((float)x, (float)y);
+
+    if (v.y >= v0.y && v.y <= v1.y && v.x >= v0.x) { // ball is in the region
+      v.set(v0.x - size / 2, v.y);
+      position.set(rot45Pos(v.x, v.y));
+      velocity.rotate(2 * (-PI / 4 - velocity.heading()));
     } 
     println(velocity.mag());
     
