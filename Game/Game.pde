@@ -87,6 +87,7 @@ void draw() {
     if(extend > -5 && extend <= 5) {//runs once
       white.applyForce(cue.direction.setMag(cue.power));
       white.isMovable = false; //resets movability
+      allDone = false;
     }
     if(extend > -5) {extend-=10;}
     
