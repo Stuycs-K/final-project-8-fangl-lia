@@ -139,6 +139,15 @@ public class Ball {
       off.setMag((size - off.mag())/2);
       position.add(off);
       other.position.sub(off);
+      
+      //apply velocities
+      float angleThis = velocity.heading() - off.copy().rotate(PI).heading();
+      float angleOther = other.velocity.heading() - off.heading();
+      
+      PVector thisCopy = velocity.copy();
+      PVector otherCopy = other.velocity.copy();
+      velocity.add(otherCopy.mult(cos(angleOther)));
+      other.velocity.add(thisCopy.mult(cos(angleThis)));
     }
   }
 
