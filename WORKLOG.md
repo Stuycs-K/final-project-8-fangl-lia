@@ -91,3 +91,7 @@ Finished the preliminary draft of how the CueStick will be used to effect force
 on the white ball. Discussed ways to improve collide() with Jack.
 
 ### 05-30
+Finished CueStick implementation and how the white ball behaves. Started
+polishing the game state, and will work on bounce().
+
+### 05-31
