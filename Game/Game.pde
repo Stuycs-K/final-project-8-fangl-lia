@@ -67,6 +67,14 @@ void draw() {
     b.show();
     b.move();
     b.collide();
+    
+    //bounce testing
+    for(Ball c: balls) {
+      if(c != b) {
+        b.bounce(c);
+      }
+    }
+    
     b.pot();
     allDone = allDone && !b.isMoving; //to check if everything is no longer moving
   }
