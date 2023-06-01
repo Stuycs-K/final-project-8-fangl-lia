@@ -11,6 +11,11 @@
     noStroke();
     fill(#F5ECCD);
     circle(position.x, position.y, size);
+    
+    if(isMovable) {//explain movability
+      fill(0);
+      text("You potted the cue ball. You have the cue ball in hand.", cornerX, height - cornerY + edgeThickness);
+    }
   }
   
   //override pot
