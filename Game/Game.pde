@@ -134,7 +134,7 @@ void draw() {
       extend-=10;
     }
 
-    if (extend <= -5 && !white.isMoving && !white.isPotted) {//the second boolean is changeable, only runs after applying force
+    if (extend <= -5 && allDone && !white.isPotted) {//the second boolean is changeable, only runs after applying force
       game = READY;
       extend = 0;
     }
