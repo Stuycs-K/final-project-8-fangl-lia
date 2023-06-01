@@ -10,14 +10,18 @@ float[] pocketYs;
 
 WhiteBall white;
 CueStick cue;
+Ball[] balls;
 
 int game;
 final static int READY = 0;
 final static int AIM = 1;
 final static int FIRE = 2;
 
+boolean allDone;
+
 float extend; //for the CueStick's extension when firing
 float borderBrightness; //to indicate the border of moving the WhiteBall
+
 void setup() {
   // basic pool table dimensions layout
   size(1000, 500);
@@ -40,10 +44,15 @@ void setup() {
   pocketYs[1] = height - pocketYs[0];
 
   //to test ball physics
-  white = new WhiteBall(500, 253);
-  white.show();
+  white = new WhiteBall(250, 250);
 
-  borderBrightness = 0;
+  //CHANGE LATER TO INCLUDE ALL BALLS
+  balls = new Ball[2];
+  balls[0] = white;
+  balls[1] = new Ball(1, 500, 250);
+  allDone = true;
+
+  borderBrightness = 0; //for WhiteBall border
 
   //to test CueStick
   cue = new CueStick();
@@ -56,12 +65,23 @@ void setup() {
 void draw() {
   background(250);
   drawTable();
-  white.move();
-  if (!white.isPotted) {
-    white.collide();
+
+  allDone = true;
+  for (Ball b : balls) {
+    b.show();
+    b.move();
+    b.collide();
+
+    //bounce testing
+    for (Ball c : balls) {
+      if (c != b && !c.isPotted) {
+        b.bounce(c);
+      }
+    }
+
+    b.pot();
+    allDone = allDone && !b.isMoving; //to check if everything is no longer moving
   }
-  white.show();
-  white.pot();
 
   cue.show();
 
@@ -98,10 +118,6 @@ void draw() {
           borderBrightness--;
         }
       }
-    } else {//resetting
-      if (borderBrightness > 0) {
-        borderBrightness--;
-      }
     }
   } else if (game == AIM) {
     drawPower();
@@ -112,6 +128,7 @@ void draw() {
     if (extend > -5 && extend <= 5) {//runs once
       white.applyForce(cue.direction.setMag(cue.power));
       white.isMovable = false; //resets movability
+      allDone = false;
     }
     if (extend > -5) {
       extend-=10;
@@ -122,7 +139,12 @@ void draw() {
       extend = 0;
     }
   }
-  println(mouseX + ", " + mouseY);
+  
+  if(game != READY || !white.moving) {
+    if(borderBrightness > 0) {
+      borderBrightness--;
+    }
+  }
 }
 
 //smoother movement

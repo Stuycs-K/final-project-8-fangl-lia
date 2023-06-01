@@ -102,10 +102,10 @@ public class Ball {
     if (isMoving) {
       velocity.add(acceleration);
 
-      println(position.x + ", " + position.y);
-
       //check for stop moving
-      if (velocity.mag() < acceleration.mag() * 0.51 && Math.abs(velocity.heading() - acceleration.heading()) < 0.1) {//requires velocity and acceleration directions to be the same
+      if (velocity.equals(new PVector(0, 0)) || acceleration.equals(new PVector(0, 0))) {
+        reset();
+      } else if (velocity.mag() < acceleration.mag() * 0.51 && Math.abs(velocity.heading() - acceleration.heading()) < 0.1) {//requires velocity and acceleration directions to be the same
         reset();
       }
 
@@ -141,6 +141,31 @@ public class Ball {
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
     isMoving = false;
+  }
+
+  public void bounce(Ball other) {
+    PVector posDiff = other.position.copy().sub(position.copy()); //from this to other; x2 - x1
+    if(posDiff.mag() < size) {//touching or overlapped
+      //offset positions, should ensure that this only runs once per pair of balls
+      PVector offset = posDiff.copy().setMag((size - posDiff.mag())/2);
+      other.position.add(offset);
+      position.sub(offset);
+      
+      //calculate difference in velocities
+      PVector velDiff = other.velocity.copy().sub(velocity.copy()); //from this to other; v2 - v1
+      //recalculate difference in position
+      posDiff.setMag(size);
+      
+      //calculate applied velocities
+      float magnitude = (velDiff.x * posDiff.x + velDiff.y * posDiff.y)/posDiff.mag();
+      PVector applyToThis = posDiff.copy().setMag(magnitude);
+      PVector applyToOther = posDiff.copy().rotate(PI).setMag(magnitude);
+      
+      this.applyForce(applyToThis.mult(mass * ballRestitution));
+      this.hitTime = 1;
+      other.applyForce(applyToOther.mult(mass * ballRestitution));
+      other.hitTime = 1; //minimal sliding
+    }
   }
 
   public void collide() {
@@ -192,7 +217,6 @@ public class Ball {
       velocity.rotate(-PI - 2 * velocity.heading());
       velocity.setMag(velocity.mag() * railRestitution);
     }
-
 
     // --------------------------------------------------------
 
@@ -353,7 +377,6 @@ public class Ball {
       velocity.setMag(velocity.mag() * railRestitution);
     }
 
-
     // --------------------------------------------------------
 
     // top right: right (8)
@@ -376,7 +399,6 @@ public class Ball {
       velocity.setMag(velocity.mag() * railRestitution);
     }
 
-
     // --------------------------------------------------------
 
     // left: bottom (9)
@@ -398,7 +420,6 @@ public class Ball {
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
       velocity.setMag(velocity.mag() * railRestitution);
     }
-
 
     // --------------------------------------------------------
 
