@@ -145,6 +145,10 @@ public class Ball {
       PVector thisCopy = velocity.copy().mult(cos(angleThis));
       PVector otherCopy = other.velocity.copy().mult(cos(angleOther));
       
+      //rotate velocities
+      other.velocity.rotate(2*(off.copy().rotate(PI).heading() - other.velocity.heading()));
+      velocity.rotate(2*(off.heading() - velocity.heading()));
+      
       //apply forces
       this.applyForce(otherCopy.copy().mult(mass));
       other.applyForce(thisCopy.copy().mult(mass));
@@ -152,10 +156,6 @@ public class Ball {
       //subtract velocities
       velocity.sub(thisCopy);
       other.velocity.sub(otherCopy);
-      
-      //rotate velocities
-      other.velocity.rotate(2*(off.copy().rotate(PI).heading() - other.velocity.heading()));
-      velocity.rotate(2*(off.heading() - velocity.heading()));
     }
   }
 
