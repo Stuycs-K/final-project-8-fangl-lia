@@ -61,6 +61,8 @@ void setup() {
 void draw() {
   background(250);
   drawTable();
+  println(white.position.x + ", " + white.position.y);
+  println(white.velocity.mag());
   
   allDone = true;
   for(Ball b: balls) {
@@ -104,7 +106,6 @@ void draw() {
       extend = 0;
     }
   }
-  println(mouseX + ", " + mouseY);
 }
 
 void mouseClicked() {

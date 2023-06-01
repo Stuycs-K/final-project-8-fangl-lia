@@ -91,8 +91,6 @@ public class Ball {
     if (isMoving) {
       velocity.add(acceleration);
 
-      println(position.x + ", " + position.y);
-
       //check for stop moving
       if (velocity.mag() < acceleration.mag() * 0.51 && Math.abs(velocity.heading() - acceleration.heading()) < 0.1) {//requires velocity and acceleration directions to be the same
         reset();
@@ -133,7 +131,7 @@ public class Ball {
   }
   
   public void bounce(Ball other) {
-    if(dist(position.x, position.y, other.position.x, other.position.y) <= size) {//touching
+    if(dist(position.x, position.y, other.position.x, other.position.y) < size) {//touching
       //offset positions
       PVector off = position.copy().sub(other.position.copy()); //other to this
       off.setMag((size - off.mag())/2);
@@ -146,8 +144,12 @@ public class Ball {
       
       PVector thisCopy = velocity.copy().mult(cos(angleThis));
       PVector otherCopy = other.velocity.copy().mult(cos(angleOther));
-      velocity.add(otherCopy);
-      other.velocity.add(thisCopy);
+      
+      //apply forces
+      this.applyForce(otherCopy.copy().mult(mass));
+      other.applyForce(thisCopy.copy().mult(mass));
+      
+      //subtract velocities
       velocity.sub(thisCopy);
       other.velocity.sub(otherCopy);
     }
