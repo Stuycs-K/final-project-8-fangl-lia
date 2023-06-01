@@ -151,7 +151,9 @@ public class Ball {
       PVector applyToOther = posDiff.copy().rotate(PI).setMag(magnitude);
       
       this.applyForce(applyToThis.mult(mass * ballRestitution));
+      this.hitTime = 1;
       other.applyForce(applyToOther.mult(mass * ballRestitution));
+      other.hitTime = 1; //minimal sliding
     }
   }
 
