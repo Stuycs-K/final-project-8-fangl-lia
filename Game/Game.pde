@@ -122,6 +122,17 @@ void draw() {
           borderBrightness--;
         }
       }
+      
+      //not inside another ball?
+      for(Ball x: balls) {
+        if(x != white) {
+          PVector posDiff = white.position.copy().sub(x.position.copy());
+          if(posDiff.mag() < Ball.size) {
+            posDiff.setMag(Ball.size);
+            white.position = posDiff.add(x.position);
+          }
+        }
+      }
     }
   } else if (game == AIM) {
     drawPower();
