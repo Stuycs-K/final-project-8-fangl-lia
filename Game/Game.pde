@@ -16,7 +16,8 @@ final static int READY = 0;
 final static int AIM = 1;
 final static int FIRE = 2;
 
-float extend;
+float extend; //for the CueStick's extension when firing
+float borderBrightness; //to indicate the border of moving the WhiteBall
 void setup() {
   // basic pool table dimensions layout
   size(1000, 500);
@@ -42,6 +43,8 @@ void setup() {
   white = new WhiteBall(500, 253);
   white.show();
 
+  borderBrightness = 0;
+
   //to test CueStick
   cue = new CueStick();
 
@@ -64,11 +67,40 @@ void draw() {
 
   //game state
   if (game == READY) {
-    if (white.isMovable && mousePressed && dist(mouseX, mouseY, white.position.x, white.position.y) < Ball.size) {//move the white ball
+    if (white.moving) {//move the white ball
       //not out of bounds?
-      if (mouseX < width - cornerX - edgeThickness - pocketDiam && mouseX > cornerX + edgeThickness + pocketDiam &&
-        mouseY < height - cornerY - edgeThickness - pocketDiam && mouseY > cornerY + edgeThickness + pocketDiam) {
-        white.position = new PVector(mouseX, mouseY);
+      boolean xBoundedUp = mouseX > cornerX + edgeThickness + pocketDiam + centerOffset;
+      boolean xBoundedDown = mouseX < width - cornerX - edgeThickness - centerOffset - pocketDiam;
+      boolean yBoundedUp = mouseY > cornerY + edgeThickness + pocketDiam + centerOffset;
+      boolean yBoundedDown = mouseY < height - cornerY - edgeThickness - pocketDiam - centerOffset;
+      if (xBoundedUp && xBoundedDown) {
+        white.position.x = mouseX;
+      } else if (xBoundedUp) {
+        white.position.x = width - cornerX - edgeThickness - centerOffset - pocketDiam;
+      } else {
+        white.position.x = cornerX + edgeThickness + pocketDiam + centerOffset;
+      }
+
+      if (yBoundedUp && yBoundedDown) {
+        white.position.y = mouseY;
+      } else if (yBoundedUp) {
+        white.position.y = height - cornerY - edgeThickness - pocketDiam - centerOffset;
+      } else {
+        white.position.y = cornerY + edgeThickness + pocketDiam + centerOffset;
+      }
+
+      if (!(xBoundedUp && xBoundedDown) || !(yBoundedUp && yBoundedDown)) {
+        if (borderBrightness < 100) {
+          borderBrightness++;
+        }
+      } else {
+        if (borderBrightness > 0) {
+          borderBrightness--;
+        }
+      }
+    } else {//resetting
+      if (borderBrightness > 0) {
+        borderBrightness--;
       }
     }
   } else if (game == AIM) {
@@ -91,6 +123,17 @@ void draw() {
     }
   }
   println(mouseX + ", " + mouseY);
+}
+
+//smoother movement
+void mousePressed() {
+  if (white.isMovable && mousePressed && dist(mouseX, mouseY, white.position.x, white.position.y) < Ball.size) {
+    white.moving = true;
+  }
+}
+
+void mouseReleased() {
+  white.moving = false;
 }
 
 void mouseClicked() {
@@ -192,4 +235,11 @@ void drawTable() {
   vertex(width - cornerX - centerOffset - edgeThickness, cornerY + centerOffset + pocketDiam / 2 + edgeThickness);
   vertex(width - cornerX - centerOffset, cornerY + centerOffset + pocketDiam / 2);
   endShape();
+
+  //border for white ball movability
+  strokeWeight(1);
+  fill(106, 182, 99);
+  stroke(106 + borderBrightness, 182 + borderBrightness, 99 + borderBrightness);
+  rect(cornerX + edgeThickness + centerOffset + pocketDiam - Ball.size/2, cornerY + edgeThickness + pocketDiam + centerOffset - Ball.size/2,
+    width - 2*(cornerX + edgeThickness + centerOffset + pocketDiam) + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
 }
