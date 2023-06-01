@@ -95,3 +95,5 @@ Finished CueStick implementation and how the white ball behaves. Started
 polishing the game state, and will work on bounce().
 
 ### 05-31
+Tried to start implementing bounce(), no luck. I'm probably doing physics
+wrong. 
