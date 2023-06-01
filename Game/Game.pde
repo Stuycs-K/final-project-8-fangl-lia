@@ -16,7 +16,8 @@ final static int READY = 0;
 final static int AIM = 1;
 final static int FIRE = 2;
 
-float extend;
+float extend; //for the CueStick's extension when firing
+float borderBrightness; //to indicate the border of moving the WhiteBall
 void setup() {
   // basic pool table dimensions layout
   size(1000, 500);
@@ -42,6 +43,8 @@ void setup() {
   white = new WhiteBall(500, 253);
   white.show();
 
+  borderBrightness = 0;
+
   //to test CueStick
   cue = new CueStick();
 
@@ -66,11 +69,22 @@ void draw() {
   if (game == READY) {
     if (white.moving) {//move the white ball
       //not out of bounds?
-      if (mouseX < width - cornerX - edgeThickness - pocketDiam && mouseX > cornerX + edgeThickness + pocketDiam) {
+      boolean xBounded = mouseX < width - cornerX - edgeThickness - centerOffset - pocketDiam && mouseX > cornerX + edgeThickness + pocketDiam + centerOffset;
+      boolean yBounded = mouseY < height - cornerY - edgeThickness - pocketDiam - centerOffset && mouseY > cornerY + edgeThickness + pocketDiam + centerOffset;
+      if (xBounded) {
         white.position.x = mouseX;
       }
-      if(mouseY < height - cornerY - edgeThickness - pocketDiam && mouseY > cornerY + edgeThickness + pocketDiam) {
+      if (yBounded) {
         white.position.y = mouseY;
+      }
+      if (!xBounded || !yBounded) {
+        if (borderBrightness < 100) {
+          borderBrightness++;
+        }
+      } else {
+        if (borderBrightness > 0) {
+          borderBrightness--;
+        }
       }
     }
   } else if (game == AIM) {
@@ -205,4 +219,11 @@ void drawTable() {
   vertex(width - cornerX - centerOffset - edgeThickness, cornerY + centerOffset + pocketDiam / 2 + edgeThickness);
   vertex(width - cornerX - centerOffset, cornerY + centerOffset + pocketDiam / 2);
   endShape();
+
+  //border
+  strokeWeight(1);
+  fill(106, 182, 99);
+  stroke(106 + borderBrightness, 182 + borderBrightness, 99 + borderBrightness);
+  rect(cornerX + edgeThickness + centerOffset + pocketDiam, cornerY + edgeThickness + pocketDiam + centerOffset,
+  width - 2*(cornerX + edgeThickness + centerOffset + pocketDiam), height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset));
 }
