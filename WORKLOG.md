@@ -30,6 +30,7 @@ Started bounce method. Added position offsets, removed threshold, met with Andre
 Reworked position offsets using linear algebra (rotation matrices) to check conditions. Implemented new position offsets for 6 of the 12 corner walls.
 
 ### 05-31
+Finished the new position offsets for the rest of the 12 corner walls. Added restitution constants and merged collide() method with main.
 
 ## Andrew Li
 
@@ -96,4 +97,4 @@ polishing the game state, and will work on bounce().
 
 ### 05-31
 Tried to start implementing bounce(), no luck. I'm probably doing physics
-wrong. 
+wrong.
