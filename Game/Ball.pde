@@ -133,10 +133,25 @@ public class Ball {
   }
 
   public void bounce(Ball other) {
-    PVector posses = other.position.copy().sub(position.copy());
-    if(posses.mag() < size) {//touching or overlapped
+    PVector posDiff = other.position.copy().sub(position.copy()); //from this to other; x2 - x1
+    if(posDiff.mag() < size) {//touching or overlapped
       //offset positions, should ensure that this only runs once per pair of balls
+      PVector offset = posDiff.copy().setMag((size - posDiff.mag())/2);
+      other.position.add(offset);
+      position.sub(offset);
       
+      //calculate difference in velocities
+      PVector velDiff = other.velocity.copy().sub(velocity.copy()); //from this to other; v2 - v1
+      //recalculate difference in position
+      posDiff.setMag(size);
+      
+      //calculate applied velocities
+      float magnitude = (velDiff.x * posDiff.x + velDiff.y * posDiff.y)/posDiff.mag();
+      PVector applyToThis = posDiff.copy().setMag(magnitude);
+      PVector applyToOther = posDiff.copy().rotate(PI).setMag(magnitude);
+      
+      this.applyForce(applyToThis.mult(mass));
+      other.applyForce(applyToOther.mult(mass));
     }
   }
 
