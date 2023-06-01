@@ -151,7 +151,7 @@ public class Ball {
       && position.x <= width / 2 - pocketDiam / 2 - edgeThickness) {
       position.y = cornerY + centerOffset + edgeThickness + size / 2;
       velocity.rotate(-2 * velocity.heading());
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     }
     
     // top right
@@ -159,7 +159,7 @@ public class Ball {
       && position.x >= width / 2 + pocketDiam / 2 + edgeThickness) {
       position.y = cornerY + centerOffset + edgeThickness + size / 2;
       velocity.rotate(-2 * velocity.heading());
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     }
 
     // bottom left
@@ -167,14 +167,14 @@ public class Ball {
       && position.x <= width / 2 - pocketDiam / 2 - edgeThickness) {
       position.y = height - cornerY - centerOffset - edgeThickness - size / 2;
       velocity.rotate(-2 * velocity.heading());
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     }
     // bottom right
     if (position.y + size / 2 >= height - cornerY - centerOffset - edgeThickness && position.x <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness
       && position.x >= width / 2 + pocketDiam / 2 + edgeThickness) {
         position.y = height - cornerY - centerOffset - edgeThickness - size / 2;
       velocity.rotate(-2 * velocity.heading());
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     }
 
     // left
@@ -182,7 +182,7 @@ public class Ball {
       && position.y <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness) {
       position.x = cornerX + centerOffset + edgeThickness + size / 2;
       velocity.rotate(PI - 2 * velocity.heading());
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     }
 
     // right
@@ -190,7 +190,7 @@ public class Ball {
       && position.y <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness) {
       position.x = width - cornerX - centerOffset - edgeThickness - size / 2;
       velocity.rotate(-PI - 2 * velocity.heading());
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     }
     
     
@@ -215,7 +215,7 @@ public class Ball {
       v.set(v.x, v0.y + size / 2);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     } 
     
     // --------------------------------------------------------
@@ -236,7 +236,7 @@ public class Ball {
       v.set(v.x, v0.y + size / 2);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     } 
     
     // --------------------------------------------------------
@@ -258,7 +258,7 @@ public class Ball {
       v.set(v.x, v0.y + size / 2);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     } 
     
     
@@ -281,7 +281,7 @@ public class Ball {
       v.set(v.x, v0.y - size / 2);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     }
     
     
@@ -304,7 +304,7 @@ public class Ball {
       v.set(v.x, v0.y - size / 2);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     } 
     
     
@@ -327,7 +327,7 @@ public class Ball {
       v.set(v.x, v0.y - size / 2);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     } 
     
     
@@ -350,7 +350,7 @@ public class Ball {
       v.set(v0.x + size / 2, v.y);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     } 
     
     
@@ -373,7 +373,7 @@ public class Ball {
       v.set(v0.x + size / 2, v.y);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     } 
     
     
@@ -396,7 +396,7 @@ public class Ball {
       v.set(v0.x + size / 2, v.y);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     } 
     
     
@@ -419,7 +419,7 @@ public class Ball {
       v.set(v0.x - size / 2, v.y);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     } 
     
     
@@ -441,7 +441,7 @@ public class Ball {
       v.set(v0.x - size / 2, v.y);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     } 
     
     
@@ -463,7 +463,7 @@ public class Ball {
       v.set(v0.x - size / 2, v.y);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
-      velocity.setMag(velocity.mag() * ballRestitution);
+      velocity.setMag(velocity.mag() * railRestitution);
     } 
 
     // --------------------------------------------------------  
