@@ -69,15 +69,23 @@ void draw() {
   if (game == READY) {
     if (white.moving) {//move the white ball
       //not out of bounds?
-      boolean xBounded = mouseX < width - cornerX - edgeThickness - centerOffset - pocketDiam && mouseX > cornerX + edgeThickness + pocketDiam + centerOffset;
-      boolean yBounded = mouseY < height - cornerY - edgeThickness - pocketDiam - centerOffset && mouseY > cornerY + edgeThickness + pocketDiam + centerOffset;
-      if (xBounded) {
+      boolean xBoundedUp = mouseX > cornerX + edgeThickness + pocketDiam + centerOffset;
+      boolean xBoundedDown = mouseX < width - cornerX - edgeThickness - centerOffset - pocketDiam;
+      boolean yBoundedUp = mouseY > cornerY + edgeThickness + pocketDiam + centerOffset;
+      boolean yBoundedDown = mouseY < height - cornerY - edgeThickness - pocketDiam - centerOffset;
+      if (xBoundedUp && xBoundedDown) {
         white.position.x = mouseX;
+      } else if (xBoundedUp) {
+      } else {
       }
-      if (yBounded) {
+
+      if (yBoundedUp && yBoundedDown) {
         white.position.y = mouseY;
+      } else if (yBoundedUp) {
+      } else {
       }
-      if (!xBounded || !yBounded) {
+
+      if (!(xBoundedUp && xBoundedDown) || !(yBoundedUp && yBoundedDown)) {
         if (borderBrightness < 100) {
           borderBrightness++;
         }
@@ -85,6 +93,10 @@ void draw() {
         if (borderBrightness > 0) {
           borderBrightness--;
         }
+      }
+    } else {//resetting
+      if (borderBrightness > 0) {
+        borderBrightness--;
       }
     }
   } else if (game == AIM) {
@@ -220,10 +232,10 @@ void drawTable() {
   vertex(width - cornerX - centerOffset, cornerY + centerOffset + pocketDiam / 2);
   endShape();
 
-  //border
+  //border for white ball movability
   strokeWeight(1);
   fill(106, 182, 99);
   stroke(106 + borderBrightness, 182 + borderBrightness, 99 + borderBrightness);
-  rect(cornerX + edgeThickness + centerOffset + pocketDiam, cornerY + edgeThickness + pocketDiam + centerOffset,
-  width - 2*(cornerX + edgeThickness + centerOffset + pocketDiam), height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset));
+  rect(cornerX + edgeThickness + centerOffset + pocketDiam - Ball.size/2, cornerY + edgeThickness + pocketDiam + centerOffset - Ball.size/2,
+    width - 2*(cornerX + edgeThickness + centerOffset + pocketDiam) + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
 }
