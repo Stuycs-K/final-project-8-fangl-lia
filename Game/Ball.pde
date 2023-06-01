@@ -133,31 +133,10 @@ public class Ball {
   }
 
   public void bounce(Ball other) {
-    if (dist(position.x, position.y, other.position.x, other.position.y) < size) {//touching
-      //offset positions
-      PVector off = position.copy().sub(other.position.copy()); //other to this
-      off.setMag((size - off.mag())/2);
-      position.add(off);
-      other.position.sub(off);
-
-      //apply velocities
-      float angleThis = velocity.heading() - off.copy().rotate(PI).heading();
-      float angleOther = other.velocity.heading() - off.heading();
-
-      PVector thisCopy = velocity.copy().mult(cos(angleThis));
-      PVector otherCopy = other.velocity.copy().mult(cos(angleOther));
-
-      //rotate velocities
-      other.velocity.rotate(2*(off.copy().rotate(PI).heading() - other.velocity.heading()));
-      velocity.rotate(2*(off.heading() - velocity.heading()));
-
-      //apply forces
-      this.applyForce(otherCopy.copy().mult(mass));
-      other.applyForce(thisCopy.copy().mult(mass));
-
-      //subtract velocities
-      velocity.sub(thisCopy);
-      other.velocity.sub(otherCopy);
+    PVector posses = other.position.copy().sub(position.copy());
+    if(posses.mag() < size) {//touching or overlapped
+      //offset positions, should ensure that this only runs once per pair of balls
+      
     }
   }
 

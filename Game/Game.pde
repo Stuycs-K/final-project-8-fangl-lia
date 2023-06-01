@@ -71,11 +71,9 @@ void draw() {
     b.collide();
 
     //bounce testing
-    if (b.isMoving) {
-      for (Ball c : balls) {
-        if (c != b) {
-          b.bounce(c);
-        }
+    for (Ball c : balls) {
+      if (c != b) {
+        b.bounce(c);
       }
     }
 
