@@ -76,13 +76,17 @@ void draw() {
       if (xBoundedUp && xBoundedDown) {
         white.position.x = mouseX;
       } else if (xBoundedUp) {
+        white.position.x = width - cornerX - edgeThickness - centerOffset - pocketDiam;
       } else {
+        white.position.x = cornerX + edgeThickness + pocketDiam + centerOffset;
       }
 
       if (yBoundedUp && yBoundedDown) {
         white.position.y = mouseY;
       } else if (yBoundedUp) {
+        white.position.y = height - cornerY - edgeThickness - pocketDiam - centerOffset;
       } else {
+        white.position.y = cornerY + edgeThickness + pocketDiam + centerOffset;
       }
 
       if (!(xBoundedUp && xBoundedDown) || !(yBoundedUp && yBoundedDown)) {
