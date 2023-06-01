@@ -150,8 +150,8 @@ public class Ball {
       PVector applyToThis = posDiff.copy().setMag(magnitude);
       PVector applyToOther = posDiff.copy().rotate(PI).setMag(magnitude);
       
-      this.applyForce(applyToThis.mult(mass));
-      other.applyForce(applyToOther.mult(mass));
+      this.applyForce(applyToThis.mult(mass * ballRestitution));
+      other.applyForce(applyToOther.mult(mass * ballRestitution));
     }
   }
 

@@ -72,7 +72,7 @@ void draw() {
 
     //bounce testing
     for (Ball c : balls) {
-      if (c != b) {
+      if (c != b && !c.isPotted) {
         b.bounce(c);
       }
     }
