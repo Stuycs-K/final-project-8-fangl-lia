@@ -118,10 +118,6 @@ void draw() {
           borderBrightness--;
         }
       }
-    } else {//resetting
-      if (borderBrightness > 0) {
-        borderBrightness--;
-      }
     }
   } else if (game == AIM) {
     drawPower();
@@ -141,6 +137,12 @@ void draw() {
     if (extend <= -5 && !white.isMoving && !white.isPotted) {//the second boolean is changeable, only runs after applying force
       game = READY;
       extend = 0;
+    }
+  }
+  
+  if(game != READY || !white.moving) {
+    if(borderBrightness > 0) {
+      borderBrightness--;
     }
   }
 }
