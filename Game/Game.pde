@@ -69,17 +69,21 @@ void draw() {
   allDone = true;
   for (Ball b : balls) {
     b.show();
-    b.move();
-    b.collide();
 
-    //bounce testing
-    for (Ball c : balls) {
-      if (c != b && !c.isPotted) {
-        b.bounce(c);
+    if (game == FIRE) {
+      b.move();
+      b.collide();
+
+      //bounce testing
+      for (Ball c : balls) {
+        if (c != b && !c.isPotted) {
+          b.bounce(c);
+        }
       }
+
+      b.pot();
     }
 
-    b.pot();
     allDone = allDone && !b.isMoving; //to check if everything is no longer moving
   }
 
@@ -139,9 +143,9 @@ void draw() {
       extend = 0;
     }
   }
-  
-  if(game != READY || !white.moving) {
-    if(borderBrightness > 0) {
+
+  if (game != READY || !white.moving) {
+    if (borderBrightness > 0) {
       borderBrightness--;
     }
   }
@@ -151,11 +155,13 @@ void draw() {
 void mousePressed() {
   if (white.isMovable && mousePressed && dist(mouseX, mouseY, white.position.x, white.position.y) < Ball.size) {
     white.moving = true;
+    cue.showable = false;
   }
 }
 
 void mouseReleased() {
   white.moving = false;
+  cue.showable = true;
 }
 
 void mouseClicked() {
