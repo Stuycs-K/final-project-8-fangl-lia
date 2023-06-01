@@ -64,11 +64,13 @@ void draw() {
 
   //game state
   if (game == READY) {
-    if (white.isMovable && mousePressed && dist(mouseX, mouseY, white.position.x, white.position.y) < Ball.size) {//move the white ball
+    if (white.moving) {//move the white ball
       //not out of bounds?
-      if (mouseX < width - cornerX - edgeThickness - pocketDiam && mouseX > cornerX + edgeThickness + pocketDiam &&
-        mouseY < height - cornerY - edgeThickness - pocketDiam && mouseY > cornerY + edgeThickness + pocketDiam) {
-        white.position = new PVector(mouseX, mouseY);
+      if (mouseX < width - cornerX - edgeThickness - pocketDiam && mouseX > cornerX + edgeThickness + pocketDiam) {
+        white.position.x = mouseX;
+      }
+      if(mouseY < height - cornerY - edgeThickness - pocketDiam && mouseY > cornerY + edgeThickness + pocketDiam) {
+        white.position.y = mouseY;
       }
     }
   } else if (game == AIM) {
@@ -91,6 +93,17 @@ void draw() {
     }
   }
   println(mouseX + ", " + mouseY);
+}
+
+//smoother movement
+void mousePressed() {
+  if (white.isMovable && mousePressed && dist(mouseX, mouseY, white.position.x, white.position.y) < Ball.size) {
+    white.moving = true;
+  }
+}
+
+void mouseReleased() {
+  white.moving = false;
 }
 
 void mouseClicked() {
