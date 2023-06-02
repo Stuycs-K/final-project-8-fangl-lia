@@ -43,13 +43,31 @@ void setup() {
   pocketYs[0] = cornerY + centerOffset;
   pocketYs[1] = height - pocketYs[0];
 
-  //to test ball physics
-  white = new WhiteBall(250, 250);
+  white = new WhiteBall(cornerX + 0.25 * (width - 2 * cornerX), 250);
 
   //CHANGE LATER TO INCLUDE ALL BALLS
-  balls = new Ball[2];
+  balls = new Ball[16];
   balls[0] = white;
-  balls[1] = new Ball(1, 500, 250);
+  float xStart = cornerX + 0.75 * (width - 2 * cornerX);
+  float yStart = 250;
+  float xShift = Ball.size * sqrt(3)/2;
+  float yShift = Ball.size * 1/2;
+  balls[1] = new Ball(1, xStart, yStart);
+  balls[2] = new Ball(2, xStart + xShift, yStart + yShift);
+  balls[3] = new Ball(3, xStart + xShift, yStart - yShift);
+  balls[4] = new Ball(4, xStart + 2*xShift, yStart + 2*yShift);
+  balls[5] = new Ball(5, xStart + 2*xShift, yStart);
+  balls[6] = new Ball(6, xStart + 2*xShift, yStart - 2*yShift);
+  balls[7] = new Ball(7, xStart + 3*xShift, yStart + 3*yShift);
+  balls[8] = new Ball(8, xStart + 3*xShift, yStart + 1*yShift);
+  balls[9] = new Ball(9, xStart + 3*xShift, yStart - 1*yShift);
+  balls[10] = new Ball(10, xStart + 3*xShift, yStart - 3*yShift);
+  balls[11] = new Ball(11, xStart + 4*xShift, yStart + 4*yShift);
+  balls[12] = new Ball(12, xStart + 4*xShift, yStart + 2*yShift);
+  balls[13] = new Ball(13, xStart + 4*xShift, yStart);
+  balls[14] = new Ball(14, xStart + 4*xShift, yStart - 2*yShift);
+  balls[15] = new Ball(15, xStart + 4*xShift, yStart - 4*yShift);
+  
   allDone = true;
 
   borderBrightness = 0; //for WhiteBall border
@@ -80,10 +98,8 @@ void draw() {
           b.bounce(c);
         }
       }
-
-      b.pot();
     }
-
+    b.pot();
     allDone = allDone && !b.isMoving; //to check if everything is no longer moving
   }
 
