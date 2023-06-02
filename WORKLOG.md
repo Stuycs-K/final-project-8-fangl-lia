@@ -98,3 +98,13 @@ polishing the game state, and will work on bounce().
 ### 05-31
 Tried to start implementing bounce(), no luck. I'm probably doing physics
 wrong.
+
+### 06-01
+I was indeed doing physics wrong. The trick is to blindly plug in the equations
+without understanding anything! Maybe next year.
+Completed bounce() with dampened elastic collisions. Also patched
+a bug that arose from dividing by 0 in calculating friction.
+Cleaned up the WhiteBall's movement abilities. Specifically, introduced a
+specific bound (a white box that shows itself if you try to go out of bounds),
+as well as a bug fix that prevented the ball from phasing through other balls.
+Finally, the simulation is now fully* playable (achieved MVP). 
