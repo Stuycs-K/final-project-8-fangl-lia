@@ -92,23 +92,26 @@ public class Ball {
   }
 
   public void applyForce(PVector f) {
-    acceleration = f.copy().div(mass);
+    acceleration.add(f.copy().div(mass));
     isMoving = true;
     hitTime = round(f.mag()*2);
     originalHitTime = hitTime;
+    if(originalHitTime == 0) {
+      originalHitTime = 1;
+    }
   }
 
   public void move() {
     if (isMoving) {
       velocity.add(acceleration);
-
+      
       //check for stop moving
       if (velocity.equals(new PVector(0, 0)) || acceleration.equals(new PVector(0, 0))) {
         reset();
       } else if (velocity.mag() < acceleration.mag() * 0.51 && Math.abs(velocity.heading() - acceleration.heading()) < 0.1) {//requires velocity and acceleration directions to be the same
         reset();
       }
-
+      
       position.add(velocity);
 
       //apply friction (INCORPORATES HIT TIME)
