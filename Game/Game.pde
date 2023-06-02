@@ -45,7 +45,6 @@ void setup() {
 
   white = new WhiteBall(cornerX + 0.25 * (width - 2 * cornerX), 250);
 
-  //CHANGE LATER TO INCLUDE ALL BALLS
   balls = new Ball[16];
   balls[0] = white;
   float xStart = cornerX + 0.75 * (width - 2 * cornerX);
@@ -72,7 +71,6 @@ void setup() {
 
   borderBrightness = 0; //for WhiteBall border
 
-  //to test CueStick
   cue = new CueStick();
 
   //game state
