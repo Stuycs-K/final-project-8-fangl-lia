@@ -23,11 +23,20 @@ public class CueStick {
 
       rotate(direction.heading());
       imageMode(CENTER);
-      image(stick, -165 - extend, 0); //correct position to the ball
+      image(stick, -165 - extend, 0); //correct position to the ball\
 
       //reverse transformations of the plane
       rotate(-1 * direction.heading());
       translate(-1 * white.position.x, -1 * white.position.y);
+      
+      //calculate if aiming will hit a ball
+      for(Ball b : balls) {
+        PVector towards = b.position.copy().sub(white.position.copy());
+        float angle = Math.abs(towards.heading() - direction.heading());
+        if(angle < PI/2 && sin(angle) < Ball.size/(towards.mag())) { //trig, checks for colliding with another ball
+          
+        }
+      }
     }
   }
 }
