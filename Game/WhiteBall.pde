@@ -1,14 +1,12 @@
 public class WhiteBall extends Ball {
   public boolean isMovable; //can the player move the white ball?
   public boolean moving; //to avoid staggered movement
-  public boolean breaking; //different things for breaking
 
   //constructor
   public WhiteBall(float x, float y) {
     super(0, x, y);
     isMovable = false;
     moving = isMovable;
-    breaking = true;
   }
 
   public void show() {

@@ -18,6 +18,7 @@ final static int AIM = 1;
 final static int FIRE = 2;
 
 boolean allDone;
+boolean breaking; //first shot
 
 float extend; //for the CueStick's extension when firing
 float borderBrightness; //to indicate the border of moving the WhiteBall
@@ -49,6 +50,7 @@ void setup() {
   balls = new Ball[16];
   balls[0] = white;
   white.isMovable = true; //breaking allows movement
+  breaking = true;
   
   float xStart = cornerX + 0.75 * (width - 2 * cornerX);
   float yStart = 250;
@@ -113,7 +115,7 @@ void draw() {
       //not out of bounds?
       boolean xBoundedUp = mouseX > cornerX + edgeThickness + pocketDiam + centerOffset;
       boolean xBoundedDown;
-      if(white.breaking) {
+      if(breaking) {
         xBoundedDown = mouseX < 2 * (cornerX + edgeThickness + pocketDiam + centerOffset);
       } else {
         xBoundedDown = mouseX < width - cornerX - edgeThickness - centerOffset - pocketDiam;
@@ -123,7 +125,7 @@ void draw() {
       if (xBoundedUp && xBoundedDown) {
         white.position.x = mouseX;
       } else if (xBoundedUp) {
-        if(white.breaking) {
+        if(breaking) {
           white.position.x = 2 * (cornerX + edgeThickness + pocketDiam + centerOffset);
         } else {
           white.position.x = width - cornerX - edgeThickness - centerOffset - pocketDiam;
@@ -212,7 +214,7 @@ void mouseClicked() {
     if (mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
       cue.power = 0.5 + 3.5 * (height - cornerY - 10 - mouseY)/(height - 2*cornerY - 20);
       game = FIRE;
-      white.breaking = false;
+      breaking = false;
     } else {
       game = READY;
       extend = 0;
@@ -307,7 +309,7 @@ void drawTable() {
   strokeWeight(1);
   fill(106, 182, 99);
   stroke(106 + borderBrightness, 182 + borderBrightness, 99 + borderBrightness);
-  if(white.breaking) {
+  if(breaking) {
     rect(cornerX + edgeThickness + centerOffset + pocketDiam - Ball.size/2, cornerY + edgeThickness + pocketDiam + centerOffset - Ball.size/2,
     cornerX + edgeThickness + pocketDiam + centerOffset + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
   } else {
