@@ -38,7 +38,15 @@ public class CueStick {
           PVector towards = b.position.copy().sub(white.position.copy());
           float angle = Math.abs(towards.heading() - direction.heading());
           if (angle < PI/2 && sin(angle) < Ball.size/(towards.mag())) { //trig, checks for colliding with another ball
-            float distance = cos(angle) * towards.mag();
+            //law of sines
+            float ratio = sin(angle)/Ball.size;
+            float secondAngle = PI - asin(ratio * towards.mag());
+            float thirdAngle = PI - angle - secondAngle;
+            float distance = sin(thirdAngle)/ratio;
+            if(ratio == 0) {//undefined stuff
+              distance = towards.mag() - Ball.size;
+            }
+            
             if (distanceToBall == -1 || distance < distanceToBall) {
               distanceToBall = distance;
               c = b; //set the ball to be the colliding one
@@ -50,7 +58,7 @@ public class CueStick {
       if (c == null) { //no collisions
         
       } else { //collides
-        PVector out = direction.copy().setMag(distanceToBall - Ball.size);
+        PVector out = direction.copy().setMag(distanceToBall);
         strokeWeight(2);
         stroke(240);
         fill(106, 182, 99);
