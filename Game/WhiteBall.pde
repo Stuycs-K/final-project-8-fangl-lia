@@ -1,12 +1,14 @@
 public class WhiteBall extends Ball {
   public boolean isMovable; //can the player move the white ball?
   public boolean moving; //to avoid staggered movement
+  public boolean breaking; //different things for breaking
 
   //constructor
   public WhiteBall(float x, float y) {
     super(0, x, y);
     isMovable = false;
     moving = isMovable;
+    breaking = true;
   }
 
   public void show() {
@@ -16,7 +18,11 @@ public class WhiteBall extends Ball {
 
     if (isMovable) {//explain movability
       fill(0);
-      text("You potted the cue ball. You have the cue ball in hand.", cornerX, height - cornerY + edgeThickness);
+      if(breaking) {
+        text("You are breaking. You have the cue ball in hand.", cornerX, height - cornerY + edgeThickness);
+      } else {
+        text("You potted the cue ball. You have the cue ball in hand.", cornerX, height - cornerY + edgeThickness);
+      }
     }
   }
 

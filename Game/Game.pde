@@ -48,6 +48,8 @@ void setup() {
   //CHANGE LATER TO INCLUDE ALL BALLS
   balls = new Ball[16];
   balls[0] = white;
+  white.isMovable = true; //breaking allows movement
+  
   float xStart = cornerX + 0.75 * (width - 2 * cornerX);
   float yStart = 250;
   float xShift = Ball.size * sqrt(3)/2;
@@ -110,13 +112,22 @@ void draw() {
     if (white.moving) {//move the white ball
       //not out of bounds?
       boolean xBoundedUp = mouseX > cornerX + edgeThickness + pocketDiam + centerOffset;
-      boolean xBoundedDown = mouseX < width - cornerX - edgeThickness - centerOffset - pocketDiam;
+      boolean xBoundedDown;
+      if(white.breaking) {
+        xBoundedDown = mouseX < 2 * (cornerX + edgeThickness + pocketDiam + centerOffset);
+      } else {
+        xBoundedDown = mouseX < width - cornerX - edgeThickness - centerOffset - pocketDiam;
+      }
       boolean yBoundedUp = mouseY > cornerY + edgeThickness + pocketDiam + centerOffset;
       boolean yBoundedDown = mouseY < height - cornerY - edgeThickness - pocketDiam - centerOffset;
       if (xBoundedUp && xBoundedDown) {
         white.position.x = mouseX;
       } else if (xBoundedUp) {
-        white.position.x = width - cornerX - edgeThickness - centerOffset - pocketDiam;
+        if(white.breaking) {
+          white.position.x = 2 * (cornerX + edgeThickness + pocketDiam + centerOffset);
+        } else {
+          white.position.x = width - cornerX - edgeThickness - centerOffset - pocketDiam;
+        }
       } else {
         white.position.x = cornerX + edgeThickness + pocketDiam + centerOffset;
       }
@@ -201,6 +212,7 @@ void mouseClicked() {
     if (mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
       cue.power = 0.5 + 3.5 * (height - cornerY - 10 - mouseY)/(height - 2*cornerY - 20);
       game = FIRE;
+      white.breaking = false;
     } else {
       game = READY;
       extend = 0;
@@ -295,6 +307,11 @@ void drawTable() {
   strokeWeight(1);
   fill(106, 182, 99);
   stroke(106 + borderBrightness, 182 + borderBrightness, 99 + borderBrightness);
-  rect(cornerX + edgeThickness + centerOffset + pocketDiam - Ball.size/2, cornerY + edgeThickness + pocketDiam + centerOffset - Ball.size/2,
+  if(white.breaking) {
+    rect(cornerX + edgeThickness + centerOffset + pocketDiam - Ball.size/2, cornerY + edgeThickness + pocketDiam + centerOffset - Ball.size/2,
+    cornerX + edgeThickness + pocketDiam + centerOffset + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
+  } else {
+    rect(cornerX + edgeThickness + centerOffset + pocketDiam - Ball.size/2, cornerY + edgeThickness + pocketDiam + centerOffset - Ball.size/2,
     width - 2*(cornerX + edgeThickness + centerOffset + pocketDiam) + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
+  }
 }
