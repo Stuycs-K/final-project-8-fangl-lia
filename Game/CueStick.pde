@@ -63,12 +63,27 @@ public class CueStick {
         stroke(240);
         fill(106, 182, 99);
         
+        //from cue ball to ball
         circle(white.position.x + out.x, white.position.y + out.y, Ball.size);
         line(white.position.x, white.position.y, white.position.x + out.x, white.position.y + out.y);
         
+        //into ball
         PVector outer = white.position.copy().add(out.copy());
-        PVector in = c.position.copy().sub(outer);
+        PVector in = c.position.copy().sub(outer.copy());
         line(outer.x, outer.y, outer.x + in.x, outer.y + in.y);
+        
+        //perpendicular
+        //check farther
+        PVector test1 = in.copy().rotate(PI/2).add(outer.copy());
+        PVector test2 = in.copy().rotate(-1 * PI/2).add(outer.copy());
+        PVector normal;
+        if(dist(white.position.x, white.position.y, test1.x, test1.y) >= dist(white.position.x, white.position.y, test2.x, test2.y)) {
+          normal = test1;
+        } else {
+          normal = test2;
+        }
+        
+        line(outer.x, outer.y, normal.x, normal.y);
       }
     }
   }
