@@ -61,7 +61,7 @@ public class CueStick {
         PVector out = direction.copy().setMag(distanceToBall);
         strokeWeight(2);
         stroke(240);
-        fill(106, 182, 99);
+        noFill();
         
         //from cue ball to ball
         circle(white.position.x + out.x, white.position.y + out.y, Ball.size);
