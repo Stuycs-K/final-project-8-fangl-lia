@@ -16,7 +16,7 @@ public class WhiteBall extends Ball {
 
     if (isMovable) {//explain movability
       fill(0);
-      if(breaking) {
+      if (breaking) {
         text("You are breaking. You have the cue ball in hand.", cornerX, height - cornerY + edgeThickness);
       } else {
         text("You potted the cue ball. You have the cue ball in hand.", cornerX, height - cornerY + edgeThickness);
