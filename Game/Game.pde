@@ -54,8 +54,8 @@ void setup() {
   
   float xStart = cornerX + 0.75 * (width - 2 * cornerX);
   float yStart = 250;
-  float xShift = Ball.size * sqrt(3)/2;
-  float yShift = Ball.size * 1/2;
+  float xShift = Ball.size * sqrt(3)/2 + 0.01;
+  float yShift = Ball.size * 1/2 + 0.01;
   balls[1] = new Ball(1, xStart, yStart);
   balls[2] = new Ball(2, xStart + xShift, yStart + yShift);
   balls[3] = new Ball(3, xStart + xShift, yStart - yShift);
@@ -96,7 +96,6 @@ void draw() {
       b.move();
       b.collide();
 
-      //bounce testing
       for (Ball c : balls) {
         allDone = allDone && !c.isMoving;//check for not moving
         if (c != b && !c.isPotted) {
