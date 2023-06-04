@@ -34,6 +34,16 @@ public class WhiteBall extends Ball {
           if (allDone) {
             isPotted = false;
             position = new PVector(250, 250);
+            //not inside another ball?
+            for (Ball b : balls) {
+              if (b != white) {
+                PVector posDiff = white.position.copy().sub(b.position.copy());
+                if (posDiff.mag() < Ball.size) {
+                  posDiff.setMag(Ball.size);
+                  white.position = posDiff.add(b.position);
+                }
+              }
+            }
             isMovable = true;
           }
         } else if (d < pocketDiam/2) {//in pocket?
