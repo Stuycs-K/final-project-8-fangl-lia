@@ -34,7 +34,7 @@ public class CueStick {
       float distanceToBall = -1; //-1 if nothing, then set to closest one
 
       for (Ball b : balls) {
-        if (b != white) {//can't be the white ball itself
+        if (b != white && !b.isPotted) {//can't be the white ball itself
           PVector towards = b.position.copy().sub(white.position.copy());
           float angle = Math.abs(towards.heading() - direction.heading());
           if (angle < PI/2 && sin(angle) < Ball.size/(towards.mag())) { //trig, checks for colliding with another ball
@@ -65,6 +65,10 @@ public class CueStick {
         
         circle(white.position.x + out.x, white.position.y + out.y, Ball.size);
         line(white.position.x, white.position.y, white.position.x + out.x, white.position.y + out.y);
+        
+        PVector outer = white.position.copy().add(out.copy());
+        PVector in = c.position.copy().sub(outer);
+        line(outer.x, outer.y, outer.x + in.x, outer.y + in.y);
       }
     }
   }
