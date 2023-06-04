@@ -32,6 +32,7 @@ public class CueStick {
       //calculate if aiming will hit a ball
       Ball c = null; //null if nothing, then set to closest one
       float distanceToBall = -1; //-1 if nothing, then set to closest one
+      float largeAngle = -1; //-1 if nothing, then set to closest one
 
       for (Ball b : balls) {
         if (b != white && !b.isPotted) {//can't be the white ball itself
@@ -50,6 +51,7 @@ public class CueStick {
             if (distanceToBall == -1 || distance < distanceToBall) {
               distanceToBall = distance;
               c = b; //set the ball to be the colliding one
+              largeAngle = secondAngle;
             }
           }
         }
@@ -70,7 +72,7 @@ public class CueStick {
         //into ball
         PVector outer = white.position.copy().add(out.copy());
         PVector in = c.position.copy().sub(outer.copy());
-        line(outer.x, outer.y, outer.x + in.x, outer.y + in.y);
+        line(outer.x, outer.y, outer.x + in.x * -2 * cos(largeAngle), outer.y + in.y * -2 * cos(largeAngle));
         
         //perpendicular
         //check farther
@@ -83,7 +85,7 @@ public class CueStick {
           normal = test2;
         }
         
-        line(outer.x, outer.y, normal.x, normal.y);
+        line(outer.x, outer.y, outer.x + (normal.x - outer.x) * 2 * sin(largeAngle), outer.y + (normal.y - outer.y) * 2 * sin(largeAngle));
       }
     }
   }
