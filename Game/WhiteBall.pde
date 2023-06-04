@@ -27,7 +27,7 @@ public class WhiteBall extends Ball {
       for (float y : pocketYs) {
         float d = dist(position.x, position.y, x, y);
         if (d < 0.1) {//equals threshold, take it out
-          if (true) {//change boolean to when all balls stop moving
+          if (allDone) {
             isPotted = false;
             position = new PVector(250, 250);
             isMovable = true;

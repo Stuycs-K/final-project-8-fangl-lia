@@ -94,13 +94,13 @@ void draw() {
 
       //bounce testing
       for (Ball c : balls) {
+        allDone = allDone && !c.isMoving;//check for not moving
         if (c != b && !c.isPotted) {
           b.bounce(c);
         }
       }
     }
     b.pot();
-    allDone = allDone && !b.isMoving; //to check if everything is no longer moving
   }
 
   cue.show();
