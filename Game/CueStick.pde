@@ -50,7 +50,13 @@ public class CueStick {
       if (c == null) { //no collisions
         
       } else { //collides
+        PVector out = direction.copy().setMag(distanceToBall - Ball.size);
+        strokeWeight(2);
+        stroke(240);
+        fill(106, 182, 99);
         
+        circle(white.position.x + out.x, white.position.y + out.y, Ball.size);
+        line(white.position.x, white.position.y, white.position.x + out.x, white.position.y + out.y);
       }
     }
   }
