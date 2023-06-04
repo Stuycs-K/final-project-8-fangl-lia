@@ -30,12 +30,25 @@ public class CueStick {
       translate(-1 * white.position.x, -1 * white.position.y);
       
       //calculate if aiming will hit a ball
+      Ball c = null; //null if nothing, then set to closest one
+      float distanceToBall = -1; //-1 if nothing, then set to closest one
+      
       for(Ball b : balls) {
         PVector towards = b.position.copy().sub(white.position.copy());
         float angle = Math.abs(towards.heading() - direction.heading());
         if(angle < PI/2 && sin(angle) < Ball.size/(towards.mag())) { //trig, checks for colliding with another ball
-          
+          float distance = cos(angle) * towards.mag();
+          if(distanceToBall == -1 || distance < distanceToBall) {
+            distanceToBall = distance;
+            c = b; //set the ball to be the colliding one
+          }
         }
+      }
+      
+      if(c == null) { //no collisions
+        
+      } else { //collides
+        
       }
     }
   }
