@@ -35,7 +35,7 @@ public class CueStick {
       float largeAngle = -1; //-1 if nothing, then set to closest one
 
       for (Ball b : balls) {
-        if (b != white && !b.isPotted) {//can't be the white ball itself
+        if (b != white && !b.isPotted && !(mouseX == white.position.x && mouseY == white.position.y)) {//can't be the white ball itself, and weird lines come out if mouse is on white ball fsr
           PVector towards = b.position.copy().sub(white.position.copy());
           float angle = Math.abs(towards.heading() - direction.heading());
           if (angle < PI/2 && sin(angle) < Ball.size/(towards.mag())) { //trig, checks for colliding with another ball
@@ -58,6 +58,9 @@ public class CueStick {
       }
 
       if (c == null) { //no collisions
+      float distanceToWall = -1; //-1 if none
+        //check the 6 main walls
+        
         
       } else { //collides
         PVector out = direction.copy().setMag(distanceToBall);
