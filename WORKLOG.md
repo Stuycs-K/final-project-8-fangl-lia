@@ -32,6 +32,9 @@ Reworked position offsets using linear algebra (rotation matrices) to check cond
 ### 05-31
 Finished the new position offsets for the rest of the 12 corner walls. Added restitution constants and merged collide() method with main.
 
+### 06-04
+Added rack to collect the balls in. Made potted balls slide into this rack instead of remaining in pot.
+
 ## Andrew Li
 
 ### 05-22
@@ -120,4 +123,4 @@ Implemented a few bug fixes when moving the WhiteBall, including being able to
 move it in a smaller box when breaking. Then, I started on including the white
 guidelines into the CueStick class. Currently, the case where it collides with
 another ball is complete. Debating whether or not to implement the case to detect
-wall collision. 
+wall collision.
