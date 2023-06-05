@@ -31,6 +31,7 @@ public class Ball {
   //for pool logic
   public boolean isPotted; //consider in pot()
   public boolean isMoving; //consider in collide() and bounce() and move()
+  public boolean isRolling; // roll/slide into the rack
 
   // for collision logic
   private double y0;

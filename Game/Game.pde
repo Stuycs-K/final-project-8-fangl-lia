@@ -4,6 +4,8 @@ int rectRadius;
 float pocketDiam;
 float centerOffset;
 float edgeThickness;
+float rackSpacing;
+float rackOffset;
 
 float[] pocketXs;
 float[] pocketYs;
@@ -11,6 +13,8 @@ float[] pocketYs;
 WhiteBall white;
 CueStick cue;
 Ball[] balls;
+
+Ball testBall; // FOR DEBUGGING
 
 int game;
 final static int READY = 0;
@@ -32,6 +36,8 @@ void setup() {
   pocketDiam = 40;
   centerOffset = 25;
   edgeThickness = 12;
+  rackSpacing = 0.3;
+  rackOffset = 0.6;
 
   //to make pot() easier
   pocketXs = new float[3];
@@ -82,11 +88,14 @@ void setup() {
   //game state
   game = READY;
   extend = 0;
+  testBall = new Ball(1, 920, cornerY + (rackOffset + 1.5 * rackSpacing) * centerOffset);
 }
 
 void draw() {
   background(250);
+  drawRack();
   drawTable();
+  testBall.show();
 
   allDone = true;
   for (Ball b : balls) {
@@ -98,7 +107,7 @@ void draw() {
 
       //bounce testing
       for (Ball c : balls) {
-        allDone = allDone && !c.isMoving;//check for not moving
+        allDone = allDone && !c.isMoving && !c.isRolling;//check for not moving and not rolling
         if (c != b && !c.isPotted) {
           b.bounce(c);
         }
@@ -237,7 +246,6 @@ void drawPower() {
 void drawTable() {
   //table
   noStroke();
-  background(255);
   fill(192);
 
   rect(cornerX, cornerY, width - 2 * cornerX, height - 2 * cornerY, rectRadius);
@@ -316,4 +324,30 @@ void drawTable() {
     rect(cornerX + edgeThickness + centerOffset + pocketDiam - Ball.size/2, cornerY + edgeThickness + pocketDiam + centerOffset - Ball.size/2,
     width - 2*(cornerX + edgeThickness + centerOffset + pocketDiam) + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
   }
+}
+
+void drawRack() {
+  noFill();
+  stroke(150);
+  
+  strokeWeight(3);
+  beginShape();
+  vertex(width - cornerX, cornerY + rackOffset * centerOffset);
+  vertex(width - cornerX * 2 / 3.0 + 3 * rackSpacing * centerOffset, cornerY + rackOffset * centerOffset);
+  vertex(width - cornerX * 2 / 3.0 + 3 * rackSpacing * centerOffset, height - cornerY);
+  vertex(width - cornerX * 2 / 3.0, height - cornerY);
+  vertex(width - cornerX * 2 / 3.0, cornerY + (rackOffset + 3 * rackSpacing) * centerOffset);
+  vertex(width - cornerX, cornerY + (rackOffset + 3 * rackSpacing) * centerOffset);
+  endShape();
+  
+  strokeWeight(1);
+  beginShape();
+  vertex(width - cornerX, cornerY + (rackOffset + rackSpacing) * centerOffset);
+  vertex(width - cornerX * 2 / 3.0 + 2 * rackSpacing * centerOffset, cornerY + (rackOffset + rackSpacing) * centerOffset);
+  vertex(width - cornerX * 2 / 3.0 + 2 * rackSpacing * centerOffset, height - cornerY);
+  vertex(width - cornerX * 2 / 3.0 + rackSpacing * centerOffset, height - cornerY);
+  vertex(width - cornerX * 2 / 3.0 + rackSpacing * centerOffset, cornerY + (rackOffset + 2 * rackSpacing) * centerOffset);
+  vertex(width - cornerX, cornerY + (rackOffset + 2 * rackSpacing) * centerOffset);
+  endShape();
+  
 }
