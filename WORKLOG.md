@@ -107,4 +107,17 @@ a bug that arose from dividing by 0 in calculating friction.
 Cleaned up the WhiteBall's movement abilities. Specifically, introduced a
 specific bound (a white box that shows itself if you try to go out of bounds),
 as well as a bug fix that prevented the ball from phasing through other balls.
-Finally, the simulation is now fully* playable (achieved MVP). 
+Finally, the simulation is now fully* playable (achieved MVP).
+
+### 06-02
+N/A
+
+### 06-03
+N/A
+
+### 06-04
+Implemented a few bug fixes when moving the WhiteBall, including being able to
+move it in a smaller box when breaking. Then, I started on including the white
+guidelines into the CueStick class. Currently, the case where it collides with
+another ball is complete. Debating whether or not to implement the case to detect
+wall collision. 
