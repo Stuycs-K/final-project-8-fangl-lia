@@ -14,8 +14,6 @@ WhiteBall white;
 CueStick cue;
 Ball[] balls;
 
-Ball testBall; // FOR DEBUGGING
-
 int game;
 final static int READY = 0;
 final static int AIM = 1;
@@ -88,18 +86,25 @@ void setup() {
   //game state
   game = READY;
   extend = 0;
-  testBall = new Ball(1, 920, cornerY + (rackOffset + 1.5 * rackSpacing) * centerOffset);
 }
 
 void draw() {
   background(250);
   drawRack();
+  for (Ball b : balls) {
+    if (b.isRolling) {
+      b.slide();
+      b.show();
+    }
+  }
   drawTable();
-  testBall.show();
+  
 
   allDone = true;
   for (Ball b : balls) {
-    b.show();
+    if (!b.isRolling) {
+      b.show();
+    }
 
     if (game == FIRE) {
       b.move();
@@ -108,7 +113,7 @@ void draw() {
       //bounce testing
       for (Ball c : balls) {
         allDone = allDone && !c.isMoving && !c.isRolling;//check for not moving and not rolling
-        if (c != b && !c.isPotted) {
+        if (c != b && !c.isPotted && !c.isRolling) {
           b.bounce(c);
         }
       }
