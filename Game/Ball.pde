@@ -63,7 +63,7 @@ public class Ball {
 
     //assign vectors
     position = new PVector(x, y);
-    velocity = new PVector(30, 30);
+    velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
     hitTime = 0;
     originalHitTime = hitTime;
