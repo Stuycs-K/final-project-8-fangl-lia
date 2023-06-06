@@ -14,9 +14,6 @@ WhiteBall white;
 CueStick cue;
 Ball[] balls;
 
-Ball b1; // for debugging
-Ball b2; 
-
 int game;
 final static int READY = 0;
 final static int AIM = 1;
@@ -81,10 +78,6 @@ void setup() {
   
   allDone = true;
 
-  // FOR DEBUGGING
-  b1 = new Ball(1, 850, 200);
-  b2 = new Ball(3, 150, 230);
-
   borderBrightness = 0; //for WhiteBall border
 
   //to test CueStick
@@ -128,10 +121,6 @@ void draw() {
     }
     b.pot();
   }
-  b1.pot(); // FOR DEBUGGING
-  b2.pot();
-  b1.show();
-  b2.show();
 
   cue.show();
 
@@ -246,9 +235,6 @@ void mouseClicked() {
       extend = 0;
     }
   }
-  
-  b1.applyForce(new PVector(0, -20));
-  b2.applyForce(new PVector(0, -20));
 }
 
 void drawPower() {
