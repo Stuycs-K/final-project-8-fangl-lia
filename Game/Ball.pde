@@ -170,6 +170,19 @@ public class Ball {
       other.hitTime = 0; //no sliding
     }
   }
+  
+  private static float quadratic(int a, int b, int c) {
+    //returns a float in [0, 1] if it is a solution (returns smaller if both in)
+    //otherwise, if no solutions in [0, 1], return -1.0
+    float disc = pow(b, 2) - 4*a*c;
+    if(disc < 0) {return -1.0;}
+    else {
+      disc = sqrt(disc);
+      float r1 = (-1 * b + disc)/(2*a);
+      float r2 = (-1 * b - disc)/(2*a);
+      
+    }
+  }
 
   public void collide() {
     // HORIZONTAL AND VERTICAL WALLS
