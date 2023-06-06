@@ -23,11 +23,73 @@ public class CueStick {
 
       rotate(direction.heading());
       imageMode(CENTER);
-      image(stick, -165 - extend, 0); //correct position to the ball
+      image(stick, -165 - extend, 0); //correct position to the ball\
 
       //reverse transformations of the plane
       rotate(-1 * direction.heading());
       translate(-1 * white.position.x, -1 * white.position.y);
+
+      //calculate if aiming will hit a ball
+      Ball c = null; //null if nothing, then set to closest one
+      float distanceToBall = -1; //-1 if nothing, then set to closest one
+      float largeAngle = -1; //-1 if nothing, then set to closest one
+
+      for (Ball b : balls) {
+        if (b != white && !b.isPotted && !(mouseX == white.position.x && mouseY == white.position.y)) {//can't be the white ball itself, and weird lines come out if mouse is on white ball fsr
+          PVector towards = b.position.copy().sub(white.position.copy());
+          float angle = Math.abs(towards.heading() - direction.heading());
+          if (angle < PI/2 && sin(angle) < Ball.size/(towards.mag())) { //trig, checks for colliding with another ball
+            //law of sines
+            float ratio = sin(angle)/Ball.size;
+            float secondAngle = PI - asin(ratio * towards.mag());
+            float thirdAngle = PI - angle - secondAngle;
+            float distance = sin(thirdAngle)/ratio;
+            if(ratio == 0) {//undefined stuff
+              distance = towards.mag() - Ball.size;
+            }
+            
+            if (distanceToBall == -1 || distance < distanceToBall) {
+              distanceToBall = distance;
+              c = b; //set the ball to be the colliding one
+              largeAngle = secondAngle;
+            }
+          }
+        }
+      }
+
+      if (c == null) { //no collisions
+      float distanceToWall = -1; //-1 if none
+        //check the 6 main walls
+        
+        
+      } else { //collides
+        PVector out = direction.copy().setMag(distanceToBall);
+        strokeWeight(2);
+        stroke(240);
+        noFill();
+        
+        //from cue ball to ball
+        circle(white.position.x + out.x, white.position.y + out.y, Ball.size);
+        line(white.position.x, white.position.y, white.position.x + out.x, white.position.y + out.y);
+        
+        //into ball
+        PVector outer = white.position.copy().add(out.copy());
+        PVector in = c.position.copy().sub(outer.copy());
+        line(outer.x, outer.y, outer.x + in.x * -2 * cos(largeAngle), outer.y + in.y * -2 * cos(largeAngle));
+        
+        //perpendicular
+        //check farther
+        PVector test1 = in.copy().rotate(PI/2).add(outer.copy());
+        PVector test2 = in.copy().rotate(-1 * PI/2).add(outer.copy());
+        PVector normal;
+        if(dist(white.position.x, white.position.y, test1.x, test1.y) >= dist(white.position.x, white.position.y, test2.x, test2.y)) {
+          normal = test1;
+        } else {
+          normal = test2;
+        }
+        
+        line(outer.x, outer.y, outer.x + (normal.x - outer.x) * 2 * sin(largeAngle), outer.y + (normal.y - outer.y) * 2 * sin(largeAngle));
+      }
     }
   }
 }
