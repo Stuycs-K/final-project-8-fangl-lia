@@ -27,7 +27,7 @@ public class Ball {
 
   public int hitTime; //to change friction; in frames
   public int originalHitTime;
-
+  
   //for pool logic
   public boolean isPotted; //consider in pot()
   public boolean isMoving; //consider in collide() and bounce() and move()
