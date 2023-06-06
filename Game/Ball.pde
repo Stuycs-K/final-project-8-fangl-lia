@@ -180,7 +180,8 @@ public class Ball {
       disc = sqrt(disc);
       float r1 = (-1 * b + disc)/(2*a);
       float r2 = (-1 * b - disc)/(2*a);
-      
+      boolean oneIn = r1 >= 0 && r1 <= 1;
+      boolean twoIn = r2 >= 0 && r2 <= 1;
     }
   }
 
