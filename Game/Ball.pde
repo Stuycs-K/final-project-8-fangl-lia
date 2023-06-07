@@ -150,11 +150,11 @@ public class Ball {
     //solve the quadratic
     PVector velDiff = other.velocity.copy().sub(velocity.copy()); //from this to other; v2 - v1
     float A = pow(velDiff.x, 2) + pow(velDiff.y, 2);
-    float B = velDiff.x * (other.position.y - this.position.y) + velDiff.y * (other.position.x - this.position.x);
-    float C = pow(other.position.y - this.position.y, 2) + pow(other.position.x - this.position.x, 2);
+    float B = 2*velDiff.y * (other.position.y - this.position.y) + 2*velDiff.x * (other.position.x - this.position.x);
+    float C = pow(other.position.y - this.position.y, 2) + pow(other.position.x - this.position.x, 2) - pow(Ball.size, 2);
     float r = quadratic(A, B, C);
 
-    if (r >= 0 && r <= 1) {//real collision will occur
+    if (r != -1) {//real collision will occur
       //offset to the exact position
       this.position.add(this.velocity.copy().mult(r));
       other.position.add(other.velocity.copy().mult(r));
