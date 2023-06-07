@@ -152,13 +152,19 @@ public class Ball {
     float A = pow(velDiff.x, 2) + pow(velDiff.y, 2);
     float B = velDiff.x * (other.position.y - this.position.y) + velDiff.y * (other.position.x - this.position.x);
     float C = pow(other.position.y - this.position.y, 2) + pow(other.position.x - this.position.x, 2);
-    
-    PVector posDiff = other.position.copy().sub(position.copy()); //from this to other; x2 - x1
-    if (posDiff.mag() < size) {//touching or overlapped
-      //offset positions, should ensure that this only runs once per pair of balls
+    float r = quadratic(A, B, C);
+
+    if (r >= 0 && r <= 1) {//real collision will occur
+      //offset to the exact position
+      this.position.add(this.velocity.copy().mult(r));
+      other.position.add(other.velocity.copy().mult(r));
+      
+      //do things
+      PVector posDiff = other.position.copy().sub(position.copy()); //from this to other; x2 - x1
+      /*//offset positions, should ensure that this only runs once per pair of balls
       PVector offset = posDiff.copy().setMag((size - posDiff.mag())/2);
       other.position.add(offset);
-      position.sub(offset);
+      position.sub(offset);*///i think this is unnecessary
 
       //recalculate difference in position
       posDiff.setMag(size);

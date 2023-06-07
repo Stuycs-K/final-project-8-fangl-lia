@@ -221,7 +221,7 @@ void mouseClicked() {
   }
 }
 
-float quadratic(int a, int b, int c) {
+float quadratic(float a, float b, float c) {
   //returns a float in [0, 1] if it is a solution (returns smaller if both in)
   //otherwise, if no solutions in [0, 1], return -1.0
   float disc = pow(b, 2) - 4*a*c;
