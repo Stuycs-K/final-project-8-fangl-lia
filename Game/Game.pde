@@ -19,6 +19,21 @@ final static int READY = 0;
 final static int AIM = 1;
 final static int FIRE = 2;
 
+int screen;
+final static int MENU = 0;
+final static int PLAY = 1;
+
+PImage playButton;
+float buttonHeight;
+float buttonWidth;
+float newButtonHeight;
+float newButtonWidth;
+boolean mouseOnNewButton;
+
+PImage poolLego;
+float logoHeight;
+float logoWidth;
+
 boolean allDone;
 boolean breaking; //first shot
 
@@ -87,120 +102,152 @@ void setup() {
   game = READY;
   extend = 0;
   
+  // game mega state
+  screen = MENU;
+  playButton = loadImage("play-button.png");
+  buttonWidth = 130;
+  buttonHeight = 60;
+  newButtonWidth = buttonWidth * 1.1;
+  newButtonHeight = buttonHeight * 1.1;
+  
+  poolLego = loadImage("pool-lego.png");
+  logoWidth = 600;
+  logoHeight = 150;
 }
 
 void draw() {
   background(250);
-  drawRack();
-  for (Ball b : balls) {
-    if (b.isRolling) {
-      b.slide();
-      b.show();
+  fill(0);
+  text(screen, 10, 10);
+  if (screen == MENU) {
+    image(poolLego, (width - logoWidth) / 2, (0.5 * height - logoHeight) / 2, logoWidth, logoHeight);
+    if (!mouseOnNewButton) {
+      image(playButton, (width - buttonWidth) / 2, (height - buttonHeight) / 2, buttonWidth, buttonHeight);
+      if (mouseX > (width - buttonWidth) / 2 && mouseX < (width + buttonWidth) / 2
+      && mouseY > (height - buttonHeight) / 2 && mouseY < (height + buttonHeight) / 2) {
+        mouseOnNewButton = true;
+      }
+    } else {
+      image(playButton, (width - newButtonWidth) / 2, (height - newButtonHeight) / 2, newButtonWidth, newButtonHeight);
+      if (!(mouseX > (width - newButtonWidth) / 2 && mouseX < (width + newButtonWidth) / 2
+      && mouseY > (height - newButtonHeight) / 2 && mouseY < (height + newButtonHeight) / 2)) {
+        mouseOnNewButton = false;
+      }
     }
   }
-  drawTable();
-
-
-  allDone = true;
-  for (Ball b : balls) {
-    if (!b.isRolling) {
-      b.show();
-    }
-
-    if (game == FIRE) {
-      b.move();
-      b.collide();
-
-      for (Ball c : balls) {
-        allDone = allDone && !c.isMoving && !c.isRolling;//check for not moving and not rolling
-        if (c != b && !c.isPotted && !c.isRolling) {
-          b.bounce(c);
-        }
+  
+  if (screen == PLAY) {
+    drawRack();
+    for (Ball b : balls) {
+      if (b.isRolling) {
+        b.slide();
+        b.show();
       }
     }
-    b.pot();
-  }
-
-  cue.show();
-
-  //game state
-  if (game == READY) {
-    if (white.moving) {//move the white ball
-      //not out of bounds?
-      boolean xBoundedUp = mouseX > cornerX + edgeThickness + pocketDiam + centerOffset;
-      boolean xBoundedDown;
-      if(breaking) {
-        xBoundedDown = mouseX < 2 * (cornerX + edgeThickness + pocketDiam + centerOffset);
-      } else {
-        xBoundedDown = mouseX < width - cornerX - edgeThickness - centerOffset - pocketDiam;
+    drawTable();
+  
+  
+    allDone = true;
+    for (Ball b : balls) {
+      if (!b.isRolling) {
+        b.show();
       }
-      boolean yBoundedUp = mouseY > cornerY + edgeThickness + pocketDiam + centerOffset;
-      boolean yBoundedDown = mouseY < height - cornerY - edgeThickness - pocketDiam - centerOffset;
-      if (xBoundedUp && xBoundedDown) {
-        white.position.x = mouseX;
-      } else if (xBoundedUp) {
-        if(breaking) {
-          white.position.x = 2 * (cornerX + edgeThickness + pocketDiam + centerOffset);
-        } else {
-          white.position.x = width - cornerX - edgeThickness - centerOffset - pocketDiam;
-        }
-      } else {
-        white.position.x = cornerX + edgeThickness + pocketDiam + centerOffset;
-      }
-
-      if (yBoundedUp && yBoundedDown) {
-        white.position.y = mouseY;
-      } else if (yBoundedUp) {
-        white.position.y = height - cornerY - edgeThickness - pocketDiam - centerOffset;
-      } else {
-        white.position.y = cornerY + edgeThickness + pocketDiam + centerOffset;
-      }
-
-      if (!(xBoundedUp && xBoundedDown) || !(yBoundedUp && yBoundedDown)) {
-        if (borderBrightness < 100) {
-          borderBrightness++;
-        }
-      } else {
-        if (borderBrightness > 0) {
-          borderBrightness--;
-        }
-      }
-      
-      //not inside another ball?
-      for(Ball x: balls) {
-        if(x != white) {
-          PVector posDiff = white.position.copy().sub(x.position.copy());
-          if(posDiff.mag() < Ball.size) {
-            posDiff.setMag(Ball.size);
-            white.position = posDiff.add(x.position);
+  
+      if (game == FIRE) {
+        b.move();
+        b.collide();
+  
+        for (Ball c : balls) {
+          allDone = allDone && !c.isMoving && !c.isRolling;//check for not moving and not rolling
+          if (c != b && !c.isPotted && !c.isRolling) {
+            b.bounce(c);
           }
         }
       }
+      b.pot();
     }
-  } else if (game == AIM) {
-    drawPower();
-    if (mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
-      extend = (height - cornerY - 10 - mouseY)/2;
+  
+    cue.show();
+  
+    //game state
+    if (game == READY) {
+      if (white.moving) {//move the white ball
+        //not out of bounds?
+        boolean xBoundedUp = mouseX > cornerX + edgeThickness + pocketDiam + centerOffset;
+        boolean xBoundedDown;
+        if(breaking) {
+          xBoundedDown = mouseX < 2 * (cornerX + edgeThickness + pocketDiam + centerOffset);
+        } else {
+          xBoundedDown = mouseX < width - cornerX - edgeThickness - centerOffset - pocketDiam;
+        }
+        boolean yBoundedUp = mouseY > cornerY + edgeThickness + pocketDiam + centerOffset;
+        boolean yBoundedDown = mouseY < height - cornerY - edgeThickness - pocketDiam - centerOffset;
+        if (xBoundedUp && xBoundedDown) {
+          white.position.x = mouseX;
+        } else if (xBoundedUp) {
+          if(breaking) {
+            white.position.x = 2 * (cornerX + edgeThickness + pocketDiam + centerOffset);
+          } else {
+            white.position.x = width - cornerX - edgeThickness - centerOffset - pocketDiam;
+          }
+        } else {
+          white.position.x = cornerX + edgeThickness + pocketDiam + centerOffset;
+        }
+  
+        if (yBoundedUp && yBoundedDown) {
+          white.position.y = mouseY;
+        } else if (yBoundedUp) {
+          white.position.y = height - cornerY - edgeThickness - pocketDiam - centerOffset;
+        } else {
+          white.position.y = cornerY + edgeThickness + pocketDiam + centerOffset;
+        }
+  
+        if (!(xBoundedUp && xBoundedDown) || !(yBoundedUp && yBoundedDown)) {
+          if (borderBrightness < 100) {
+            borderBrightness++;
+          }
+        } else {
+          if (borderBrightness > 0) {
+            borderBrightness--;
+          }
+        }
+        
+        //not inside another ball?
+        for(Ball x: balls) {
+          if(x != white) {
+            PVector posDiff = white.position.copy().sub(x.position.copy());
+            if(posDiff.mag() < Ball.size) {
+              posDiff.setMag(Ball.size);
+              white.position = posDiff.add(x.position);
+            }
+          }
+        }
+      }
+    } else if (game == AIM) {
+      drawPower();
+      if (mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
+        extend = (height - cornerY - 10 - mouseY)/2;
+      }
+    } else if (game == FIRE) {
+      if (extend > -5 && extend <= 5) {//runs once
+        white.applyForce(cue.direction.setMag(cue.power));
+        white.isMovable = false; //resets movability
+        allDone = false;
+      }
+      if (extend > -5) {
+        extend-=10;
+      }
+  
+      if (extend <= -5 && allDone && !white.isPotted) {//the second boolean is changeable, only runs after applying force
+        game = READY;
+        extend = 0;
+      }
     }
-  } else if (game == FIRE) {
-    if (extend > -5 && extend <= 5) {//runs once
-      white.applyForce(cue.direction.setMag(cue.power));
-      white.isMovable = false; //resets movability
-      allDone = false;
-    }
-    if (extend > -5) {
-      extend-=10;
-    }
-
-    if (extend <= -5 && allDone && !white.isPotted) {//the second boolean is changeable, only runs after applying force
-      game = READY;
-      extend = 0;
-    }
-  }
-
-  if (game != READY || !white.moving) {
-    if (borderBrightness > 0) {
-      borderBrightness--;
+  
+    if (game != READY || !white.moving) {
+      if (borderBrightness > 0) {
+        borderBrightness--;
+      }
     }
   }
 }
@@ -214,26 +261,47 @@ void mousePressed() {
 }
 
 void mouseReleased() {
-  white.moving = false;
-  cue.showable = true;
+  if (screen == PLAY) {
+    white.moving = false;
+    cue.showable = true;
+  }
 }
 
 void mouseClicked() {
-  if (game == READY) {
-    if (dist(mouseX, mouseY, white.position.x, white.position.y) >= Ball.size) {
-      game = AIM;
-    }
-  } else if (game == AIM) {
-    //inside power?
-    if (mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
-      cue.power = 0.5 + 3.5 * (height - cornerY - 10 - mouseY)/(height - 2*cornerY - 20);
-      game = FIRE;
-      breaking = false;
-    } else {
-      game = READY;
-      extend = 0;
+  if (screen == PLAY) {
+    if (game == READY) {
+      if (dist(mouseX, mouseY, white.position.x, white.position.y) >= Ball.size) {
+        game = AIM;
+      }
+    } else if (game == AIM) {
+      //inside power?
+      if (mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
+        cue.power = 0.5 + 3.5 * (height - cornerY - 10 - mouseY)/(height - 2*cornerY - 20);
+        game = FIRE;
+        breaking = false;
+      } else {
+        game = READY;
+        extend = 0;
+      }
     }
   }
+  
+  if (screen == MENU) {
+    
+    if (mouseOnNewButton) {
+      if (mouseX > (width - newButtonWidth) / 2 && mouseX < (width + newButtonWidth) / 2
+    && mouseY > (height - newButtonHeight) / 2 && mouseY < (height + newButtonHeight) / 2) {
+      screen = PLAY;
+      }
+    } else {
+      if (mouseX > (width - buttonWidth) / 2 && mouseX < (width + buttonWidth) / 2
+    && mouseY > (height - buttonHeight) / 2 && mouseY < (height + buttonHeight) / 2) {
+      screen = PLAY;
+      }
+    }
+    
+  }
+  
 }
 
 void drawPower() {
