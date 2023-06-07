@@ -19,6 +19,10 @@ final static int READY = 0;
 final static int AIM = 1;
 final static int FIRE = 2;
 
+int turn;
+final static int PLAYER1 = 0;
+final static int PLAYER2 = 1;
+
 int screen;
 final static int MENU = 0;
 final static int PLAY = 1;
@@ -80,10 +84,10 @@ void setup() {
   balls[2] = new Ball(2, xStart + xShift, yStart + yShift);
   balls[3] = new Ball(3, xStart + xShift, yStart - yShift);
   balls[4] = new Ball(4, xStart + 2*xShift, yStart + 2*yShift);
-  balls[5] = new Ball(5, xStart + 2*xShift, yStart);
+  balls[5] = new Ball(5, xStart + 3*xShift, yStart + 1*yShift);
   balls[6] = new Ball(6, xStart + 2*xShift, yStart - 2*yShift);
   balls[7] = new Ball(7, xStart + 3*xShift, yStart + 3*yShift);
-  balls[8] = new Ball(8, xStart + 3*xShift, yStart + 1*yShift);
+  balls[8] = new Ball(8, xStart + 2*xShift, yStart);
   balls[9] = new Ball(9, xStart + 3*xShift, yStart - 1*yShift);
   balls[10] = new Ball(10, xStart + 3*xShift, yStart - 3*yShift);
   balls[11] = new Ball(11, xStart + 4*xShift, yStart + 4*yShift);
