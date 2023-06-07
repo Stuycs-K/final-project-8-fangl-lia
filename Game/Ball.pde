@@ -147,6 +147,12 @@ public class Ball {
   }
 
   public void bounce(Ball other) {
+    //solve the quadratic
+    PVector velDiff = other.velocity.copy().sub(velocity.copy()); //from this to other; v2 - v1
+    float A = pow(velDiff.x, 2) + pow(velDiff.y, 2);
+    float B = velDiff.x * (other.position.y - this.position.y) + velDiff.y * (other.position.x - this.position.x);
+    float C = pow(other.position.y - this.position.y, 2) + pow(other.position.x - this.position.x, 2);
+    
     PVector posDiff = other.position.copy().sub(position.copy()); //from this to other; x2 - x1
     if (posDiff.mag() < size) {//touching or overlapped
       //offset positions, should ensure that this only runs once per pair of balls
@@ -154,8 +160,6 @@ public class Ball {
       other.position.add(offset);
       position.sub(offset);
 
-      //calculate difference in velocities
-      PVector velDiff = other.velocity.copy().sub(velocity.copy()); //from this to other; v2 - v1
       //recalculate difference in position
       posDiff.setMag(size);
 
