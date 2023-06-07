@@ -29,6 +29,7 @@ float buttonWidth;
 float newButtonHeight;
 float newButtonWidth;
 boolean mouseOnNewButton;
+float buttonOffset;
 
 PImage poolLego;
 float logoHeight;
@@ -109,10 +110,11 @@ void setup() {
   buttonHeight = 60;
   newButtonWidth = buttonWidth * 1.1;
   newButtonHeight = buttonHeight * 1.1;
+  buttonOffset = 50;
   
   poolLego = loadImage("pool-lego.png");
-  logoWidth = 600;
-  logoHeight = 150;
+  logoWidth = 500;
+  logoHeight = 200;
 }
 
 void draw() {
@@ -122,15 +124,15 @@ void draw() {
   if (screen == MENU) {
     image(poolLego, (width - logoWidth) / 2, (0.5 * height - logoHeight) / 2, logoWidth, logoHeight);
     if (!mouseOnNewButton) {
-      image(playButton, (width - buttonWidth) / 2, (height - buttonHeight) / 2, buttonWidth, buttonHeight);
-      if (mouseX > (width - buttonWidth) / 2 && mouseX < (width + buttonWidth) / 2
-      && mouseY > (height - buttonHeight) / 2 && mouseY < (height + buttonHeight) / 2) {
-        mouseOnNewButton = true;
+      image(playButton, (width - buttonWidth) / 2, (height - buttonHeight) / 2 + buttonOffset, buttonWidth, buttonHeight);
+      if (!(mouseX > (width - buttonWidth) / 2 && mouseX < (width + buttonWidth) / 2
+      && mouseY > ((height - buttonHeight) / 2 + buttonOffset) && mouseY < ((height + buttonHeight) / 2 + buttonOffset))) {
+        mouseOnNewButton = false;
       }
     } else {
-      image(playButton, (width - newButtonWidth) / 2, (height - newButtonHeight) / 2, newButtonWidth, newButtonHeight);
+      image(playButton, (width - newButtonWidth) / 2, (height - newButtonHeight) / 2 + buttonOffset, newButtonWidth, newButtonHeight);
       if (!(mouseX > (width - newButtonWidth) / 2 && mouseX < (width + newButtonWidth) / 2
-      && mouseY > (height - newButtonHeight) / 2 && mouseY < (height + newButtonHeight) / 2)) {
+      && mouseY > ((height - newButtonHeight) / 2 + buttonOffset) && mouseY < ((height + newButtonHeight) / 2 + buttonOffset))) {
         mouseOnNewButton = false;
       }
     }
@@ -290,12 +292,12 @@ void mouseClicked() {
     
     if (mouseOnNewButton) {
       if (mouseX > (width - newButtonWidth) / 2 && mouseX < (width + newButtonWidth) / 2
-    && mouseY > (height - newButtonHeight) / 2 && mouseY < (height + newButtonHeight) / 2) {
+    && mouseY > (height - newButtonHeight) / 2 + buttonOffset && mouseY < (height + newButtonHeight) / 2 + buttonOffset) {
       screen = PLAY;
       }
     } else {
       if (mouseX > (width - buttonWidth) / 2 && mouseX < (width + buttonWidth) / 2
-    && mouseY > (height - buttonHeight) / 2 && mouseY < (height + buttonHeight) / 2) {
+    && mouseY > (height - buttonHeight) / 2 + buttonOffset && mouseY < (height + buttonHeight) / 2 + buttonOffset) {
       screen = PLAY;
       }
     }
