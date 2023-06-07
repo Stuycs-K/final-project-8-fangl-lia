@@ -130,3 +130,12 @@ move it in a smaller box when breaking. Then, I started on including the white
 guidelines into the CueStick class. Currently, the case where it collides with
 another ball is complete. Debating whether or not to implement the case to detect
 wall collision.
+
+### 06-05
+N/A
+
+### 06-06
+Merged the CueStick guideline, decided not to implement wall detection.
+Attempted to make collisions more accurate in the fixPhysics branch with
+math, but it ended up breaking the whole thing; reverted changes. Considering
+upping the refresh rate from 60 to try and make collisions more accurate...
