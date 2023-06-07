@@ -35,6 +35,12 @@ Finished the new position offsets for the rest of the 12 corner walls. Added res
 ### 06-04
 Added rack to collect the balls in. Made potted balls slide into this rack instead of remaining in pot.
 
+### 06-06
+Tested rack branch. Merged rack branch with main.
+
+### 06-07
+
+
 ## Andrew Li
 
 ### 05-22
