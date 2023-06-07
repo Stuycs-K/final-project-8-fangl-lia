@@ -51,7 +51,7 @@ void setup() {
   balls[0] = white;
   white.isMovable = true; //breaking allows movement
   breaking = true;
-  
+
   float xStart = cornerX + 0.75 * (width - 2 * cornerX);
   float yStart = 250;
   float xShift = Ball.size * sqrt(3)/2 + 0.01;
@@ -71,7 +71,7 @@ void setup() {
   balls[13] = new Ball(13, xStart + 4*xShift, yStart);
   balls[14] = new Ball(14, xStart + 4*xShift, yStart - 2*yShift);
   balls[15] = new Ball(15, xStart + 4*xShift, yStart - 4*yShift);
-  
+
   allDone = true;
 
   borderBrightness = 0; //for WhiteBall border
@@ -114,7 +114,7 @@ void draw() {
       //not out of bounds?
       boolean xBoundedUp = mouseX > cornerX + edgeThickness + pocketDiam + centerOffset;
       boolean xBoundedDown;
-      if(breaking) {
+      if (breaking) {
         xBoundedDown = mouseX < 2 * (cornerX + edgeThickness + pocketDiam + centerOffset);
       } else {
         xBoundedDown = mouseX < width - cornerX - edgeThickness - centerOffset - pocketDiam;
@@ -124,7 +124,7 @@ void draw() {
       if (xBoundedUp && xBoundedDown) {
         white.position.x = mouseX;
       } else if (xBoundedUp) {
-        if(breaking) {
+        if (breaking) {
           white.position.x = 2 * (cornerX + edgeThickness + pocketDiam + centerOffset);
         } else {
           white.position.x = width - cornerX - edgeThickness - centerOffset - pocketDiam;
@@ -150,12 +150,12 @@ void draw() {
           borderBrightness--;
         }
       }
-      
+
       //not inside another ball?
-      for(Ball x: balls) {
-        if(x != white) {
+      for (Ball x : balls) {
+        if (x != white) {
           PVector posDiff = white.position.copy().sub(x.position.copy());
-          if(posDiff.mag() < Ball.size) {
+          if (posDiff.mag() < Ball.size) {
             posDiff.setMag(Ball.size);
             white.position = posDiff.add(x.position);
           }
@@ -217,6 +217,30 @@ void mouseClicked() {
     } else {
       game = READY;
       extend = 0;
+    }
+  }
+}
+
+float quadratic(int a, int b, int c) {
+  //returns a float in [0, 1] if it is a solution (returns smaller if both in)
+  //otherwise, if no solutions in [0, 1], return -1.0
+  float disc = pow(b, 2) - 4*a*c;
+  if (disc < 0) {
+    return -1.0;
+  } else {
+    disc = sqrt(disc);
+    float r1 = (-1 * b + disc)/(2*a);
+    float r2 = (-1 * b - disc)/(2*a);
+    boolean oneIn = r1 >= 0 && r1 <= 1;
+    boolean twoIn = r2 >= 0 && r2 <= 1;
+    if (oneIn && twoIn) {
+      return min(r1, r2);
+    } else if (oneIn) {
+      return r1;
+    } else if (twoIn) {
+      return r2;
+    } else {
+      return -1;
     }
   }
 }
@@ -308,11 +332,11 @@ void drawTable() {
   strokeWeight(1);
   fill(106, 182, 99);
   stroke(106 + borderBrightness, 182 + borderBrightness, 99 + borderBrightness);
-  if(breaking) {
+  if (breaking) {
     rect(cornerX + edgeThickness + centerOffset + pocketDiam - Ball.size/2, cornerY + edgeThickness + pocketDiam + centerOffset - Ball.size/2,
-    cornerX + edgeThickness + pocketDiam + centerOffset + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
+      cornerX + edgeThickness + pocketDiam + centerOffset + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
   } else {
     rect(cornerX + edgeThickness + centerOffset + pocketDiam - Ball.size/2, cornerY + edgeThickness + pocketDiam + centerOffset - Ball.size/2,
-    width - 2*(cornerX + edgeThickness + centerOffset + pocketDiam) + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
+      width - 2*(cornerX + edgeThickness + centerOffset + pocketDiam) + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
   }
 }

@@ -96,7 +96,7 @@ public class Ball {
     isMoving = true;
     hitTime = round(f.mag()*2);
     originalHitTime = hitTime;
-    if(originalHitTime == 0) {
+    if (originalHitTime == 0) {
       originalHitTime = 1;
     }
   }
@@ -104,14 +104,14 @@ public class Ball {
   public void move() {
     if (isMoving) {
       velocity.add(acceleration);
-      
+
       //check for stop moving
       if (velocity.equals(new PVector(0, 0)) || acceleration.equals(new PVector(0, 0))) {
         reset();
       } else if (velocity.mag() < acceleration.mag() * 0.51 && Math.abs(velocity.heading() - acceleration.heading()) < 0.1) {//requires velocity and acceleration directions to be the same
         reset();
       }
-      
+
       position.add(velocity);
 
       //apply friction (INCORPORATES HIT TIME)
@@ -148,40 +148,26 @@ public class Ball {
 
   public void bounce(Ball other) {
     PVector posDiff = other.position.copy().sub(position.copy()); //from this to other; x2 - x1
-    if(posDiff.mag() < size) {//touching or overlapped
+    if (posDiff.mag() < size) {//touching or overlapped
       //offset positions, should ensure that this only runs once per pair of balls
       PVector offset = posDiff.copy().setMag((size - posDiff.mag())/2);
       other.position.add(offset);
       position.sub(offset);
-      
+
       //calculate difference in velocities
       PVector velDiff = other.velocity.copy().sub(velocity.copy()); //from this to other; v2 - v1
       //recalculate difference in position
       posDiff.setMag(size);
-      
+
       //calculate applied velocities
       float magnitude = (velDiff.x * posDiff.x + velDiff.y * posDiff.y)/posDiff.mag();
       PVector applyToThis = posDiff.copy().setMag(magnitude);
       PVector applyToOther = posDiff.copy().rotate(PI).setMag(magnitude);
-      
+
       this.applyForce(applyToThis.mult(mass * ballRestitution));
       this.hitTime = 0;
       other.applyForce(applyToOther.mult(mass * ballRestitution));
       other.hitTime = 0; //no sliding
-    }
-  }
-  
-  private static float quadratic(int a, int b, int c) {
-    //returns a float in [0, 1] if it is a solution (returns smaller if both in)
-    //otherwise, if no solutions in [0, 1], return -1.0
-    float disc = pow(b, 2) - 4*a*c;
-    if(disc < 0) {return -1.0;}
-    else {
-      disc = sqrt(disc);
-      float r1 = (-1 * b + disc)/(2*a);
-      float r2 = (-1 * b - disc)/(2*a);
-      boolean oneIn = r1 >= 0 && r1 <= 1;
-      boolean twoIn = r2 >= 0 && r2 <= 1;
     }
   }
 
