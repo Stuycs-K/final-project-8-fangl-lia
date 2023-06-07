@@ -27,10 +27,12 @@ public class Ball {
 
   public int hitTime; //to change friction; in frames
   public int originalHitTime;
-
+  
   //for pool logic
   public boolean isPotted; //consider in pot()
   public boolean isMoving; //consider in collide() and bounce() and move()
+  public boolean isRolling; // roll/slide into the rack
+  private int numPotted; // number of balls potted before this ball, used in slide()
 
   // for collision logic
   private double y0;
@@ -96,7 +98,7 @@ public class Ball {
     isMoving = true;
     hitTime = round(f.mag()*2);
     originalHitTime = hitTime;
-    if (originalHitTime == 0) {
+    if(originalHitTime == 0) {
       originalHitTime = 1;
     }
   }
@@ -104,14 +106,14 @@ public class Ball {
   public void move() {
     if (isMoving) {
       velocity.add(acceleration);
-
+      
       //check for stop moving
       if (velocity.equals(new PVector(0, 0)) || acceleration.equals(new PVector(0, 0))) {
         reset();
       } else if (velocity.mag() < acceleration.mag() * 0.51 && Math.abs(velocity.heading() - acceleration.heading()) < 0.1) {//requires velocity and acceleration directions to be the same
         reset();
       }
-
+      
       position.add(velocity);
 
       //apply friction (INCORPORATES HIT TIME)
@@ -129,6 +131,8 @@ public class Ball {
         float d = dist(position.x, position.y, x, y);
         if (d < 0.1) {//equals threshold
           //animate and slide
+          isRolling = true;
+          position.set(880, cornerY + centerOffset + 5);
         } else if (d < pocketDiam/2) {//in pocket?
           isPotted = true;
           reset();
@@ -139,6 +143,23 @@ public class Ball {
       }
     }
   }
+  
+  public void slide() {
+     if (position.x < 944) {
+       position.set(position.x + 3, position.y);
+     } else {
+       float maxDepth = height - cornerY - size / 2 - 1 - numPotted * size;
+       if (position.y < maxDepth) {
+         position.set(944, position.y + 3);
+       } else {
+         position.set(position.x, maxDepth);
+         isRolling = false;
+         for (Ball b : balls) {
+           b.numPotted++;
+         }
+       }
+     }
+  }
 
   public void reset() {
     velocity = new PVector(0, 0);
@@ -147,33 +168,23 @@ public class Ball {
   }
 
   public void bounce(Ball other) {
-    //solve the quadratic
-    PVector velDiff = other.velocity.copy().sub(velocity.copy()); //from this to other; v2 - v1
-    float A = pow(velDiff.x, 2) + pow(velDiff.y, 2);
-    float B = 2*velDiff.y * (other.position.y - this.position.y) + 2*velDiff.x * (other.position.x - this.position.x);
-    float C = pow(other.position.y - this.position.y, 2) + pow(other.position.x - this.position.x, 2) - pow(Ball.size, 2);
-    float r = quadratic(A, B, C);
-
-    if (r != -1) {//real collision will occur
-      //offset to the exact position
-      this.position.add(this.velocity.copy().mult(r));
-      other.position.add(other.velocity.copy().mult(r));
-      
-      //do things
-      PVector posDiff = other.position.copy().sub(position.copy()); //from this to other; x2 - x1
-      /*//offset positions, should ensure that this only runs once per pair of balls
+    PVector posDiff = other.position.copy().sub(position.copy()); //from this to other; x2 - x1
+    if(posDiff.mag() < size) {//touching or overlapped
+      //offset positions, should ensure that this only runs once per pair of balls
       PVector offset = posDiff.copy().setMag((size - posDiff.mag())/2);
       other.position.add(offset);
-      position.sub(offset);*///i think this is unnecessary
-
+      position.sub(offset);
+      
+      //calculate difference in velocities
+      PVector velDiff = other.velocity.copy().sub(velocity.copy()); //from this to other; v2 - v1
       //recalculate difference in position
       posDiff.setMag(size);
-
+      
       //calculate applied velocities
       float magnitude = (velDiff.x * posDiff.x + velDiff.y * posDiff.y)/posDiff.mag();
       PVector applyToThis = posDiff.copy().setMag(magnitude);
       PVector applyToOther = posDiff.copy().rotate(PI).setMag(magnitude);
-
+      
       this.applyForce(applyToThis.mult(mass * ballRestitution));
       this.hitTime = 0;
       other.applyForce(applyToOther.mult(mass * ballRestitution));
@@ -225,7 +236,7 @@ public class Ball {
 
     // right
     if (position.x + size / 2 >= width - cornerX - centerOffset - edgeThickness && position.y >= cornerY + centerOffset + pocketDiam / 2 + edgeThickness
-      && position.y <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness) {
+      && position.y <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness && (position.x < width - cornerX * 5/6.0)) {
       position.x = width - cornerX - centerOffset - edgeThickness - size / 2;
       velocity.rotate(-PI - 2 * velocity.heading());
       velocity.setMag(velocity.mag() * railRestitution);
@@ -278,7 +289,7 @@ public class Ball {
 
     // --------------------------------------------------------
 
-    // left: bottom (3)
+    // right: bottom (3)
     y0 = height - cornerY - centerOffset - pocketDiam / 2;
     x0 = width - cornerX - centerOffset;
     y1 = y0 - edgeThickness;
@@ -291,7 +302,7 @@ public class Ball {
     v = rot45Neg((float)x, (float)y);
 
     //
-    if (v.x >= v1.x && v.x <= v0.x && v.y <= v0.y) { // ball is in the region
+    if (v.x >= v1.x && v.x <= v0.x && v.y <= v0.y && (position.x < width - cornerX * 5/6.0)) { // ball is in the region
       v.set(v.x, v0.y + size / 2);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
@@ -481,7 +492,7 @@ public class Ball {
 
     // --------------------------------------------------------
 
-    // left: top (12)
+    // right: top (12)
     y0 = cornerY + centerOffset + pocketDiam / 2;
     x0 = width - cornerX - centerOffset;
     y1 = y0 + edgeThickness;
@@ -493,7 +504,7 @@ public class Ball {
     v1 = rot45Neg((float)x1, (float)y1);
     v = rot45Neg((float)x, (float)y);
 
-    if (v.y >= v0.y && v.y <= v1.y && v.x >= v0.x) { // ball is in the region
+    if (v.y >= v0.y && v.y <= v1.y && v.x >= v0.x && (position.x < width - cornerX * 5/6.0)) { // ball is in the region
       v.set(v0.x - size / 2, v.y);
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
