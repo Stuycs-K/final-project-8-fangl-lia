@@ -120,7 +120,6 @@ void setup() {
 void draw() {
   background(255);
   fill(0);
-  text(screen, 10, 10);
   if (screen == MENU) {
     image(poolLego, (width - logoWidth) / 2, (0.62 * height - logoHeight) / 2, logoWidth, logoHeight);
     if (!mouseOnNewButton) {
