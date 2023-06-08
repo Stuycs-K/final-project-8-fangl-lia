@@ -39,7 +39,7 @@ Added rack to collect the balls in. Made potted balls slide into this rack inste
 Tested rack branch. Merged rack branch with main.
 
 ### 06-07
-
+Added main menu screen with clickable button. Started implementing turns.
 
 ## Andrew Li
 
