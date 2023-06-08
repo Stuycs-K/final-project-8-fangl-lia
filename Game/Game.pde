@@ -438,8 +438,13 @@ int[] randomizeRack() {
   }
   
   if(ret[0] != 0) {
-    swap(ret, 0, 
+    swap(ret, 0, find(ret, 0));
   }
+  if(ret[5] != 8) {
+    swap(ret, 5, find(ret, 8));
+  }
+  
+  return ret;
 }
 
 int find(int[] arr, int value) {
@@ -448,6 +453,7 @@ int find(int[] arr, int value) {
       return i;
     }
   }
+  return -1;
 }
 
 void swap(int[] arr, int i, int j) {//indexes
