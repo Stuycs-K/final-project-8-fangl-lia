@@ -76,6 +76,8 @@ void setup() {
   float yStart = 250;
   float xShift = Ball.size * sqrt(3)/2 + 0.01;
   float yShift = Ball.size * 1/2 + 0.01;
+  
+  //decide random racking
   balls[1] = new Ball(1, xStart, yStart);
   balls[2] = new Ball(2, xStart + xShift, yStart + yShift);
   balls[3] = new Ball(3, xStart + xShift, yStart - yShift);
@@ -422,4 +424,21 @@ void drawRack() {
   vertex(width - cornerX * 2 / 3.0 + rackSpacing * centerOffset, cornerY + (rackOffset + 2 * rackSpacing) * centerOffset);
   vertex(width - cornerX, cornerY + (rackOffset + 2 * rackSpacing) * centerOffset);
   endShape();
+}
+
+int[] randomizeRack() {
+  int[] ret = new int[16];
+  for(int i = 0; i < ret.length; i++) {
+    ret[i] = i;
+  }
+  
+  //fisher-yates algorithm
+}
+
+void swap(int[] arr, int i, int j) {//indexes
+  if(i != j) {
+    int temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+  }
 }
