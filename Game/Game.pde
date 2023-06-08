@@ -433,6 +433,21 @@ int[] randomizeRack() {
   }
   
   //fisher-yates algorithm
+  for(int i = ret.length - 1; i > 0; i--) { //i = 0 is redundant
+    swap(ret, i, (int) (Math.random() * (i + 1))); //0 to i inclusive
+  }
+  
+  if(ret[0] != 0) {
+    swap(ret, 0, 
+  }
+}
+
+int find(int[] arr, int value) {
+  for(int i = 0; i < arr.length; i++) {
+    if(arr[i] == value) {
+      return i;
+    }
+  }
 }
 
 void swap(int[] arr, int i, int j) {//indexes
