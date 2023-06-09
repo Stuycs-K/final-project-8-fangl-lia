@@ -41,6 +41,9 @@ Tested rack branch. Merged rack branch with main.
 ### 06-07
 Added main menu screen with clickable button. Started implementing turns.
 
+### 06-08
+Made giant outline of rules in Google Docs. Introduced arrays to store the number of potted balls of each type. Added processing skeleton, as well as hitRail skeleton for colored balls. Added new booleans for white ball to help with rules.
+
 ## Andrew Li
 
 ### 05-22
