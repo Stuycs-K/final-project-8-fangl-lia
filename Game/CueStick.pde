@@ -69,11 +69,7 @@ public class CueStick {
           if (direction.heading() < 0) {
             check = (white.position.y - Ball.size / 2 - (cornerY + centerOffset + edgeThickness))/Math.abs(sin(direction.heading()));
             float newX;
-            if (direction.heading() <= -1 * PI/2) {
-              newX = white.position.x - check * cos(direction.heading());
-            } else {
-              newX = white.position.x + check * cos(direction.heading());
-            }
+            newX = white.position.x + check * cos(direction.heading());
             if (newX >= cornerX + centerOffset + pocketDiam / 2 + edgeThickness && newX <= width / 2 - pocketDiam / 2 - edgeThickness ||
               newX <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness && newX >= width / 2 + pocketDiam / 2 + edgeThickness) {//left and right
               if (distanceToWall == -1 || distanceToWall > check) {
