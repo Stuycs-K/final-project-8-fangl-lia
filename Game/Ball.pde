@@ -35,6 +35,8 @@ public class Ball {
   private int numPotted; // number of balls potted before this ball, used in slide()
   
   // for pool rules
+  private boolean pottedAndProcessed;
+  public boolean hitRail;
 
   // for collision logic
   private double y0;
@@ -145,6 +147,20 @@ public class Ball {
           position.set(880, cornerY + centerOffset + 5);
         } else if (d < pocketDiam/2) {//in pocket?
           isPotted = true;
+          
+          if (!pottedAndProcessed) {
+            if (numNewPotted[0] + numNewPotted[1] == 0 && stripeOwner == -1) {
+              white.setFirstPot(this);
+            }
+            
+            if (getType().equals("striped")) {
+              numNewPotted[0]++;
+            } else if (getType().equals("solid")) {
+              numNewPotted[1]++;
+            }
+            pottedAndProcessed = true;
+          }
+          
           reset();
           PVector shift = new PVector(x - position.x, y - position.y);
           shift.setMag(min(shift.mag(), 1));
@@ -180,9 +196,10 @@ public class Ball {
   public void bounce(Ball other) {
     PVector posDiff = other.position.copy().sub(position.copy()); //from this to other; x2 - x1
     if(posDiff.mag() < size) {//touching or overlapped
-      if (getType().equals("white") && white.getFirstContact() == -1) { // white ball is the action
-        white.setFirstContact(other.getNumber());
+      if (getType().equals("white") && white.getFirstContact() == null) { // white ball is the action
+        white.setFirstContact(other);
       }
+      
       //offset positions, should ensure that this only runs once per pair of balls
       PVector offset = posDiff.copy().setMag((size - posDiff.mag())/2);
       other.position.add(offset);
@@ -206,6 +223,8 @@ public class Ball {
   }
 
   public void collide() {
+    boolean madeCollision = false;
+    
     // HORIZONTAL AND VERTICAL WALLS
 
     // top left
@@ -214,6 +233,7 @@ public class Ball {
       position.y = cornerY + centerOffset + edgeThickness + size / 2;
       velocity.rotate(-2 * velocity.heading());
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
     // top right
@@ -222,6 +242,7 @@ public class Ball {
       position.y = cornerY + centerOffset + edgeThickness + size / 2;
       velocity.rotate(-2 * velocity.heading());
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
     // bottom left
@@ -230,6 +251,7 @@ public class Ball {
       position.y = height - cornerY - centerOffset - edgeThickness - size / 2;
       velocity.rotate(-2 * velocity.heading());
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
     // bottom right
     if (position.y + size / 2 >= height - cornerY - centerOffset - edgeThickness && position.x <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness
@@ -237,6 +259,7 @@ public class Ball {
       position.y = height - cornerY - centerOffset - edgeThickness - size / 2;
       velocity.rotate(-2 * velocity.heading());
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
     // left
@@ -245,6 +268,7 @@ public class Ball {
       position.x = cornerX + centerOffset + edgeThickness + size / 2;
       velocity.rotate(PI - 2 * velocity.heading());
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
     // right
@@ -253,6 +277,7 @@ public class Ball {
       position.x = width - cornerX - centerOffset - edgeThickness - size / 2;
       velocity.rotate(-PI - 2 * velocity.heading());
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
     // --------------------------------------------------------
@@ -277,6 +302,7 @@ public class Ball {
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
     // --------------------------------------------------------
@@ -298,6 +324,7 @@ public class Ball {
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
     // --------------------------------------------------------
@@ -320,6 +347,7 @@ public class Ball {
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
 
@@ -343,6 +371,7 @@ public class Ball {
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
 
@@ -366,6 +395,7 @@ public class Ball {
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
 
@@ -389,6 +419,7 @@ public class Ball {
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (PI / 4 - velocity.heading()));
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
 
@@ -412,6 +443,7 @@ public class Ball {
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
     // --------------------------------------------------------
@@ -434,6 +466,7 @@ public class Ball {
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
     // --------------------------------------------------------
@@ -456,6 +489,7 @@ public class Ball {
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
     // --------------------------------------------------------
@@ -478,6 +512,7 @@ public class Ball {
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
 
@@ -500,6 +535,7 @@ public class Ball {
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
 
 
@@ -522,9 +558,23 @@ public class Ball {
       position.set(rot45Pos(v.x, v.y));
       velocity.rotate(2 * (-PI / 4 - velocity.heading()));
       velocity.setMag(velocity.mag() * railRestitution);
+      madeCollision = true;
     }
-
+    
     // --------------------------------------------------------
+    
+    if (madeCollision && !hitRail) {
+      if (getType().equals("white")) {
+        if (white.getFirstContact() != null) {
+          hitRail = true;
+        }
+      } else {
+        hitRail = true;
+        numHitRail++;
+      }
+    }
+    
+    
   }
 
   public PVector rot45Neg(float i, float j) {

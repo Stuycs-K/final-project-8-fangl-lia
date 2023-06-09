@@ -2,8 +2,8 @@ public class WhiteBall extends Ball {
   public boolean isMovable; //can the player move the white ball?
   public boolean moving; //to avoid staggered movement
   
-  private int firstContact;
-  private int firstPot;
+  private Ball firstContact;
+  private Ball firstPot;
 
   //constructor
   public WhiteBall(float x, float y) {
@@ -11,20 +11,20 @@ public class WhiteBall extends Ball {
     isMovable = false;
     moving = isMovable;
     
-    firstContact = -1;
-    firstPot = 1;
+    firstContact = null;
+    firstPot = null;
   }
 
-  public int getFirstContact() {
+  public Ball getFirstContact() {
      return firstContact;
   }
-  public int getFirstPot() {
+  public Ball getFirstPot() {
      return firstPot;
   }
-  public void setFirstContact(int fc) {
+  public void setFirstContact(Ball fc) {
      firstContact = fc;
   }
-  public void setFirstPot(int fp) {
+  public void setFirstPot(Ball fp) {
     firstPot = fp;
   }
 

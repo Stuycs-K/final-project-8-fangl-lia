@@ -29,6 +29,7 @@ final static int PLAYER2 = 1;
 int stripeOwner; // only applicable once groups have been made
 int[] numOldPotted;
 int[] numNewPotted;
+int numHitRail;
 
 PImage playButton;
 float buttonHeight;
@@ -83,6 +84,7 @@ void setup() {
   stripeOwner = -1; // -1 corresponds to open table
   numOldPotted = new int[2];
   numNewPotted = new int[2];
+  numHitRail = 0;
 
   float xStart = cornerX + 0.75 * (width - 2 * cornerX);
   float yStart = 250;
@@ -160,8 +162,23 @@ void draw() {
       }
     }
     drawTable();
-
-
+    
+    // TEXT FOR DEBUGGING
+    text("Old striped and solids " + numOldPotted[0] + " " + numOldPotted[1], 5, 10);
+    text("New striped and solids " + numNewPotted[0] + " " + numNewPotted[1], 5, 25);
+    text("numHitRail = " + numHitRail, 200, 10);
+    text("white.hitRail = " + white.hitRail, 200, 25);
+    if (white.getFirstContact() == null) {
+      text("white no contact", 400, 10);
+    } else {
+      text("white's first contact: " + white.getFirstContact().getNumber(), 400, 10);
+    }
+    if (white.getFirstPot() == null) {
+      text("white no pot", 400, 25);
+    } else {
+      text("white's first pot: " + white.getFirstPot().getNumber(), 400, 25);
+    }
+    
     allDone = true;
     for (Ball b : balls) {
       if (!b.isRolling) {
@@ -417,7 +434,23 @@ void drawTable() {
 }
 
 void process() {
-  // process
+  resetVariables();
+}
+
+void resetVariables() { // after processing of rules
+  numOldPotted[0] += numNewPotted[0];
+  numOldPotted[1] += numNewPotted[1];
+  numNewPotted[0] = 0;
+  numNewPotted[1] = 0;
+  
+  for (Ball b : balls) {
+    b.hitRail = false;
+  }
+  numHitRail = 0;
+  
+  white.setFirstContact(null);
+  white.setFirstPot(null);
+  
   processingDone = true;
 }
 
