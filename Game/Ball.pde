@@ -33,6 +33,8 @@ public class Ball {
   public boolean isMoving; //consider in collide() and bounce() and move()
   public boolean isRolling; // roll/slide into the rack
   private int numPotted; // number of balls potted before this ball, used in slide()
+  
+  // for pool rules
 
   // for collision logic
   private double y0;
@@ -72,7 +74,15 @@ public class Ball {
     isPotted = false;
     isMoving = false;
   }
-
+  
+  public String getType() {
+    return type;
+  }
+  
+  public int getNumber() {
+    return number;
+  }
+  
   public void show() {
     noStroke();
     fill(ballColor);
@@ -170,6 +180,9 @@ public class Ball {
   public void bounce(Ball other) {
     PVector posDiff = other.position.copy().sub(position.copy()); //from this to other; x2 - x1
     if(posDiff.mag() < size) {//touching or overlapped
+      if (getType().equals("white") && white.getFirstContact() == -1) { // white ball is the action
+        white.setFirstContact(other.getNumber());
+      }
       //offset positions, should ensure that this only runs once per pair of balls
       PVector offset = posDiff.copy().setMag((size - posDiff.mag())/2);
       other.position.add(offset);

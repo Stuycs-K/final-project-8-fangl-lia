@@ -19,13 +19,16 @@ final static int READY = 0;
 final static int AIM = 1;
 final static int FIRE = 2;
 
-int turn;
-final static int PLAYER1 = 0;
-final static int PLAYER2 = 1;
-
 int screen;
 final static int MENU = 0;
 final static int PLAY = 1;
+
+int player;
+final static int PLAYER1 = 0;
+final static int PLAYER2 = 1;
+int stripeOwner; // only applicable once groups have been made
+int[] numOldPotted;
+int[] numNewPotted;
 
 PImage playButton;
 float buttonHeight;
@@ -41,6 +44,7 @@ float logoWidth;
 
 boolean allDone;
 boolean breaking; //first shot
+boolean processingDone;
 
 float extend; //for the CueStick's extension when firing
 float borderBrightness; //to indicate the border of moving the WhiteBall
@@ -76,6 +80,10 @@ void setup() {
   white.isMovable = true; //breaking allows movement
   breaking = true;
 
+  stripeOwner = -1; // -1 corresponds to open table
+  numOldPotted = new int[2];
+  numNewPotted = new int[2];
+
   float xStart = cornerX + 0.75 * (width - 2 * cornerX);
   float yStart = 250;
   float xShift = Ball.size * sqrt(3)/2 + 0.01;
@@ -97,6 +105,7 @@ void setup() {
   balls[15] = new Ball(15, xStart + 4*xShift, yStart - 4*yShift);
 
   allDone = true;
+  
 
   borderBrightness = 0; //for WhiteBall border
 
@@ -106,6 +115,7 @@ void setup() {
   //game state
   game = READY;
   extend = 0;
+  
 
   // game mega state
   screen = MENU;
@@ -238,11 +248,16 @@ void draw() {
         white.applyForce(cue.direction.setMag(cue.power));
         white.isMovable = false; //resets movability
         allDone = false;
+        processingDone = false;
       }
       if (extend > -5) {
         extend-=10;
       }
-
+      
+      if (extend <= -5 && allDone) {
+        process();
+      }
+      
       if (extend <= -5 && allDone && !white.isPotted) {//the second boolean is changeable, only runs after applying force
         game = READY;
         extend = 0;
@@ -283,7 +298,6 @@ void mouseClicked() {
       if (mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
         cue.power = 0.5 + 3.5 * (height - cornerY - 10 - mouseY)/(height - 2*cornerY - 20);
         game = FIRE;
-        breaking = false;
       } else {
         game = READY;
         extend = 0;
@@ -400,6 +414,11 @@ void drawTable() {
     rect(cornerX + edgeThickness + centerOffset + pocketDiam - Ball.size/2, cornerY + edgeThickness + pocketDiam + centerOffset - Ball.size/2,
       width - 2*(cornerX + edgeThickness + centerOffset + pocketDiam) + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
   }
+}
+
+void process() {
+  // process
+  processingDone = true;
 }
 
 void drawRack() {

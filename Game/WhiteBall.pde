@@ -1,12 +1,31 @@
 public class WhiteBall extends Ball {
   public boolean isMovable; //can the player move the white ball?
   public boolean moving; //to avoid staggered movement
+  
+  private int firstContact;
+  private int firstPot;
 
   //constructor
   public WhiteBall(float x, float y) {
     super(0, x, y);
     isMovable = false;
     moving = isMovable;
+    
+    firstContact = -1;
+    firstPot = 1;
+  }
+
+  public int getFirstContact() {
+     return firstContact;
+  }
+  public int getFirstPot() {
+     return firstPot;
+  }
+  public void setFirstContact(int fc) {
+     firstContact = fc;
+  }
+  public void setFirstPot(int fp) {
+    firstPot = fp;
   }
 
   public void show() {
@@ -31,7 +50,7 @@ public class WhiteBall extends Ball {
       for (float y : pocketYs) {
         float d = dist(position.x, position.y, x, y);
         if (d < 0.1) {//equals threshold, take it out
-          if (allDone) {
+          if (allDone && processingDone) {
             isPotted = false;
             position = new PVector(250, 250);
             //not inside another ball?
