@@ -31,8 +31,21 @@ int[] numOldPotted;
 int[] numNewPotted;
 int numHitRail;
 
-boolean gameOver;
+int winner; // -1 if game hasn't ended, 0 if player 1, 1 if player 2
 boolean foulMade;
+String foulMessage;
+final static String OPEN8HIT = "FOUL! You need to hit either a striped or solid ball.";
+final static String NOHIT = "FOUL! The cue ball did not strike another ball.";
+final static String NOSOLIDHIT = "FOUL! You must hit a solid ball.";
+final static String NOSTRIPEDHIT = "FOUL! You must hit a striped ball.";
+final static String POTCUE = "FOUL! You potted the cue ball.";
+final static String NO8HIT = "FOUL! You must hit the 8-ball.";
+final static String SOFTHIT = "FOUL! No balls struck a rail after contact.";
+final static String ILLEGALBREAK = "FOUL! You made an illegal break.";
+static String BADPOT8 = "PLAYER [] WINS! You did not hit the 8-ball first.";
+static String CUEPLUS8 = "PLAYER [] WINS! You potted the cue ball along with the 8-ball.";
+static String WIN = "PLAYER [] WINS! You potted the 8-ball.";
+static String POT8 = "PLAYER [] WINS! You potted the 8-ball.";
 
 PImage playButton;
 float buttonHeight;
@@ -84,10 +97,12 @@ void setup() {
   white.isMovable = true; //breaking allows movement
   breaking = true;
 
+  // for rules implementation
   stripeOwner = -1; // -1 corresponds to open table
   numOldPotted = new int[2];
   numNewPotted = new int[2];
   numHitRail = 0;
+  winner = -1;
 
   float xStart = cornerX + 0.75 * (width - 2 * cornerX);
   float yStart = 250;
@@ -181,19 +196,27 @@ void draw() {
     } else {
       text("white's first pot: " + white.getFirstPot().getNumber(), 400, 25);
     }
-    text("game over: " + gameOver, 600, 10);
+    if (winner == -1) {
+      text("game in progress", 600, 10);
+    } else {
+      text("game winner is Player " + (winner + 1), 600, 10);
+    }
     text("foul made: " + foulMade, 600, 25);
     text("player turn: " + (player + 1), 800, 10);
     text("breaking: " + breaking, 800, 25);
     if (stripeOwner == -1) {
       text("table open", 600, 40);
     } else {
-      text("stripe owner: Player " + (player + 1), 600, 40);
+      text("stripe owner: Player " + (stripeOwner + 1), 600, 40);
     }
     
     allDone = true;
     for (Ball b : balls) {
       if (!b.isRolling) {
+        if (b.getType().equals("white") && foulMade) {
+          white.isPotted = false;
+          white.resetPosition();
+        }
         b.show();
       }
 
@@ -278,12 +301,14 @@ void draw() {
         white.isMovable = false; //resets movability
         allDone = false;
         processingDone = false;
+        foulMade = false;
+        white.positionReset = false;
       }
       if (extend > -5) {
         extend-=10;
       }
       
-      if (extend <= -5 && allDone) {
+      if (extend <= -5 && allDone && !processingDone) {
         process();
       }
       
@@ -446,32 +471,35 @@ void drawTable() {
 }
 
 void process() {
-  foulMade = false;
-  
-  if (breaking) {
+  if (breaking) { // break
     if (balls[8].isPotted) {
-      gameOver = true;
+      winner = 1 - player;
     } else if (white.isPotted) {
       foulMade = true;
+      foulMessage = POTCUE;
       player = 1 - player;
     } else if (numHitRail < 4 && numNewPotted[0] + numNewPotted[1] == 0) {
       foulMade = true;
+      foulMessage = ILLEGALBREAK;
       player = 1 - player;
     } else if (numNewPotted[0] + numNewPotted[1] == 0) {
       player = 1 - player;
     }
     breaking = false;
-  } else if (stripeOwner == -1) {
+  } else if (stripeOwner == -1) { // open table
     if (balls[8].isPotted) {
-      gameOver = true;
+      winner = 1 - player;
     } else if (white.isPotted) {
       foulMade = true;
+      foulMessage = POTCUE;
       player = 1 - player;
     } else if (white.getFirstContact() == null) {
       foulMade = true;
+      foulMessage = NOHIT;
       player = 1 - player;
     } else if (white.getFirstContact().getType().equals("eight")) {
       foulMade = true;
+      foulMessage = OPEN8HIT;
       player = 1 - player;
     } else if (white.getFirstPot() == null) {
       player = 1 - player;
@@ -480,8 +508,104 @@ void process() {
     } else if (white.getFirstPot().getType().equals("striped")) {
       stripeOwner = player;
     }
-  } else {
-    //
+  } else { // table is not open, groups have been assigned
+    if (player == stripeOwner) {
+      if (numOldPotted[0] == 7) { // allowed to pot 8 ball
+        if (balls[8].isPotted) {
+          if (white.isPotted || !white.getFirstContact().getType().equals("eight")) {
+            winner = 1 - player;
+          } else {
+            winner = player;
+          }
+        } else if (white.isPotted) {
+          foulMade = true;
+          foulMessage = POTCUE;
+          player = 1 - player;
+        } else if (white.getFirstContact() == null) {
+          foulMade = true;
+          foulMessage = NOHIT;
+          player = 1 - player;
+        } else if (!white.getFirstContact().getType().equals("eight")) {
+          foulMade = true;
+          foulMessage = NO8HIT;
+          player = 1 - player;
+        } else if (numNewPotted[0] + numNewPotted[1] == 0 && numHitRail == 0 && !white.hitRail) {
+          foulMade = true;
+          foulMessage = SOFTHIT;
+          player = 1 - player;
+        } else {
+          player = 1 - player;
+        }
+      } else if (balls[8].isPotted) {
+        winner = 1 - player;
+      } else if (white.isPotted) {
+        foulMade = true;
+        foulMessage = POTCUE;
+        player = 1 - player;
+      } else if (white.getFirstContact() == null) {
+        foulMade = true;
+        foulMessage = NOHIT;
+        player = 1 - player;
+      } else if (!white.getFirstContact().getType().equals("striped")) {
+        foulMade = true;
+        foulMessage = NOSTRIPEDHIT;
+        player = 1 - player;
+      } else if (numNewPotted[0] + numNewPotted[1] == 0 && numHitRail == 0 && !white.hitRail) {
+        foulMade = true;
+        foulMessage = SOFTHIT;
+        player = 1 - player;
+      } else if (numNewPotted[0] == 0) {
+        player = 1 - player;
+      }
+    } else { // player has solids
+      if (numOldPotted[1] == 7) { // allowed to pot 8 ball
+        if (balls[8].isPotted) {
+          if (white.isPotted || !white.getFirstContact().getType().equals("eight")) {
+            winner = 1 - player;
+          } else {
+            winner = player;
+          }
+        } else if (white.isPotted) {
+          foulMade = true;
+          foulMessage = POTCUE;
+          player = 1 - player;
+        } else if (white.getFirstContact() == null) {
+          foulMade = true;
+          foulMessage = NOHIT;
+          player = 1 - player;
+        } else if (!white.getFirstContact().getType().equals("eight")) {
+          foulMade = true;
+          foulMessage = NO8HIT;
+          player = 1 - player;
+        } else if (numNewPotted[0] + numNewPotted[1] == 0 && numHitRail == 0 && !white.hitRail) {
+          foulMade = true;
+          foulMessage = SOFTHIT;
+          player = 1 - player;
+        } else {
+          player = 1 - player;
+        }
+      } else if (balls[8].isPotted) {
+        winner = 1 - player;
+      } else if (white.isPotted) {
+        foulMade = true;
+        foulMessage = POTCUE;
+        player = 1 - player;
+      } else if (white.getFirstContact() == null) {
+        foulMade = true;
+        foulMessage = NOHIT;
+        player = 1 - player;
+      } else if (!white.getFirstContact().getType().equals("solid")) {
+        foulMade = true;
+        foulMessage = NOSOLIDHIT;
+        player = 1 - player;
+      } else if (numNewPotted[0] + numNewPotted[1] == 0 && numHitRail == 0 && !white.hitRail) {
+        foulMade = true;
+        foulMessage = SOFTHIT;
+        player = 1 - player;
+      } else if (numNewPotted[1] == 0) {
+        player = 1 - player;
+      }
+    }
   }
   
   resetVariables();
