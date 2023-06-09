@@ -142,3 +142,13 @@ Merged the CueStick guideline, decided not to implement wall detection.
 Attempted to make collisions more accurate in the fixPhysics branch with
 math, but it ended up breaking the whole thing; reverted changes. Considering
 upping the refresh rate from 60 to try and make collisions more accurate...
+
+### 06-07
+Looked at a few more ways to fix physics, decided it would be too complex.
+The article helps, but I had already tried implementing most of the ideas,
+and it would instead require changing the entire structure of our code.
+
+### 06-08
+Discussed implementing rules with Jack, helped create a template for it.
+Correctly randomized racking of the balls, with the 8-ball in the middle
+and corners with at least one of each type.
