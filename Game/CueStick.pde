@@ -38,6 +38,7 @@ public class CueStick {
         if (b != white && !b.isPotted && !(mouseX == white.position.x && mouseY == white.position.y)) {//can't be the white ball itself, and weird lines come out if mouse is on white ball fsr
           PVector towards = b.position.copy().sub(white.position.copy());
           float angle = Math.abs(towards.heading() - direction.heading());
+          if(angle >= 1.5*PI) {angle = 2*PI - angle;} //mod things
           if (angle < PI/2 && sin(angle) < Ball.size/(towards.mag())) { //trig, checks for colliding with another ball
             //law of sines
             float ratio = sin(angle)/Ball.size;
