@@ -95,8 +95,32 @@ public class CueStick {
         }
 
         //left
-
+        if(white.position.x - Ball.size / 2 > cornerX + centerOffset + edgeThickness) {//not inside a pocket
+          if(direction.heading() > PI/2 || direction.heading() < -1 * PI/2) {
+            check = -1 * (white.position.x - Ball.size / 2 - (cornerX + centerOffset + edgeThickness))/cos(direction.heading());
+            float newY;
+            newY = white.position.y + check * sin(direction.heading());
+            if(newY >= cornerY + centerOffset + pocketDiam / 2 + edgeThickness && newY <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness) {
+              if (distanceToWall == -1 || distanceToWall > check) {
+                distanceToWall = check;
+              }
+            }
+          }
+        }
+        
         //right
+        if(white.position.x + Ball.size / 2 < width - cornerX - centerOffset - edgeThickness) {//not inside a pocket
+          if(direction.heading() < PI/2 && direction.heading() > -1 * PI/2) {
+            check = -1 * (white.position.x + Ball.size / 2 - (width - cornerX - centerOffset - edgeThickness))/cos(direction.heading());
+            float newY;
+            newY = white.position.y + check * sin(direction.heading());
+            if(newY >= cornerY + centerOffset + pocketDiam / 2 + edgeThickness && newY <= height - cornerY - centerOffset - pocketDiam / 2 - edgeThickness) {
+              if (distanceToWall == -1 || distanceToWall > check) {
+                distanceToWall = check;
+              }
+            }
+          }
+        }
 
         if (distanceToWall != -1) {
           PVector out = direction.copy().setMag(distanceToWall);
