@@ -38,17 +38,19 @@ public class CueStick {
         if (b != white && !b.isPotted && !(mouseX == white.position.x && mouseY == white.position.y)) {//can't be the white ball itself, and weird lines come out if mouse is on white ball fsr
           PVector towards = b.position.copy().sub(white.position.copy());
           float angle = Math.abs(towards.heading() - direction.heading());
-          if(angle >= 1.5*PI) {angle = 2*PI - angle;} //mod things
+          if (angle >= 1.5*PI) {
+            angle = 2*PI - angle;
+          } //mod things
           if (angle < PI/2 && sin(angle) < Ball.size/(towards.mag())) { //trig, checks for colliding with another ball
             //law of sines
             float ratio = sin(angle)/Ball.size;
             float secondAngle = PI - asin(ratio * towards.mag());
             float thirdAngle = PI - angle - secondAngle;
             float distance = sin(thirdAngle)/ratio;
-            if(ratio == 0) {//undefined stuff
+            if (ratio == 0) {//undefined stuff
               distance = towards.mag() - Ball.size;
             }
-            
+
             if (distanceToBall == -1 || distance < distanceToBall) {
               distanceToBall = distance;
               c = b; //set the ball to be the colliding one
@@ -59,36 +61,70 @@ public class CueStick {
       }
 
       if (c == null) { //no collisions
-      float distanceToWall = -1; //-1 if none
+        float distanceToWall = -1; //-1 if none
         //check the 6 main walls
-        
-        
+        float check = 0;
+        //top left and right
+        if (white.position.y - Ball.size / 2 > cornerY + centerOffset + edgeThickness) {//not inside a pocket
+          if (direction.heading() > 0) {
+            check = (white.position.y - Ball.size / 2 - (cornerY + centerOffset + edgeThickness))/sin(direction.heading());
+            float newX;
+            if (direction.heading() >= PI/2) {
+              newX = white.position.x - check * cos(direction.heading());
+            } else {
+              newX = white.position.x + check * cos(direction.heading());
+            }
+            if (newX >= cornerX + centerOffset + pocketDiam / 2 + edgeThickness && newX <= width / 2 - pocketDiam / 2 - edgeThickness ||
+              newX <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness && newX >= width / 2 + pocketDiam / 2 + edgeThickness) {//left and right
+              if (distanceToWall == -1 || distanceToWall > check) {
+                distanceToWall = check;
+              }
+            }
+          }
+        }
+
+        //bottom left and right
+
+        //left
+
+        //right
+
+        if (distanceToWall != -1) {
+          PVector out = direction.copy().setMag(distanceToWall);
+          strokeWeight(2);
+          stroke(240);
+          noFill();
+  
+          //to wall
+          circle(white.position.x + out.x, white.position.y + out.y, Ball.size);
+          line(white.position.x, white.position.y, white.position.x + out.x, white.position.y + out.y);
+        }
       } else { //collides
         PVector out = direction.copy().setMag(distanceToBall);
         strokeWeight(2);
         stroke(240);
         noFill();
-        
+
         //from cue ball to ball
         circle(white.position.x + out.x, white.position.y + out.y, Ball.size);
         line(white.position.x, white.position.y, white.position.x + out.x, white.position.y + out.y);
-        
+
         //into ball
         PVector outer = white.position.copy().add(out.copy());
         PVector in = c.position.copy().sub(outer.copy());
         line(outer.x, outer.y, outer.x + in.x * -2 * cos(largeAngle), outer.y + in.y * -2 * cos(largeAngle));
-        
+
         //perpendicular
         //check farther
         PVector test1 = in.copy().rotate(PI/2).add(outer.copy());
         PVector test2 = in.copy().rotate(-1 * PI/2).add(outer.copy());
         PVector normal;
-        if(dist(white.position.x, white.position.y, test1.x, test1.y) >= dist(white.position.x, white.position.y, test2.x, test2.y)) {
+        if (dist(white.position.x, white.position.y, test1.x, test1.y) >= dist(white.position.x, white.position.y, test2.x, test2.y)) {
           normal = test1;
         } else {
           normal = test2;
         }
-        
+
         line(outer.x, outer.y, outer.x + (normal.x - outer.x) * 2 * sin(largeAngle), outer.y + (normal.y - outer.y) * 2 * sin(largeAngle));
       }
     }
