@@ -67,7 +67,7 @@ public class CueStick {
         //top left and right
         if (white.position.y - Ball.size / 2 > cornerY + centerOffset + edgeThickness) {//not inside a pocket
           if (direction.heading() < 0) {
-            check = (white.position.y - Ball.size / 2 - (cornerY + centerOffset + edgeThickness))/Math.abs(sin(direction.heading()));
+            check = -1 * (white.position.y - Ball.size / 2 - (cornerY + centerOffset + edgeThickness))/sin(direction.heading());
             float newX;
             newX = white.position.x + check * cos(direction.heading());
             if (newX >= cornerX + centerOffset + pocketDiam / 2 + edgeThickness && newX <= width / 2 - pocketDiam / 2 - edgeThickness ||
@@ -80,6 +80,19 @@ public class CueStick {
         }
 
         //bottom left and right
+        if (white.position.y + Ball.size / 2 < height - cornerY - centerOffset - edgeThickness) {//not inside a pocket
+          if (direction.heading() > 0) {
+            check = -1 * (white.position.y + Ball.size / 2 - (height - cornerY - centerOffset - edgeThickness))/sin(direction.heading());
+            float newX;
+            newX = white.position.x + check * cos(direction.heading());
+            if (newX >= cornerX + centerOffset + pocketDiam / 2 + edgeThickness && newX <= width / 2 - pocketDiam / 2 - edgeThickness ||
+              newX <= width - cornerX - centerOffset - pocketDiam / 2 - edgeThickness && newX >= width / 2 + pocketDiam / 2 + edgeThickness) {//left and right
+              if (distanceToWall == -1 || distanceToWall > check) {
+                distanceToWall = check;
+              }
+            }
+          }
+        }
 
         //left
 
