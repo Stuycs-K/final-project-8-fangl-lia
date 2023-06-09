@@ -31,6 +31,9 @@ int[] numOldPotted;
 int[] numNewPotted;
 int numHitRail;
 
+boolean gameOver;
+boolean foulMade;
+
 PImage playButton;
 float buttonHeight;
 float buttonWidth;
@@ -177,6 +180,15 @@ void draw() {
       text("white no pot", 400, 25);
     } else {
       text("white's first pot: " + white.getFirstPot().getNumber(), 400, 25);
+    }
+    text("game over: " + gameOver, 600, 10);
+    text("foul made: " + foulMade, 600, 25);
+    text("player turn: " + (player + 1), 800, 10);
+    text("breaking: " + breaking, 800, 25);
+    if (stripeOwner == -1) {
+      text("table open", 600, 40);
+    } else {
+      text("stripe owner: Player " + (player + 1), 600, 40);
     }
     
     allDone = true;
@@ -434,6 +446,44 @@ void drawTable() {
 }
 
 void process() {
+  foulMade = false;
+  
+  if (breaking) {
+    if (balls[8].isPotted) {
+      gameOver = true;
+    } else if (white.isPotted) {
+      foulMade = true;
+      player = 1 - player;
+    } else if (numHitRail < 4 && numNewPotted[0] + numNewPotted[1] == 0) {
+      foulMade = true;
+      player = 1 - player;
+    } else if (numNewPotted[0] + numNewPotted[1] == 0) {
+      player = 1 - player;
+    }
+    breaking = false;
+  } else if (stripeOwner == -1) {
+    if (balls[8].isPotted) {
+      gameOver = true;
+    } else if (white.isPotted) {
+      foulMade = true;
+      player = 1 - player;
+    } else if (white.getFirstContact() == null) {
+      foulMade = true;
+      player = 1 - player;
+    } else if (white.getFirstContact().getType().equals("eight")) {
+      foulMade = true;
+      player = 1 - player;
+    } else if (white.getFirstPot() == null) {
+      player = 1 - player;
+    } else if (white.getFirstPot().getType().equals("solid")) {
+      stripeOwner = 1 - player;
+    } else if (white.getFirstPot().getType().equals("striped")) {
+      stripeOwner = player;
+    }
+  } else {
+    //
+  }
+  
   resetVariables();
 }
 
