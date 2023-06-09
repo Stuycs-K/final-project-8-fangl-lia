@@ -66,10 +66,10 @@ public class CueStick {
         float check = 0;
         //top left and right
         if (white.position.y - Ball.size / 2 > cornerY + centerOffset + edgeThickness) {//not inside a pocket
-          if (direction.heading() > 0) {
-            check = (white.position.y - Ball.size / 2 - (cornerY + centerOffset + edgeThickness))/sin(direction.heading());
+          if (direction.heading() < 0) {
+            check = (white.position.y - Ball.size / 2 - (cornerY + centerOffset + edgeThickness))/Math.abs(sin(direction.heading()));
             float newX;
-            if (direction.heading() >= PI/2) {
+            if (direction.heading() <= -1 * PI/2) {
               newX = white.position.x - check * cos(direction.heading());
             } else {
               newX = white.position.x + check * cos(direction.heading());
