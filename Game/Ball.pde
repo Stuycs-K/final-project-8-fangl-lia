@@ -27,7 +27,7 @@ public class Ball {
 
   public int hitTime; //to change friction; in frames
   public int originalHitTime;
-  
+
   //for pool logic
   public boolean isPotted; //consider in pot()
   public boolean isMoving; //consider in collide() and bounce() and move()
@@ -98,7 +98,7 @@ public class Ball {
     isMoving = true;
     hitTime = round(f.mag()*2);
     originalHitTime = hitTime;
-    if(originalHitTime == 0) {
+    if (originalHitTime == 0) {
       originalHitTime = 1;
     }
   }
@@ -106,14 +106,14 @@ public class Ball {
   public void move() {
     if (isMoving) {
       velocity.add(acceleration);
-      
+
       //check for stop moving
       if (velocity.equals(new PVector(0, 0)) || acceleration.equals(new PVector(0, 0))) {
         reset();
       } else if (velocity.mag() < acceleration.mag() * 0.51 && Math.abs(velocity.heading() - acceleration.heading()) < 0.1) {//requires velocity and acceleration directions to be the same
         reset();
       }
-      
+
       position.add(velocity);
 
       //apply friction (INCORPORATES HIT TIME)
@@ -130,11 +130,13 @@ public class Ball {
       for (float y : pocketYs) {
         float d = dist(position.x, position.y, x, y);
         if (d < 0.1) {//equals threshold
-          pot.play();
           //animate and slide
           isRolling = true;
           position.set(880, cornerY + centerOffset + 5);
         } else if (d < pocketDiam/2) {//in pocket?
+          if (!isPotted) {//runs once
+            pot.play();
+          }
           isPotted = true;
           reset();
           PVector shift = new PVector(x - position.x, y - position.y);
@@ -144,22 +146,22 @@ public class Ball {
       }
     }
   }
-  
+
   public void slide() {
-     if (position.x < 944) {
-       position.set(position.x + 3, position.y);
-     } else {
-       float maxDepth = height - cornerY - size / 2 - 1 - numPotted * size;
-       if (position.y < maxDepth) {
-         position.set(944, position.y + 3);
-       } else {
-         position.set(position.x, maxDepth);
-         isRolling = false;
-         for (Ball b : balls) {
-           b.numPotted++;
-         }
-       }
-     }
+    if (position.x < 944) {
+      position.set(position.x + 3, position.y);
+    } else {
+      float maxDepth = height - cornerY - size / 2 - 1 - numPotted * size;
+      if (position.y < maxDepth) {
+        position.set(944, position.y + 3);
+      } else {
+        position.set(position.x, maxDepth);
+        isRolling = false;
+        for (Ball b : balls) {
+          b.numPotted++;
+        }
+      }
+    }
   }
 
   public void reset() {
@@ -170,29 +172,31 @@ public class Ball {
 
   public void bounce(Ball other) {
     PVector posDiff = other.position.copy().sub(position.copy()); //from this to other; x2 - x1
-    if(posDiff.mag() < size) {//touching or overlapped
+    if (posDiff.mag() < size) {//touching or overlapped
       //offset positions, should ensure that this only runs once per pair of balls
       PVector offset = posDiff.copy().setMag((size - posDiff.mag())/2);
       other.position.add(offset);
       position.sub(offset);
-      
+
       //calculate difference in velocities
       PVector velDiff = other.velocity.copy().sub(velocity.copy()); //from this to other; v2 - v1
       //recalculate difference in position
       posDiff.setMag(size);
-      
+
       //calculate applied velocities
       float magnitude = (velDiff.x * posDiff.x + velDiff.y * posDiff.y)/posDiff.mag();
       PVector applyToThis = posDiff.copy().setMag(magnitude);
       PVector applyToOther = posDiff.copy().rotate(PI).setMag(magnitude);
-      
+
       this.applyForce(applyToThis.mult(mass * ballRestitution));
       this.hitTime = 0;
       other.applyForce(applyToOther.mult(mass * ballRestitution));
       other.hitTime = 0; //no sliding
-      
-      float volume = velDiff.mag()/25;
-      if(volume > 1) {volume = 1;};
+
+      float volume = velDiff.mag()/size;
+      if (volume > 1) {
+        volume = 1;
+      };
       ballToBall.amp(volume);
       ballToBall.play();
     }

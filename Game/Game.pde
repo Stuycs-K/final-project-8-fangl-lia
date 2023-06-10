@@ -247,6 +247,15 @@ void draw() {
         white.applyForce(cue.direction.setMag(cue.power));
         white.isMovable = false; //resets movability
         allDone = false;
+        
+        float amp;
+        if(cue.power > 1) {
+          amp = 1;
+        } else {
+          amp = cue.power;
+        }
+        ballToBall.amp(amp);
+        ballToBall.play();
       }
       if (extend > -5) {
         extend-=10;
