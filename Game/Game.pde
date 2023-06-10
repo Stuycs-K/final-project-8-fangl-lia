@@ -81,7 +81,7 @@ void setup() {
   float yStart = 250;
   float xShift = Ball.size * sqrt(3)/2 + 0.01;
   float yShift = Ball.size * 1/2 + 0.01;
-  
+
   //decide random racking
   int[] racking = randomizeRack();
   balls[1] = new Ball(racking[1], xStart, yStart);
@@ -123,7 +123,7 @@ void setup() {
   poolLego = loadImage("pool-lego.png");
   logoWidth = 500;
   logoHeight = 250;
-  
+
   //sounds
   ballToBall = new SoundFile(this, "BallToBall.mp3");
   pot = new SoundFile(this, "Pot.mp3");
@@ -247,9 +247,9 @@ void draw() {
         white.applyForce(cue.direction.setMag(cue.power));
         white.isMovable = false; //resets movability
         allDone = false;
-        
+
         float amp;
-        if(cue.power > 1) {
+        if (cue.power > 1) {
           amp = 1;
         } else {
           amp = cue.power;
@@ -447,36 +447,36 @@ void drawRack() {
 
 int[] randomizeRack() {
   int[] ret = new int[16];
-  for(int i = 0; i < ret.length; i++) {
+  for (int i = 0; i < ret.length; i++) {
     ret[i] = i;
   }
-  
+
   //fisher-yates algorithm
-  for(int i = ret.length - 1; i > 0; i--) { //i = 0 is redundant
+  for (int i = ret.length - 1; i > 0; i--) { //i = 0 is redundant
     swap(ret, i, (int) (Math.random() * (i + 1))); //0 to i inclusive
   }
-  
-  if(ret[0] != 0) {
+
+  if (ret[0] != 0) {
     swap(ret, 0, find(ret, 0));
   }
-  if(ret[5] != 8) {
+  if (ret[5] != 8) {
     swap(ret, 5, find(ret, 8));
   }
-  
-  if(ret[1] < 8 && ret[11] < 8 && ret[15] < 8) {//all solids
+
+  if (ret[1] < 8 && ret[11] < 8 && ret[15] < 8) {//all solids
     swap(ret, 1, find(ret, 9));
   }
-  
-  if(ret[1] > 8 && ret[11] > 8 && ret[15] > 8) {//all stripes
+
+  if (ret[1] > 8 && ret[11] > 8 && ret[15] > 8) {//all stripes
     swap(ret, 1, find(ret, 1));
   }
-  
+
   return ret;
 }
 
 int find(int[] arr, int value) {
-  for(int i = 0; i < arr.length; i++) {
-    if(arr[i] == value) {
+  for (int i = 0; i < arr.length; i++) {
+    if (arr[i] == value) {
       return i;
     }
   }
@@ -484,7 +484,7 @@ int find(int[] arr, int value) {
 }
 
 void swap(int[] arr, int i, int j) {//indexes
-  if(i != j) {
+  if (i != j) {
     int temp = arr[i];
     arr[i] = arr[j];
     arr[j] = temp;
