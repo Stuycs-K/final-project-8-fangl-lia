@@ -699,3 +699,7 @@ void drawRack() {
   vertex(width - cornerX, cornerY + (rackOffset + 2 * rackSpacing) * centerOffset);
   endShape();
 }
+
+void drawAvatars() {
+  //
+}
