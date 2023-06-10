@@ -41,6 +41,11 @@ boolean breaking; //first shot
 float extend; //for the CueStick's extension when firing
 float borderBrightness; //to indicate the border of moving the WhiteBall
 
+//for sounds
+import processing.sound.*;
+SoundFile ballToBall;
+SoundFile pot;
+
 void setup() {
   // basic pool table dimensions layout
   size(1000, 500);
@@ -118,6 +123,10 @@ void setup() {
   poolLego = loadImage("pool-lego.png");
   logoWidth = 500;
   logoHeight = 250;
+  
+  //sounds
+  ballToBall = new SoundFile(this, "BallToBall.mp3");
+  pot = new SoundFile(this, "Pot.mp3");
 }
 
 void draw() {
