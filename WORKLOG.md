@@ -155,3 +155,6 @@ and it would instead require changing the entire structure of our code.
 Discussed implementing rules with Jack, helped create a template for it.
 Correctly randomized racking of the balls, with the 8-ball in the middle
 and corners with at least one of each type.
+
+### 06-09
+Started adding sound to ball-to-ball collision and pottings. Fixed a small visual bug.
