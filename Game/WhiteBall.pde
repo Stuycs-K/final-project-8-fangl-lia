@@ -36,10 +36,11 @@ public class WhiteBall extends Ball {
 
     if (isMovable) {//explain movability
       fill(0);
+      textSize(15);
       if (breaking) {
-        text("You are breaking. You have the cue ball in hand.", cornerX, height - cornerY + edgeThickness);
+        text("You are breaking. You have the cue ball in hand.", cornerX, height - cornerY + 1.3 * edgeThickness);
       } else if (foulMade) {
-        text(foulMessage, cornerX, height - cornerY + edgeThickness);
+        text(foulMessage, cornerX, height - cornerY + 1.3 * edgeThickness);
       }
     }
   }
