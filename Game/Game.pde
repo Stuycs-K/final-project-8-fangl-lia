@@ -19,11 +19,32 @@ final static int READY = 0;
 final static int AIM = 1;
 final static int FIRE = 2;
 
+int screen;
+final static int MENU = 0;
+final static int PLAY = 1;
+
+PImage playButton;
+float buttonHeight;
+float buttonWidth;
+float newButtonHeight;
+float newButtonWidth;
+boolean mouseOnNewButton;
+float buttonOffset;
+
+PImage poolLego;
+float logoHeight;
+float logoWidth;
+
 boolean allDone;
 boolean breaking; //first shot
 
 float extend; //for the CueStick's extension when firing
 float borderBrightness; //to indicate the border of moving the WhiteBall
+
+//for sounds
+import processing.sound.*;
+SoundFile ballToBall;
+SoundFile pot;
 
 void setup() {
   // basic pool table dimensions layout
@@ -55,27 +76,30 @@ void setup() {
   balls[0] = white;
   white.isMovable = true; //breaking allows movement
   breaking = true;
-  
+
   float xStart = cornerX + 0.75 * (width - 2 * cornerX);
   float yStart = 250;
   float xShift = Ball.size * sqrt(3)/2 + 0.01;
   float yShift = Ball.size * 1/2 + 0.01;
-  balls[1] = new Ball(1, xStart, yStart);
-  balls[2] = new Ball(2, xStart + xShift, yStart + yShift);
-  balls[3] = new Ball(3, xStart + xShift, yStart - yShift);
-  balls[4] = new Ball(4, xStart + 2*xShift, yStart + 2*yShift);
-  balls[5] = new Ball(5, xStart + 2*xShift, yStart);
-  balls[6] = new Ball(6, xStart + 2*xShift, yStart - 2*yShift);
-  balls[7] = new Ball(7, xStart + 3*xShift, yStart + 3*yShift);
-  balls[8] = new Ball(8, xStart + 3*xShift, yStart + 1*yShift);
-  balls[9] = new Ball(9, xStart + 3*xShift, yStart - 1*yShift);
-  balls[10] = new Ball(10, xStart + 3*xShift, yStart - 3*yShift);
-  balls[11] = new Ball(11, xStart + 4*xShift, yStart + 4*yShift);
-  balls[12] = new Ball(12, xStart + 4*xShift, yStart + 2*yShift);
-  balls[13] = new Ball(13, xStart + 4*xShift, yStart);
-  balls[14] = new Ball(14, xStart + 4*xShift, yStart - 2*yShift);
-  balls[15] = new Ball(15, xStart + 4*xShift, yStart - 4*yShift);
-  
+
+  //decide random racking
+  int[] racking = randomizeRack();
+  balls[1] = new Ball(racking[1], xStart, yStart);
+  balls[2] = new Ball(racking[2], xStart + xShift, yStart + yShift);
+  balls[3] = new Ball(racking[3], xStart + xShift, yStart - yShift);
+  balls[4] = new Ball(racking[4], xStart + 2*xShift, yStart + 2*yShift);
+  balls[5] = new Ball(racking[5], xStart + 2*xShift, yStart);
+  balls[6] = new Ball(racking[6], xStart + 2*xShift, yStart - 2*yShift);
+  balls[7] = new Ball(racking[7], xStart + 3*xShift, yStart + 3*yShift);
+  balls[8] = new Ball(racking[8], xStart + 3*xShift, yStart + 1*yShift);
+  balls[9] = new Ball(racking[9], xStart + 3*xShift, yStart - 1*yShift);
+  balls[10] = new Ball(racking[10], xStart + 3*xShift, yStart - 3*yShift);
+  balls[11] = new Ball(racking[11], xStart + 4*xShift, yStart + 4*yShift);
+  balls[12] = new Ball(racking[12], xStart + 4*xShift, yStart + 2*yShift);
+  balls[13] = new Ball(racking[13], xStart + 4*xShift, yStart);
+  balls[14] = new Ball(racking[14], xStart + 4*xShift, yStart - 2*yShift);
+  balls[15] = new Ball(racking[15], xStart + 4*xShift, yStart - 4*yShift);
+
   allDone = true;
 
   borderBrightness = 0; //for WhiteBall border
@@ -86,121 +110,167 @@ void setup() {
   //game state
   game = READY;
   extend = 0;
-  
+
+  // game mega state
+  screen = MENU;
+  playButton = loadImage("play-button.png");
+  buttonWidth = 130;
+  buttonHeight = 60;
+  newButtonWidth = buttonWidth * 1.1;
+  newButtonHeight = buttonHeight * 1.1;
+  buttonOffset = 100;
+
+  poolLego = loadImage("pool-lego.png");
+  logoWidth = 500;
+  logoHeight = 250;
+
+  //sounds
+  ballToBall = new SoundFile(this, "BallToBall.mp3");
+  pot = new SoundFile(this, "Pot.mp3");
 }
 
 void draw() {
-  background(250);
-  drawRack();
-  for (Ball b : balls) {
-    if (b.isRolling) {
-      b.slide();
-      b.show();
+  background(255);
+  fill(0);
+  text(screen, 10, 10);
+  if (screen == MENU) {
+    image(poolLego, (width - logoWidth) / 2, (0.62 * height - logoHeight) / 2, logoWidth, logoHeight);
+    if (!mouseOnNewButton) {
+      image(playButton, (width - buttonWidth) / 2, ((height - buttonHeight) / 2 + buttonOffset), buttonWidth, buttonHeight);
+      if (mouseX > (width - buttonWidth) / 2 && mouseX < (width + buttonWidth) / 2
+        && mouseY > ((height - buttonHeight) / 2 + buttonOffset) && mouseY < ((height + buttonHeight) / 2 + buttonOffset)) {
+        mouseOnNewButton = true;
+      }
+    } else {
+      image(playButton, (width - newButtonWidth) / 2, ((height - newButtonHeight) / 2 + buttonOffset), newButtonWidth, newButtonHeight);
+      if (!(mouseX > (width - newButtonWidth) / 2 && mouseX < (width + newButtonWidth) / 2
+        && mouseY > ((height - newButtonHeight) / 2 + buttonOffset) && mouseY < ((height + newButtonHeight) / 2 + buttonOffset))) {
+        mouseOnNewButton = false;
+      }
     }
   }
-  drawTable();
 
-
-  allDone = true;
-  for (Ball b : balls) {
-    if (!b.isRolling) {
-      b.show();
-    }
-
-    if (game == FIRE) {
-      b.move();
-      b.collide();
-
-      for (Ball c : balls) {
-        allDone = allDone && !c.isMoving && !c.isRolling;//check for not moving and not rolling
-        if (c != b && !c.isPotted && !c.isRolling) {
-          b.bounce(c);
-        }
+  if (screen == PLAY) {
+    drawRack();
+    for (Ball b : balls) {
+      if (b.isRolling) {
+        b.slide();
+        b.show();
       }
     }
-    b.pot();
-  }
+    drawTable();
 
-  cue.show();
 
-  //game state
-  if (game == READY) {
-    if (white.moving) {//move the white ball
-      //not out of bounds?
-      boolean xBoundedUp = mouseX > cornerX + edgeThickness + pocketDiam + centerOffset;
-      boolean xBoundedDown;
-      if(breaking) {
-        xBoundedDown = mouseX < 2 * (cornerX + edgeThickness + pocketDiam + centerOffset);
-      } else {
-        xBoundedDown = mouseX < width - cornerX - edgeThickness - centerOffset - pocketDiam;
-      }
-      boolean yBoundedUp = mouseY > cornerY + edgeThickness + pocketDiam + centerOffset;
-      boolean yBoundedDown = mouseY < height - cornerY - edgeThickness - pocketDiam - centerOffset;
-      if (xBoundedUp && xBoundedDown) {
-        white.position.x = mouseX;
-      } else if (xBoundedUp) {
-        if(breaking) {
-          white.position.x = 2 * (cornerX + edgeThickness + pocketDiam + centerOffset);
-        } else {
-          white.position.x = width - cornerX - edgeThickness - centerOffset - pocketDiam;
-        }
-      } else {
-        white.position.x = cornerX + edgeThickness + pocketDiam + centerOffset;
+    allDone = true;
+    for (Ball b : balls) {
+      if (!b.isRolling) {
+        b.show();
       }
 
-      if (yBoundedUp && yBoundedDown) {
-        white.position.y = mouseY;
-      } else if (yBoundedUp) {
-        white.position.y = height - cornerY - edgeThickness - pocketDiam - centerOffset;
-      } else {
-        white.position.y = cornerY + edgeThickness + pocketDiam + centerOffset;
-      }
+      if (game == FIRE) {
+        b.move();
+        b.collide();
 
-      if (!(xBoundedUp && xBoundedDown) || !(yBoundedUp && yBoundedDown)) {
-        if (borderBrightness < 100) {
-          borderBrightness++;
-        }
-      } else {
-        if (borderBrightness > 0) {
-          borderBrightness--;
-        }
-      }
-      
-      //not inside another ball?
-      for(Ball x: balls) {
-        if(x != white) {
-          PVector posDiff = white.position.copy().sub(x.position.copy());
-          if(posDiff.mag() < Ball.size) {
-            posDiff.setMag(Ball.size);
-            white.position = posDiff.add(x.position);
+        for (Ball c : balls) {
+          allDone = allDone && !c.isMoving && !c.isRolling;//check for not moving and not rolling
+          if (c != b && !c.isPotted && !c.isRolling) {
+            b.bounce(c);
           }
         }
       }
-    }
-  } else if (game == AIM) {
-    drawPower();
-    if (mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
-      extend = (height - cornerY - 10 - mouseY)/2;
-    }
-  } else if (game == FIRE) {
-    if (extend > -5 && extend <= 5) {//runs once
-      white.applyForce(cue.direction.setMag(cue.power));
-      white.isMovable = false; //resets movability
-      allDone = false;
-    }
-    if (extend > -5) {
-      extend-=10;
+      b.pot();
     }
 
-    if (extend <= -5 && allDone && !white.isPotted) {//the second boolean is changeable, only runs after applying force
-      game = READY;
-      extend = 0;
-    }
-  }
+    cue.show();
 
-  if (game != READY || !white.moving) {
-    if (borderBrightness > 0) {
-      borderBrightness--;
+    //game state
+    if (game == READY) {
+      if (white.moving) {//move the white ball
+        //not out of bounds?
+        boolean xBoundedUp = mouseX > cornerX + edgeThickness + pocketDiam + centerOffset;
+        boolean xBoundedDown;
+        if (breaking) {
+          xBoundedDown = mouseX < 2 * (cornerX + edgeThickness + pocketDiam + centerOffset);
+        } else {
+          xBoundedDown = mouseX < width - cornerX - edgeThickness - centerOffset - pocketDiam;
+        }
+        boolean yBoundedUp = mouseY > cornerY + edgeThickness + pocketDiam + centerOffset;
+        boolean yBoundedDown = mouseY < height - cornerY - edgeThickness - pocketDiam - centerOffset;
+        if (xBoundedUp && xBoundedDown) {
+          white.position.x = mouseX;
+        } else if (xBoundedUp) {
+          if (breaking) {
+            white.position.x = 2 * (cornerX + edgeThickness + pocketDiam + centerOffset);
+          } else {
+            white.position.x = width - cornerX - edgeThickness - centerOffset - pocketDiam;
+          }
+        } else {
+          white.position.x = cornerX + edgeThickness + pocketDiam + centerOffset;
+        }
+
+        if (yBoundedUp && yBoundedDown) {
+          white.position.y = mouseY;
+        } else if (yBoundedUp) {
+          white.position.y = height - cornerY - edgeThickness - pocketDiam - centerOffset;
+        } else {
+          white.position.y = cornerY + edgeThickness + pocketDiam + centerOffset;
+        }
+
+        if (!(xBoundedUp && xBoundedDown) || !(yBoundedUp && yBoundedDown)) {
+          if (borderBrightness < 100) {
+            borderBrightness++;
+          }
+        } else {
+          if (borderBrightness > 0) {
+            borderBrightness--;
+          }
+        }
+
+        //not inside another ball?
+        for (Ball x : balls) {
+          if (x != white) {
+            PVector posDiff = white.position.copy().sub(x.position.copy());
+            if (posDiff.mag() < Ball.size) {
+              posDiff.setMag(Ball.size);
+              white.position = posDiff.add(x.position);
+            }
+          }
+        }
+      }
+    } else if (game == AIM) {
+      drawPower();
+      if (mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
+        extend = (height - cornerY - 10 - mouseY)/2;
+      }
+    } else if (game == FIRE) {
+      if (extend > -5 && extend <= 5) {//runs once
+        white.applyForce(cue.direction.setMag(cue.power));
+        white.isMovable = false; //resets movability
+        allDone = false;
+
+        float amp;
+        if (cue.power > 1) {
+          amp = 1;
+        } else {
+          amp = cue.power;
+        }
+        ballToBall.amp(amp);
+        ballToBall.play();
+      }
+      if (extend > -5) {
+        extend-=10;
+      }
+
+      if (extend <= -5 && allDone && !white.isPotted) {//the second boolean is changeable, only runs after applying force
+        game = READY;
+        extend = 0;
+      }
+    }
+
+    if (game != READY || !white.moving) {
+      if (borderBrightness > 0) {
+        borderBrightness--;
+      }
     }
   }
 }
@@ -214,24 +284,43 @@ void mousePressed() {
 }
 
 void mouseReleased() {
-  white.moving = false;
-  cue.showable = true;
+  if (screen == PLAY) {
+    white.moving = false;
+    cue.showable = true;
+  }
 }
 
 void mouseClicked() {
-  if (game == READY) {
-    if (dist(mouseX, mouseY, white.position.x, white.position.y) >= Ball.size) {
-      game = AIM;
+  if (screen == PLAY) {
+    if (game == READY) {
+      if (dist(mouseX, mouseY, white.position.x, white.position.y) >= Ball.size) {
+        game = AIM;
+      }
+    } else if (game == AIM) {
+      //inside power?
+      if (mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
+        cue.power = 0.5 + 3.5 * (height - cornerY - 10 - mouseY)/(height - 2*cornerY - 20);
+        game = FIRE;
+        breaking = false;
+      } else {
+        game = READY;
+        extend = 0;
+      }
     }
-  } else if (game == AIM) {
-    //inside power?
-    if (mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
-      cue.power = 0.5 + 3.5 * (height - cornerY - 10 - mouseY)/(height - 2*cornerY - 20);
-      game = FIRE;
-      breaking = false;
+  }
+
+  if (screen == MENU) {
+
+    if (mouseOnNewButton) {
+      if (mouseX > (width - newButtonWidth) / 2 && mouseX < (width + newButtonWidth) / 2
+        && mouseY > ((height - newButtonHeight) / 2 + buttonOffset) && mouseY < ((height + newButtonHeight) / 2 + buttonOffset)) {
+        screen = PLAY;
+      }
     } else {
-      game = READY;
-      extend = 0;
+      if (mouseX > (width - buttonWidth) / 2 && mouseX < (width + buttonWidth) / 2
+        && mouseY > ((height - buttonHeight) / 2 + buttonOffset) && mouseY < ((height + buttonHeight) / 2 + buttonOffset)) {
+        screen = PLAY;
+      }
     }
   }
 }
@@ -322,19 +411,19 @@ void drawTable() {
   strokeWeight(1);
   fill(106, 182, 99);
   stroke(106 + borderBrightness, 182 + borderBrightness, 99 + borderBrightness);
-  if(breaking) {
+  if (breaking) {
     rect(cornerX + edgeThickness + centerOffset + pocketDiam - Ball.size/2, cornerY + edgeThickness + pocketDiam + centerOffset - Ball.size/2,
-    cornerX + edgeThickness + pocketDiam + centerOffset + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
+      cornerX + edgeThickness + pocketDiam + centerOffset + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
   } else {
     rect(cornerX + edgeThickness + centerOffset + pocketDiam - Ball.size/2, cornerY + edgeThickness + pocketDiam + centerOffset - Ball.size/2,
-    width - 2*(cornerX + edgeThickness + centerOffset + pocketDiam) + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
+      width - 2*(cornerX + edgeThickness + centerOffset + pocketDiam) + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
   }
 }
 
 void drawRack() {
   noFill();
   stroke(150);
-  
+
   strokeWeight(3);
   beginShape();
   vertex(width - cornerX, cornerY + rackOffset * centerOffset);
@@ -344,7 +433,7 @@ void drawRack() {
   vertex(width - cornerX * 2 / 3.0, cornerY + (rackOffset + 3 * rackSpacing) * centerOffset);
   vertex(width - cornerX, cornerY + (rackOffset + 3 * rackSpacing) * centerOffset);
   endShape();
-  
+
   strokeWeight(1);
   beginShape();
   vertex(width - cornerX, cornerY + (rackOffset + rackSpacing) * centerOffset);
@@ -354,5 +443,50 @@ void drawRack() {
   vertex(width - cornerX * 2 / 3.0 + rackSpacing * centerOffset, cornerY + (rackOffset + 2 * rackSpacing) * centerOffset);
   vertex(width - cornerX, cornerY + (rackOffset + 2 * rackSpacing) * centerOffset);
   endShape();
-  
+}
+
+int[] randomizeRack() {
+  int[] ret = new int[16];
+  for (int i = 0; i < ret.length; i++) {
+    ret[i] = i;
+  }
+
+  //fisher-yates algorithm
+  for (int i = ret.length - 1; i > 0; i--) { //i = 0 is redundant
+    swap(ret, i, (int) (Math.random() * (i + 1))); //0 to i inclusive
+  }
+
+  if (ret[0] != 0) {
+    swap(ret, 0, find(ret, 0));
+  }
+  if (ret[5] != 8) {
+    swap(ret, 5, find(ret, 8));
+  }
+
+  if (ret[1] < 8 && ret[11] < 8 && ret[15] < 8) {//all solids
+    swap(ret, 1, find(ret, 9));
+  }
+
+  if (ret[1] > 8 && ret[11] > 8 && ret[15] > 8) {//all stripes
+    swap(ret, 1, find(ret, 1));
+  }
+
+  return ret;
+}
+
+int find(int[] arr, int value) {
+  for (int i = 0; i < arr.length; i++) {
+    if (arr[i] == value) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+void swap(int[] arr, int i, int j) {//indexes
+  if (i != j) {
+    int temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+  }
 }

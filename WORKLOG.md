@@ -39,7 +39,13 @@ Added rack to collect the balls in. Made potted balls slide into this rack inste
 Tested rack branch. Merged rack branch with main.
 
 ### 06-07
+Added main menu screen with clickable button. Started implementing turns.
 
+### 06-08
+Made giant outline of rules in Google Docs. Introduced arrays to store the number of potted balls of each type. Added processing skeleton, as well as hitRail skeleton for colored balls. Added new booleans for white ball to help with rules.
+
+### 06-09
+Finished helper methods for turns and fouls. Added all turn and foul rules in Turns branch. Added win screen and win text.
 
 ## Andrew Li
 
@@ -139,3 +145,16 @@ Merged the CueStick guideline, decided not to implement wall detection.
 Attempted to make collisions more accurate in the fixPhysics branch with
 math, but it ended up breaking the whole thing; reverted changes. Considering
 upping the refresh rate from 60 to try and make collisions more accurate...
+
+### 06-07
+Looked at a few more ways to fix physics, decided it would be too complex.
+The article helps, but I had already tried implementing most of the ideas,
+and it would instead require changing the entire structure of our code.
+
+### 06-08
+Discussed implementing rules with Jack, helped create a template for it.
+Correctly randomized racking of the balls, with the 8-ball in the middle
+and corners with at least one of each type.
+
+### 06-09
+Started adding sound to ball-to-ball collision and pottings. Fixed a small visual bug.
