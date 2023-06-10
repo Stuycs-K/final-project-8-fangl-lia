@@ -130,6 +130,7 @@ public class Ball {
       for (float y : pocketYs) {
         float d = dist(position.x, position.y, x, y);
         if (d < 0.1) {//equals threshold
+          pot.play();
           //animate and slide
           isRolling = true;
           position.set(880, cornerY + centerOffset + 5);
@@ -189,6 +190,11 @@ public class Ball {
       this.hitTime = 0;
       other.applyForce(applyToOther.mult(mass * ballRestitution));
       other.hitTime = 0; //no sliding
+      
+      float volume = velDiff.mag()/25;
+      if(volume > 1) {volume = 1;};
+      ballToBall.amp(volume);
+      ballToBall.play();
     }
   }
 
