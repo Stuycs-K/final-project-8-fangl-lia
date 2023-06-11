@@ -32,3 +32,30 @@ To win the game, a player must pot all of their balls and then the 8 ball legall
 A player may also win if their opponent incurs an **automatic loss**.
 
 ### Rules
+The first shot of the game is called the *break*. For a break to be legal,
+a colored ball must be potted, or at least four balls must strike a rail.
+Otherwise, a foul is committed.
+
+Most colored balls, with the exception of the 8 ball, are separated into two
+*groups*: solids (numbered 1 through 7) and stripes (numbered 9 through 15).
+The first shot after the break that pots a ball and does not commit a foul
+decides the groups for the players. The player making this shot receives the
+group of the first ball they pot.
+
+Once groups are decided, the goal of the game is to pot one's group's balls
+and eventually pot the 8 ball.
+
+A foul is committed if any one of these occur during/after a shot:
+- The cue ball is potted
+- No balls strike a rail
+- No colored balls are struck
+- If groups are determined, the cue ball's first contact is NOT of the same
+group as the shooting player
+- The shot clock for the player runs out before they make a shot
+
+Players may also lose at any point in the game. These are called automatic
+losses. They occur if any of these occur during a shot:
+- The shooting player pots the 8 ball without having finished potting all balls
+of their group
+- The shooting player pots the 8 ball and the cue ball in the same shot
+- The shooting player commits a foul and pots the 8 ball in the same shot
