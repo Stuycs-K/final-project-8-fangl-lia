@@ -38,12 +38,12 @@ public class WhiteBall extends Ball {
       fill(0);
       textSize(15);
       if (breaking) {
-        text("You are breaking. You have the cue ball in hand.", cornerX, height - cornerY + 1.3 * edgeThickness);
+        text("You are breaking. You have the cue ball in hand.", cornerX, height - cornerY + 16);
       } else if (foulMade) {
         if (foulMessage.equals(CUEPLUS8) || foulMessage.equals(POT8) || foulMessage.equals(WIN) || foulMessage.equals(BADPOT8)) {
-          text(foulMessage, cornerX, height - cornerY + 1.3 * edgeThickness);
+          text(foulMessage, cornerX, height - cornerY + 16);
         } else {
-          text(foulMessage + " Opposing player has the cue ball in hand.", cornerX, height - cornerY + 1.3 * edgeThickness);
+          text(foulMessage + " Opposing player has the cue ball in hand.", cornerX, height - cornerY + 16);
         }
       }
     }

@@ -465,13 +465,13 @@ public class Ball {
     x0 = width - cornerX - centerOffset - pocketDiam / 2;
     y1 = y0 + edgeThickness;
     x1 = x0 - edgeThickness;
-    y = position.y + size / (2 * Math.sqrt(2));
-    x = position.x + size / (2 * Math.sqrt(2));
+    y = position.y - size / (2 * Math.sqrt(2));
+    x = position.x - size / (2 * Math.sqrt(2));
 
     v0 = rot45Neg((float)x0, (float)y0);
     v1 = rot45Neg((float)x1, (float)y1);
     v = rot45Neg((float)x, (float)y);
-
+    
     //
     if (v.y >= v0.y && v.y <= v1.y && v.x <= v0.x) { // ball is in the region
       v.set(v0.x + size / 2, v.y);
