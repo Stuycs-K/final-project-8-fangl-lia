@@ -64,4 +64,17 @@ of their group, or before groups have been decided
 ## Updated Prototype
 ### Updated UML
 
-###
+### Updated Description
+There is gameplay and rules for two players. As part of this, the game will
+track the solids and stripes for the players. Physics involving inelastic collisions
+are implemented. Players are greeted with a title/start screen,
+and sounds for the cue stick, ball, and edge collisions as well as potting balls.
+
+## Dev Log
+### Working Features
+
+### Broken features/bugs
+
+### Resources
+
+### Possible Improvements
