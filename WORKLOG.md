@@ -158,3 +158,10 @@ and corners with at least one of each type.
 
 ### 06-09
 Started adding sound to ball-to-ball collision and pottings. Fixed a small visual bug.
+
+### 06-10
+Completed first two aspects of README. Again considered fixing physics,
+but doing so involves recursion and combining most of the main code we have,
+which there is not enough time for.
+
+### 06-11
