@@ -199,13 +199,13 @@ void draw() {
     
     // for the yellow glow of avatars
     if (yellowTintIncreasing) {
-        if (yellowTint < 100) {
+        if (yellowTint < 130) {
           yellowTint += 2;
         } else {
           yellowTintIncreasing = false;
         }
     } else {
-      if (yellowTint > 2) {
+      if (yellowTint > 30) {
         yellowTint -= 2;
       } else {
         yellowTintIncreasing = true;
@@ -216,7 +216,7 @@ void draw() {
     if (player == PLAYER2) {
       tint(255,255,255);
       image(blueAvatar, 52, 42, avatarSize, avatarSize);
-      tint(255 - yellowTint, 255 - yellowTint, 150);
+      tint(255 - yellowTint, 255 - yellowTint, 50);
       image(redAvatar, width - 52, 42, avatarSize, avatarSize);
     } else if (player == PLAYER1) {
       tint(255,255,255);
