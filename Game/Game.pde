@@ -170,8 +170,8 @@ void setup() {
   logoWidth = 500;
   logoHeight = 250;
   
-  blueAvatar = loadImage("blueAvatar.png");
-  redAvatar = loadImage("redAvatar.png");
+  blueAvatar = loadImage("newBlueAvatar.png");
+  redAvatar = loadImage("newRedAvatar.png");
   avatarSize = 90;
   yellowTintIncreasing = true;
   
