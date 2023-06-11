@@ -20,6 +20,13 @@ final static int AIM = 1;
 final static int FIRE = 2;
 final static int END = 3;
 
+boolean broadcast1;
+int broadcast1player;
+int broadcast1timer;
+boolean broadcast2;
+int broadcast2timer;
+int announcementDuration;
+
 int screen;
 final static int MENU = 0;
 final static int PLAY = 1;
@@ -56,6 +63,8 @@ final static String BADPOT8 = "You lose! You did not hit the 8-ball first.";
 final static String CUEPLUS8 = "You lose! You potted the cue ball along with the 8-ball.";
 final static String WIN = "You win! You potted the 8-ball.";
 final static String POT8 = "You lost! You potted the 8-ball.";
+
+boolean displayAssignmentDone;
 
 PImage playButton;
 float buttonHeight;
@@ -165,6 +174,8 @@ void setup() {
   redAvatar = loadImage("redAvatar.png");
   avatarSize = 90;
   yellowTintIncreasing = true;
+  
+  announcementDuration = 120; // 60 frames per second
 }
 
 void draw() {
@@ -223,7 +234,7 @@ void draw() {
       image(redAvatar, width - 52, 42, avatarSize, avatarSize);
       tint(255 - yellowTint, 255 - yellowTint, 150);
       image(blueAvatar, 52, 42, avatarSize, avatarSize);
-    }
+    }    
     
     // TEXT FOR DEBUGGING
     textSize(12);
@@ -275,6 +286,36 @@ void draw() {
         }
       }
       b.pot();
+    }
+    
+    // for messages "You are stripes!" or "You are solids!"
+    if (broadcast1 && player == broadcast1player) {
+      if (broadcast1timer > 0) {
+        textSize(90);
+        fill(120, 120, 120);
+        if (broadcast1player == stripeOwner) {
+          text("You are stripes!", width / 2.0 - 270, height / 2.0 + 30);
+        } else {
+          text("You are solids!", width / 2.0 - 260, height / 2.0 + 30);
+        }
+        broadcast1timer--;
+      } else {
+        broadcast1 = false;
+      }
+    }
+    if (broadcast2 && player != broadcast1player) {
+      if (broadcast2timer > 0) {
+        textSize(90);
+        fill(120, 120, 120);
+        if (broadcast1player == stripeOwner) {
+          text("You are solids!", width / 2.0 - 260, height / 2.0 + 30);
+        } else {
+          text("You are stripes!", width / 2.0 - 270, height / 2.0 + 30);
+        }
+        broadcast2timer--;
+      } else {
+        broadcast2 = false;
+      }
     }
     
     if (winner != -1) { 
@@ -374,8 +415,8 @@ void draw() {
         fill(120, 120, 120);
         text("You Lose!", width / 2.0 - 230, height / 2.0 + 35);
       }
-    }
-
+    } 
+    
     if (game != READY || !white.moving) {
       if (borderBrightness > 0) {
         borderBrightness--;
@@ -569,8 +610,18 @@ void process() {
       player = 1 - player;
     } else if (white.getFirstPot().getType().equals("solid")) {
       stripeOwner = 1 - player;
+      broadcast1 = true;
+      broadcast1player = player;
+      broadcast1timer = announcementDuration;
+      broadcast2 = true;
+      broadcast2timer = announcementDuration;
     } else if (white.getFirstPot().getType().equals("striped")) {
       stripeOwner = player;
+      broadcast1 = true;
+      broadcast1player = player;
+      broadcast1timer = announcementDuration;
+      broadcast2 = true;
+      broadcast2timer = announcementDuration;
     }
   } else { // table is not open, groups have been assigned
     if (player == stripeOwner) {
