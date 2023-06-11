@@ -155,8 +155,10 @@ public class Ball {
             
             if (getType().equals("striped")) {
               numNewPotted[0]++;
+              stripes.remove(Integer.valueOf(getNumber()));
             } else if (getType().equals("solid")) {
               numNewPotted[1]++;
+              solids.remove(Integer.valueOf(getNumber()));
             }
             pottedAndProcessed = true;
           }

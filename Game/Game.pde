@@ -64,7 +64,16 @@ final static String CUEPLUS8 = "You lose! You potted the cue ball along with the
 final static String WIN = "You win! You potted the 8-ball.";
 final static String POT8 = "You lost! You potted the 8-ball.";
 
-boolean displayAssignmentDone;
+ArrayList<Integer> solids;
+ArrayList<Integer> stripes;
+PImage rack;
+float rackX;
+float rackY;
+float rackWidth;
+float rackHeight;
+float rackRound;
+float rackSpace;
+float displacement;
 
 PImage playButton;
 float buttonHeight;
@@ -146,7 +155,6 @@ void setup() {
   balls[15] = new Ball(15, xStart + 4*xShift, yStart - 4*yShift);
 
   allDone = true;
-  
 
   borderBrightness = 0; //for WhiteBall border
 
@@ -176,6 +184,23 @@ void setup() {
   yellowTintIncreasing = true;
   
   announcementDuration = 120; // 60 frames per second
+  
+  rack = loadImage("rack.png");
+  solids = new ArrayList<Integer>();
+  stripes = new ArrayList<Integer>();
+  for (int i = 1; i <= 7; i++) {
+    solids.add(i);
+  }
+  for (int i = 9; i <= 15; i++) {
+    stripes.add(i);
+  }
+  rackX = 220;
+  rackY = 40;
+  rackWidth = 200;
+  rackHeight = 30;
+  rackRound = 10;
+  rackSpace = 5;
+  displacement =  0.142 * rackWidth;
 }
 
 void draw() {
@@ -197,7 +222,8 @@ void draw() {
       }
     }
   }
-
+  
+  // for animating balls slididing into rack
   if (screen == PLAY) {
     drawRack();
     for (Ball b : balls) {
@@ -208,61 +234,11 @@ void draw() {
     }
     drawTable();
     
-    // for the yellow glow of avatars
-    if (yellowTintIncreasing) {
-        if (yellowTint < 130) {
-          yellowTint += 2;
-        } else {
-          yellowTintIncreasing = false;
-        }
-    } else {
-      if (yellowTint > 30) {
-        yellowTint -= 2;
-      } else {
-        yellowTintIncreasing = true;
-      }
-    }
+    // display avatars
+    displayAvatars();
     
-    // avatar displays
-    if (player == PLAYER2) {
-      tint(255,255,255);
-      image(blueAvatar, 52, 42, avatarSize, avatarSize);
-      tint(255 - yellowTint, 255 - yellowTint, 50);
-      image(redAvatar, width - 52, 42, avatarSize, avatarSize);
-    } else if (player == PLAYER1) {
-      tint(255,255,255);
-      image(redAvatar, width - 52, 42, avatarSize, avatarSize);
-      tint(255 - yellowTint, 255 - yellowTint, 150);
-      image(blueAvatar, 52, 42, avatarSize, avatarSize);
-    }    
-    
-    // TEXT FOR DEBUGGING
-    textSize(12);
-    text("Old striped and solids " + numOldPotted[0] + " " + numOldPotted[1], 5, 10);
-    text("New striped and solids " + numNewPotted[0] + " " + numNewPotted[1], 5, 25);
-    if (white.getFirstContact() == null) {
-      text("white no contact", 400, 10);
-    } else {
-      text("white's first contact: " + white.getFirstContact().getNumber(), 400, 10);
-    }
-    if (white.getFirstPot() == null) {
-      text("white no pot", 400, 25);
-    } else {
-      text("white's first pot: " + white.getFirstPot().getNumber(), 400, 25);
-    }
-    if (winner == -1) {
-      text("game in progress", 600, 10);
-    } else {
-      text("game winner is Player " + (winner + 1), 600, 10);
-    }
-    text("foul made: " + foulMade, 600, 25);
-    text("player turn: " + (player + 1), 200, 10);
-    text("breaking: " + breaking, 200, 25);
-    if (stripeOwner == -1) {
-      text("table open", 600, 40);
-    } else {
-      text("stripe owner: Player " + (stripeOwner + 1), 600, 40);
-    }
+    // display racks
+    displayRacks();
     
     allDone = true;
     for (Ball b : balls) {
@@ -473,6 +449,103 @@ void mouseClicked() {
         screen = PLAY;
       }
     }
+  }
+}
+
+void displayAvatars() {
+  // for the yellowish glow of avatars
+  if (yellowTintIncreasing) {
+    if (yellowTint < 130) {
+      yellowTint += 2;
+    } else {
+      yellowTintIncreasing = false;
+    }
+  } else {
+    if (yellowTint > 30) {
+      yellowTint -= 2;
+    } else {
+      yellowTintIncreasing = true;
+    }
+  }
+  
+  // avatars
+  if (player == PLAYER2) {
+    tint(255,255,255);
+    image(blueAvatar, 52, 42, avatarSize, avatarSize);
+    tint(255 - yellowTint, 255 - yellowTint, 50);
+    image(redAvatar, width - 52, 42, avatarSize, avatarSize);
+  } else if (player == PLAYER1) {
+    tint(255,255,255);
+    image(redAvatar, width - 52, 42, avatarSize, avatarSize);
+    tint(255 - yellowTint, 255 - yellowTint, 150);
+    image(blueAvatar, 52, 42, avatarSize, avatarSize);
+  }
+}
+
+void displayRacks() {
+  // rack outlines
+  stroke(0);
+  strokeWeight(2);
+  noFill();
+  if (player == PLAYER1) {
+    rect(rackX - rackWidth / 2 - rackSpace, rackY - rackHeight / 2 - rackSpace, rackWidth + 2 * rackSpace, rackHeight + 2 * rackSpace, rackRound);
+  } else if (player == PLAYER2) {
+    rect(width - rackX - rackWidth / 2 - rackSpace, rackY - rackHeight / 2 - rackSpace, rackWidth + 2 * rackSpace, rackHeight + 2 * rackSpace, rackRound);
+  }
+  
+  // racks 
+  image(rack, rackX, rackY, rackWidth, rackHeight);
+  image(rack, width - rackX, rackY, rackWidth, rackHeight);
+  
+  // balls
+  if (stripeOwner == PLAYER1) {
+    displayLeft(stripes);
+    displayRight(solids);
+  } else if (stripeOwner == PLAYER2) {
+    displayLeft(solids);
+    displayRight(stripes);
+  }
+}
+
+void displayLeft(ArrayList<Integer> nums) {
+  if (nums.size() == 0) {
+    showBall(8, rackX - 3 * displacement, rackY);
+  } else {
+    for (int i = 0; i < nums.size(); i++) {
+      showBall(nums.get(i), rackX + (i - 3) * displacement, rackY);
+    }
+  }
+}
+
+void displayRight(ArrayList<Integer> nums) {
+  if (nums.size() == 0) {
+    showBall(8, width - rackX + 3 * displacement, rackY);
+  } else {
+    for (int i = 0; i < nums.size(); i++) {
+      showBall(nums.get(i), width - rackX + (3 - i) * displacement, rackY);
+    }
+  }
+}
+
+// precondition:  1 <= n <= 15
+void showBall(int number, float x, float y) {
+  float size = Ball.size * 1.35;
+  noStroke();
+  fill(white.ballColors[number]);
+  circle(x, y, size);
+  textSize(12.5);
+  fill(255);
+  if (number < 10) {
+    text("" + number, x - 3.5, y + 4);
+  } else {
+    text("" + number, x - 7, y + 4);
+  }
+
+  if (number >= 9 && number <= 15) {
+    fill(255);
+    noStroke();
+    arc(x, y, size, size, PI/5, 4*PI/5, CHORD);
+    arc(x, y, size, size, 6*PI/5, 9*PI/5, CHORD);
   }
 }
 
@@ -786,8 +859,4 @@ void drawRack() {
   vertex(width - cornerX * 2 / 3.0 + rackSpacing * centerOffset, cornerY + (rackOffset + 2 * rackSpacing) * centerOffset);
   vertex(width - cornerX, cornerY + (rackOffset + 2 * rackSpacing) * centerOffset);
   endShape();
-}
-
-void drawAvatars() {
-  //
 }
