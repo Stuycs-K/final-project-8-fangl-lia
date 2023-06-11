@@ -32,6 +32,12 @@ int[] numOldPotted;
 int[] numNewPotted;
 int numHitRail;
 
+PImage blueAvatar;
+PImage redAvatar;
+float avatarSize;
+int yellowTint;
+boolean yellowTintIncreasing;
+
 int winner; // -1 if game hasn't ended, 0 if player 1, 1 if player 2
 float endScreenHeight;
 float endScreenWidth;
@@ -154,6 +160,11 @@ void setup() {
   poolLego = loadImage("pool-lego.png");
   logoWidth = 500;
   logoHeight = 250;
+  
+  blueAvatar = loadImage("blueAvatar.png");
+  redAvatar = loadImage("redAvatar.png");
+  avatarSize = 90;
+  yellowTintIncreasing = true;
 }
 
 void draw() {
@@ -186,12 +197,38 @@ void draw() {
     }
     drawTable();
     
+    // for the yellow glow of avatars
+    if (yellowTintIncreasing) {
+        if (yellowTint < 100) {
+          yellowTint += 2;
+        } else {
+          yellowTintIncreasing = false;
+        }
+    } else {
+      if (yellowTint > 2) {
+        yellowTint -= 2;
+      } else {
+        yellowTintIncreasing = true;
+      }
+    }
+    
+    // avatar displays
+    if (player == PLAYER2) {
+      tint(255,255,255);
+      image(blueAvatar, 52, 42, avatarSize, avatarSize);
+      tint(255 - yellowTint, 255 - yellowTint, 150);
+      image(redAvatar, width - 52, 42, avatarSize, avatarSize);
+    } else if (player == PLAYER1) {
+      tint(255,255,255);
+      image(redAvatar, width - 52, 42, avatarSize, avatarSize);
+      tint(255 - yellowTint, 255 - yellowTint, 150);
+      image(blueAvatar, 52, 42, avatarSize, avatarSize);
+    }
+    
     // TEXT FOR DEBUGGING
     textSize(12);
     text("Old striped and solids " + numOldPotted[0] + " " + numOldPotted[1], 5, 10);
     text("New striped and solids " + numNewPotted[0] + " " + numNewPotted[1], 5, 25);
-    text("numHitRail = " + numHitRail, 200, 10);
-    text("white.hitRail = " + white.hitRail, 200, 25);
     if (white.getFirstContact() == null) {
       text("white no contact", 400, 10);
     } else {
@@ -208,8 +245,8 @@ void draw() {
       text("game winner is Player " + (winner + 1), 600, 10);
     }
     text("foul made: " + foulMade, 600, 25);
-    text("player turn: " + (player + 1), 800, 10);
-    text("breaking: " + breaking, 800, 25);
+    text("player turn: " + (player + 1), 200, 10);
+    text("breaking: " + breaking, 200, 25);
     if (stripeOwner == -1) {
       text("table open", 600, 40);
     } else {
