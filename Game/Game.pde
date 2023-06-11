@@ -13,6 +13,7 @@ float[] pocketYs;
 WhiteBall white;
 CueStick cue;
 Ball[] balls;
+int indexOf8;
 
 int game;
 final static int READY = 0;
@@ -94,6 +95,11 @@ boolean processingDone;
 float extend; //for the CueStick's extension when firing
 float borderBrightness; //to indicate the border of moving the WhiteBall
 
+//for sounds
+import processing.sound.*;
+SoundFile ballToBall;
+SoundFile pot;
+
 void setup() {
   // basic pool table dimensions layout
   size(1000, 500);
@@ -138,21 +144,31 @@ void setup() {
   float yStart = 250;
   float xShift = Ball.size * sqrt(3)/2 + 0.01;
   float yShift = Ball.size * 1/2 + 0.01;
-  balls[1] = new Ball(1, xStart, yStart);
-  balls[2] = new Ball(2, xStart + xShift, yStart + yShift);
-  balls[3] = new Ball(3, xStart + xShift, yStart - yShift);
-  balls[4] = new Ball(4, xStart + 2*xShift, yStart + 2*yShift);
-  balls[5] = new Ball(5, xStart + 3*xShift, yStart + 1*yShift);
-  balls[6] = new Ball(6, xStart + 2*xShift, yStart - 2*yShift);
-  balls[7] = new Ball(7, xStart + 3*xShift, yStart + 3*yShift);
-  balls[8] = new Ball(8, xStart + 2*xShift, yStart);
-  balls[9] = new Ball(9, xStart + 3*xShift, yStart - 1*yShift);
-  balls[10] = new Ball(10, xStart + 3*xShift, yStart - 3*yShift);
-  balls[11] = new Ball(11, xStart + 4*xShift, yStart + 4*yShift);
-  balls[12] = new Ball(12, xStart + 4*xShift, yStart + 2*yShift);
-  balls[13] = new Ball(13, xStart + 4*xShift, yStart);
-  balls[14] = new Ball(14, xStart + 4*xShift, yStart - 2*yShift);
-  balls[15] = new Ball(15, xStart + 4*xShift, yStart - 4*yShift);
+
+  //decide random racking
+  int[] racking = randomizeRack();
+  balls[1] = new Ball(racking[1], xStart, yStart);
+  balls[2] = new Ball(racking[2], xStart + xShift, yStart + yShift);
+  balls[3] = new Ball(racking[3], xStart + xShift, yStart - yShift);
+  balls[4] = new Ball(racking[4], xStart + 2*xShift, yStart + 2*yShift);
+  balls[5] = new Ball(racking[5], xStart + 2*xShift, yStart);
+  balls[6] = new Ball(racking[6], xStart + 2*xShift, yStart - 2*yShift);
+  balls[7] = new Ball(racking[7], xStart + 3*xShift, yStart + 3*yShift);
+  balls[8] = new Ball(racking[8], xStart + 3*xShift, yStart + 1*yShift);
+  balls[9] = new Ball(racking[9], xStart + 3*xShift, yStart - 1*yShift);
+  balls[10] = new Ball(racking[10], xStart + 3*xShift, yStart - 3*yShift);
+  balls[11] = new Ball(racking[11], xStart + 4*xShift, yStart + 4*yShift);
+  balls[12] = new Ball(racking[12], xStart + 4*xShift, yStart + 2*yShift);
+  balls[13] = new Ball(racking[13], xStart + 4*xShift, yStart);
+  balls[14] = new Ball(racking[14], xStart + 4*xShift, yStart - 2*yShift);
+  balls[15] = new Ball(racking[15], xStart + 4*xShift, yStart - 4*yShift);
+  
+  for (int i = 0; i < balls.length; i++) {
+    if (balls[i].getNumber() == 8) {
+      indexOf8 = i;
+      break;
+    }
+  }
 
   allDone = true;
 
@@ -201,6 +217,10 @@ void setup() {
   rackRound = 10;
   rackSpace = 5;
   displacement =  0.142 * rackWidth;
+
+  //sounds
+  ballToBall = new SoundFile(this, "BallToBall.mp3");
+  pot = new SoundFile(this, "Pot.mp3");
 }
 
 void draw() {
@@ -369,6 +389,15 @@ void draw() {
         processingDone = false;
         foulMade = false;
         white.positionReset = false;
+
+        float amp;
+        if (cue.power > 1) {
+          amp = 1;
+        } else {
+          amp = cue.power;
+        }
+        ballToBall.amp(amp);
+        ballToBall.play();
       }
       if (extend > -5) {
         extend-=10;
@@ -646,7 +675,7 @@ void drawTable() {
 
 void process() {
   if (breaking) { // break
-    if (balls[8].isPotted) {
+    if (balls[indexOf8].isPotted) {
       winner = 1 - player;
       foulMade = true;
       foulMessage = POT8;
@@ -663,7 +692,7 @@ void process() {
     }
     breaking = false;
   } else if (stripeOwner == -1) { // open table
-    if (balls[8].isPotted) {
+    if (balls[indexOf8].isPotted) {
       winner = 1 - player;
       foulMade = true;
       foulMessage = POT8;
@@ -699,7 +728,7 @@ void process() {
   } else { // table is not open, groups have been assigned
     if (player == stripeOwner) {
       if (numOldPotted[0] == 7) { // allowed to pot 8 ball
-        if (balls[8].isPotted) {
+        if (balls[indexOf8].isPotted) {
           if (white.isPotted) {
             winner = 1 - player;
             foulMade = true;
@@ -732,7 +761,7 @@ void process() {
         } else {
           player = 1 - player;
         }
-      } else if (balls[8].isPotted) {
+      } else if (balls[indexOf8].isPotted) {
         winner = 1 - player;
         foulMade = true;
         foulMessage = POT8;
@@ -757,7 +786,7 @@ void process() {
       }
     } else { // player has solids
       if (numOldPotted[1] == 7) { // allowed to pot 8 ball
-        if (balls[8].isPotted) {
+        if (balls[indexOf8].isPotted) {
           if (white.isPotted) {
             winner = 1 - player;
             foulMade = true;
@@ -790,7 +819,7 @@ void process() {
         } else {
           player = 1 - player;
         }
-      } else if (balls[8].isPotted) {
+      } else if (balls[indexOf8].isPotted) {
         winner = 1 - player;
         foulMade = true;
         foulMessage = POT8;
@@ -859,4 +888,50 @@ void drawRack() {
   vertex(width - cornerX * 2 / 3.0 + rackSpacing * centerOffset, cornerY + (rackOffset + 2 * rackSpacing) * centerOffset);
   vertex(width - cornerX, cornerY + (rackOffset + 2 * rackSpacing) * centerOffset);
   endShape();
+}
+
+int[] randomizeRack() {
+  int[] ret = new int[16];
+  for (int i = 0; i < ret.length; i++) {
+    ret[i] = i;
+  }
+
+  //fisher-yates algorithm
+  for (int i = ret.length - 1; i > 0; i--) { //i = 0 is redundant
+    swap(ret, i, (int) (Math.random() * (i + 1))); //0 to i inclusive
+  }
+
+  if (ret[0] != 0) {
+    swap(ret, 0, find(ret, 0));
+  }
+  if (ret[5] != 8) {
+    swap(ret, 5, find(ret, 8));
+  }
+
+  if (ret[1] < 8 && ret[11] < 8 && ret[15] < 8) {//all solids
+    swap(ret, 1, find(ret, 9));
+  }
+
+  if (ret[1] > 8 && ret[11] > 8 && ret[15] > 8) {//all stripes
+    swap(ret, 1, find(ret, 1));
+  }
+
+  return ret;
+}
+
+int find(int[] arr, int value) {
+  for (int i = 0; i < arr.length; i++) {
+    if (arr[i] == value) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+void swap(int[] arr, int i, int j) {//indexes
+  if (i != j) {
+    int temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+  }
 }
