@@ -13,7 +13,7 @@ Past the starting screen, the game is played with typical 8 ball pool rules. A
 description of these rules is given at the end of these instructions.
 
 To aim a shot, the cue stick's direction follows the mouse, and there is a
-guideline that marks the trajectory of the cue ball. In order to make a shot,
+guideline that marks the trajectory of the cue (white) ball. In order to make a shot,
 click to aim the cue stick. A power bar will appear on the left, and the
 direction will remain stationary. Clicking outside of the power bar will reset
 the direction and allow the player to aim again. Clicking inside of the power
@@ -47,11 +47,13 @@ Once groups are decided, the goal of the game is to be the first to pot
 one's group's balls and pot the 8 ball afterwards.
 
 A foul is committed if any one of these occur during/after a shot:
-- The cue ball is potted
-- No balls strike a rail
-- No colored balls are struck
-- If groups are determined, the cue ball's first contact is NOT of the same
-group as the shooting player
+- During the break, no colored balls are potted and less than four balls strike a rail.
+- The cue ball is potted.
+- The cue ball does not hit any ball.
+- If groups are not yet determined and the cue ball's first contact is the 8-ball.
+- If groups are determined and no balls strike a rail after the cue ball hits a colored ball, if such a hit occurs.
+- If groups are determined and the cue ball's first contact is NOT of the same
+group as the shooting player.
 
 Players may also lose at any point in the game. These are called automatic
 losses. They occur if any of these occur during a shot:
