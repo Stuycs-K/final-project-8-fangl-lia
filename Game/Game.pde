@@ -13,15 +13,68 @@ float[] pocketYs;
 WhiteBall white;
 CueStick cue;
 Ball[] balls;
+int indexOf8;
 
 int game;
 final static int READY = 0;
 final static int AIM = 1;
 final static int FIRE = 2;
+final static int END = 3;
+
+boolean broadcast1;
+int broadcast1player;
+int broadcast1timer;
+boolean broadcast2;
+int broadcast2timer;
+int announcementDuration;
 
 int screen;
 final static int MENU = 0;
 final static int PLAY = 1;
+
+int player;
+final static int PLAYER1 = 0;
+final static int PLAYER2 = 1;
+int stripeOwner; // only applicable once groups have been made
+int[] numOldPotted;
+int[] numNewPotted;
+int numHitRail;
+
+PImage blueAvatar;
+PImage redAvatar;
+float avatarSize;
+int yellowTint;
+boolean yellowTintIncreasing;
+
+int winner; // -1 if game hasn't ended, 0 if player 1, 1 if player 2
+float endScreenHeight;
+float endScreenWidth;
+
+boolean foulMade;
+String foulMessage;
+final static String OPEN8HIT = "FOUL! You need to hit either a striped or solid ball.";
+final static String NOHIT = "FOUL! The cue ball did not strike another ball.";
+final static String NOSOLIDHIT = "FOUL! You must hit a solid ball.";
+final static String NOSTRIPEDHIT = "FOUL! You must hit a striped ball.";
+final static String POTCUE = "FOUL! You potted the cue ball.";
+final static String NO8HIT = "FOUL! You must hit the 8-ball.";
+final static String SOFTHIT = "FOUL! No balls struck a rail after contact.";
+final static String ILLEGALBREAK = "FOUL! You made an illegal break.";
+final static String BADPOT8 = "You lose! You did not hit the 8-ball first.";
+final static String CUEPLUS8 = "You lose! You potted the cue ball along with the 8-ball.";
+final static String WIN = "You win! You potted the 8-ball.";
+final static String POT8 = "You lost! You potted the 8-ball.";
+
+ArrayList<Integer> solids;
+ArrayList<Integer> stripes;
+PImage rack;
+float rackX;
+float rackY;
+float rackWidth;
+float rackHeight;
+float rackRound;
+float rackSpace;
+float displacement;
 
 PImage playButton;
 float buttonHeight;
@@ -37,6 +90,7 @@ float logoWidth;
 
 boolean allDone;
 boolean breaking; //first shot
+boolean processingDone;
 
 float extend; //for the CueStick's extension when firing
 float borderBrightness; //to indicate the border of moving the WhiteBall
@@ -45,6 +99,8 @@ float borderBrightness; //to indicate the border of moving the WhiteBall
 import processing.sound.*;
 SoundFile ballToBall;
 SoundFile pot;
+SoundFile begin;
+SoundFile turnEnd;
 
 void setup() {
   // basic pool table dimensions layout
@@ -77,6 +133,15 @@ void setup() {
   white.isMovable = true; //breaking allows movement
   breaking = true;
 
+  // for rules implementation
+  stripeOwner = -1; // -1 corresponds to open table
+  numOldPotted = new int[2];
+  numNewPotted = new int[2];
+  numHitRail = 0;
+  winner = -1;
+  endScreenWidth = 150;
+  endScreenHeight = 60;
+
   float xStart = cornerX + 0.75 * (width - 2 * cornerX);
   float yStart = 250;
   float xShift = Ball.size * sqrt(3)/2 + 0.01;
@@ -99,6 +164,13 @@ void setup() {
   balls[13] = new Ball(racking[13], xStart + 4*xShift, yStart);
   balls[14] = new Ball(racking[14], xStart + 4*xShift, yStart - 2*yShift);
   balls[15] = new Ball(racking[15], xStart + 4*xShift, yStart - 4*yShift);
+  
+  for (int i = 0; i < balls.length; i++) {
+    if (balls[i].getNumber() == 8) {
+      indexOf8 = i;
+      break;
+    }
+  }
 
   allDone = true;
 
@@ -123,16 +195,41 @@ void setup() {
   poolLego = loadImage("pool-lego.png");
   logoWidth = 500;
   logoHeight = 250;
+  
+  blueAvatar = loadImage("newBlueAvatar.png");
+  redAvatar = loadImage("newRedAvatar.png");
+  avatarSize = 90;
+  yellowTintIncreasing = true;
+  
+  announcementDuration = 120; // 60 frames per second
+  
+  rack = loadImage("rack.png");
+  solids = new ArrayList<Integer>();
+  stripes = new ArrayList<Integer>();
+  for (int i = 1; i <= 7; i++) {
+    solids.add(i);
+  }
+  for (int i = 9; i <= 15; i++) {
+    stripes.add(i);
+  }
+  rackX = 220;
+  rackY = 40;
+  rackWidth = 200;
+  rackHeight = 30;
+  rackRound = 10;
+  rackSpace = 5;
+  displacement =  0.142 * rackWidth;
 
   //sounds
   ballToBall = new SoundFile(this, "BallToBall.mp3");
   pot = new SoundFile(this, "Pot.mp3");
+  begin = new SoundFile(this, "Begin.mp3");
+  turnEnd = new SoundFile(this, "TurnEnd.mp3");
 }
 
 void draw() {
   background(255);
   fill(0);
-  text(screen, 10, 10);
   if (screen == MENU) {
     image(poolLego, (width - logoWidth) / 2, (0.62 * height - logoHeight) / 2, logoWidth, logoHeight);
     if (!mouseOnNewButton) {
@@ -149,7 +246,8 @@ void draw() {
       }
     }
   }
-
+  
+  // for animating balls slididing into rack
   if (screen == PLAY) {
     drawRack();
     for (Ball b : balls) {
@@ -159,11 +257,20 @@ void draw() {
       }
     }
     drawTable();
-
-
+    
+    // display avatars
+    displayAvatars();
+    
+    // display racks
+    displayRacks();
+    
     allDone = true;
     for (Ball b : balls) {
       if (!b.isRolling) {
+        if (b.getType().equals("white") && foulMade) {
+          white.isPotted = false;
+          white.resetPosition();
+        }
         b.show();
       }
 
@@ -180,9 +287,45 @@ void draw() {
       }
       b.pot();
     }
-
-    cue.show();
-
+    
+    // for messages "You are stripes!" or "You are solids!"
+    if (broadcast1 && player == broadcast1player) {
+      if (broadcast1timer > 0) {
+        textSize(90);
+        fill(120, 120, 120);
+        if (broadcast1player == stripeOwner) {
+          text("You are stripes!", width / 2.0 - 270, height / 2.0 + 30);
+        } else {
+          text("You are solids!", width / 2.0 - 260, height / 2.0 + 30);
+        }
+        broadcast1timer--;
+      } else {
+        broadcast1 = false;
+      }
+    }
+    if (broadcast2 && player != broadcast1player) {
+      if (broadcast2timer > 0) {
+        textSize(90);
+        fill(120, 120, 120);
+        if (broadcast1player == stripeOwner) {
+          text("You are solids!", width / 2.0 - 260, height / 2.0 + 30);
+        } else {
+          text("You are stripes!", width / 2.0 - 270, height / 2.0 + 30);
+        }
+        broadcast2timer--;
+      } else {
+        broadcast2 = false;
+      }
+    }
+    
+    if (winner != -1) { 
+      game = END; // winner screen turns on
+    }
+    
+    if (game != END) {
+      cue.show();
+    }
+    
     //game state
     if (game == READY) {
       if (white.moving) {//move the white ball
@@ -247,6 +390,9 @@ void draw() {
         white.applyForce(cue.direction.setMag(cue.power));
         white.isMovable = false; //resets movability
         allDone = false;
+        processingDone = false;
+        foulMade = false;
+        white.positionReset = false;
 
         float amp;
         if (cue.power > 1) {
@@ -260,13 +406,27 @@ void draw() {
       if (extend > -5) {
         extend-=10;
       }
-
+      
+      if (extend <= -5 && allDone && !processingDone) {
+        turnEnd.play();
+        process();
+      }
+      
       if (extend <= -5 && allDone && !white.isPotted) {//the second boolean is changeable, only runs after applying force
         game = READY;
         extend = 0;
       }
-    }
-
+    } else if (game == END) { // ending screen
+      textSize(128);
+      if (winner == player) {
+        fill(255, 255, 0);
+        text("You Win!", width / 2.0 - 200, height / 2.0 + 35);
+      } else {
+        fill(120, 120, 120);
+        text("You Lose!", width / 2.0 - 230, height / 2.0 + 35);
+      }
+    } 
+    
     if (game != READY || !white.moving) {
       if (borderBrightness > 0) {
         borderBrightness--;
@@ -277,9 +437,11 @@ void draw() {
 
 //smoother movement
 void mousePressed() {
-  if (white.isMovable && mousePressed && dist(mouseX, mouseY, white.position.x, white.position.y) < Ball.size) {
-    white.moving = true;
-    cue.showable = false;
+  if (screen == PLAY && game != END) {
+    if (white.isMovable && mousePressed && dist(mouseX, mouseY, white.position.x, white.position.y) < Ball.size) {
+      white.moving = true;
+      cue.showable = false;
+    }
   }
 }
 
@@ -301,7 +463,6 @@ void mouseClicked() {
       if (mouseX > 30 && mouseX < cornerX - 30 && mouseY > cornerY + 10 && mouseY < height - cornerY - 10) {
         cue.power = 0.5 + 3.5 * (height - cornerY - 10 - mouseY)/(height - 2*cornerY - 20);
         game = FIRE;
-        breaking = false;
       } else {
         game = READY;
         extend = 0;
@@ -315,13 +476,112 @@ void mouseClicked() {
       if (mouseX > (width - newButtonWidth) / 2 && mouseX < (width + newButtonWidth) / 2
         && mouseY > ((height - newButtonHeight) / 2 + buttonOffset) && mouseY < ((height + newButtonHeight) / 2 + buttonOffset)) {
         screen = PLAY;
+        begin.play();
       }
     } else {
       if (mouseX > (width - buttonWidth) / 2 && mouseX < (width + buttonWidth) / 2
         && mouseY > ((height - buttonHeight) / 2 + buttonOffset) && mouseY < ((height + buttonHeight) / 2 + buttonOffset)) {
         screen = PLAY;
+        begin.play();
       }
     }
+  }
+}
+
+void displayAvatars() {
+  // for the yellowish glow of avatars
+  if (yellowTintIncreasing) {
+    if (yellowTint < 130) {
+      yellowTint += 2;
+    } else {
+      yellowTintIncreasing = false;
+    }
+  } else {
+    if (yellowTint > 30) {
+      yellowTint -= 2;
+    } else {
+      yellowTintIncreasing = true;
+    }
+  }
+  
+  // avatars
+  if (player == PLAYER2) {
+    tint(255,255,255);
+    image(blueAvatar, 52, 42, avatarSize, avatarSize);
+    tint(255 - yellowTint, 255 - yellowTint, 50);
+    image(redAvatar, width - 52, 42, avatarSize, avatarSize);
+  } else if (player == PLAYER1) {
+    tint(255,255,255);
+    image(redAvatar, width - 52, 42, avatarSize, avatarSize);
+    tint(255 - yellowTint, 255 - yellowTint, 150);
+    image(blueAvatar, 52, 42, avatarSize, avatarSize);
+  }
+}
+
+void displayRacks() {
+  // rack outlines
+  stroke(0);
+  strokeWeight(2);
+  noFill();
+  if (player == PLAYER1) {
+    rect(rackX - rackWidth / 2 - rackSpace, rackY - rackHeight / 2 - rackSpace, rackWidth + 2 * rackSpace, rackHeight + 2 * rackSpace, rackRound);
+  } else if (player == PLAYER2) {
+    rect(width - rackX - rackWidth / 2 - rackSpace, rackY - rackHeight / 2 - rackSpace, rackWidth + 2 * rackSpace, rackHeight + 2 * rackSpace, rackRound);
+  }
+  
+  // racks 
+  image(rack, rackX, rackY, rackWidth, rackHeight);
+  image(rack, width - rackX, rackY, rackWidth, rackHeight);
+  
+  // balls
+  if (stripeOwner == PLAYER1) {
+    displayLeft(stripes);
+    displayRight(solids);
+  } else if (stripeOwner == PLAYER2) {
+    displayLeft(solids);
+    displayRight(stripes);
+  }
+}
+
+void displayLeft(ArrayList<Integer> nums) {
+  if (nums.size() == 0) {
+    showBall(8, rackX - 3 * displacement, rackY);
+  } else {
+    for (int i = 0; i < nums.size(); i++) {
+      showBall(nums.get(i), rackX + (i - 3) * displacement, rackY);
+    }
+  }
+}
+
+void displayRight(ArrayList<Integer> nums) {
+  if (nums.size() == 0) {
+    showBall(8, width - rackX + 3 * displacement, rackY);
+  } else {
+    for (int i = 0; i < nums.size(); i++) {
+      showBall(nums.get(i), width - rackX + (3 - i) * displacement, rackY);
+    }
+  }
+}
+
+// precondition:  1 <= n <= 15
+void showBall(int number, float x, float y) {
+  float size = Ball.size * 1.35;
+  noStroke();
+  fill(white.ballColors[number]);
+  circle(x, y, size);
+  textSize(12.5);
+  fill(255);
+  if (number < 10) {
+    text("" + number, x - 3.5, y + 4);
+  } else {
+    text("" + number, x - 7, y + 4);
+  }
+
+  if (number >= 9 && number <= 15) {
+    fill(255);
+    noStroke();
+    arc(x, y, size, size, PI/5, 4*PI/5, CHORD);
+    arc(x, y, size, size, 6*PI/5, 9*PI/5, CHORD);
   }
 }
 
@@ -418,6 +678,198 @@ void drawTable() {
     rect(cornerX + edgeThickness + centerOffset + pocketDiam - Ball.size/2, cornerY + edgeThickness + pocketDiam + centerOffset - Ball.size/2,
       width - 2*(cornerX + edgeThickness + centerOffset + pocketDiam) + Ball.size, height - 2*(cornerY + edgeThickness + pocketDiam + centerOffset) + Ball.size);
   }
+}
+
+void process() {
+  if (breaking) { // break
+    if (balls[indexOf8].isPotted) {
+      winner = 1 - player;
+      foulMade = true;
+      foulMessage = POT8;
+    } else if (white.isPotted) {
+      foulMade = true;
+      foulMessage = POTCUE;
+      player = 1 - player;
+    } else if (numHitRail < 4 && numNewPotted[0] + numNewPotted[1] == 0) {
+      foulMade = true;
+      foulMessage = ILLEGALBREAK;
+      player = 1 - player;
+    } else if (numNewPotted[0] + numNewPotted[1] == 0) {
+      player = 1 - player;
+    }
+    breaking = false;
+  } else if (stripeOwner == -1) { // open table
+    if (balls[indexOf8].isPotted) {
+      winner = 1 - player;
+      foulMade = true;
+      foulMessage = POT8;
+    } else if (white.isPotted) {
+      foulMade = true;
+      foulMessage = POTCUE;
+      player = 1 - player;
+    } else if (white.getFirstContact() == null) {
+      foulMade = true;
+      foulMessage = NOHIT;
+      player = 1 - player;
+    } else if (white.getFirstContact().getType().equals("eight")) {
+      foulMade = true;
+      foulMessage = OPEN8HIT;
+      player = 1 - player;
+    } else if (white.getFirstPot() == null) {
+      player = 1 - player;
+    } else if (white.getFirstPot().getType().equals("solid")) {
+      stripeOwner = 1 - player;
+      broadcast1 = true;
+      broadcast1player = player;
+      broadcast1timer = announcementDuration;
+      broadcast2 = true;
+      broadcast2timer = announcementDuration;
+    } else if (white.getFirstPot().getType().equals("striped")) {
+      stripeOwner = player;
+      broadcast1 = true;
+      broadcast1player = player;
+      broadcast1timer = announcementDuration;
+      broadcast2 = true;
+      broadcast2timer = announcementDuration;
+    }
+  } else { // table is not open, groups have been assigned
+    if (player == stripeOwner) {
+      if (numOldPotted[0] == 7) { // allowed to pot 8 ball
+        if (balls[indexOf8].isPotted) {
+          if (white.isPotted) {
+            winner = 1 - player;
+            foulMade = true;
+            foulMessage = CUEPLUS8;
+          } else if (!white.getFirstContact().getType().equals("eight")) {
+            winner = 1 - player;
+            foulMade = true;
+            foulMessage = BADPOT8;
+          } else {
+            winner = player;
+            foulMade = true;
+            foulMessage = WIN;
+          }
+        } else if (white.isPotted) {
+          foulMade = true;
+          foulMessage = POTCUE;
+          player = 1 - player;
+        } else if (white.getFirstContact() == null) {
+          foulMade = true;
+          foulMessage = NOHIT;
+          player = 1 - player;
+        } else if (!white.getFirstContact().getType().equals("eight")) {
+          foulMade = true;
+          foulMessage = NO8HIT;
+          player = 1 - player;
+        } else if (numNewPotted[0] + numNewPotted[1] == 0 && numHitRail == 0 && !white.hitRail) {
+          foulMade = true;
+          foulMessage = SOFTHIT;
+          player = 1 - player;
+        } else {
+          player = 1 - player;
+        }
+      } else if (balls[indexOf8].isPotted) {
+        winner = 1 - player;
+        foulMade = true;
+        foulMessage = POT8;
+      } else if (white.isPotted) {
+        foulMade = true;
+        foulMessage = POTCUE;
+        player = 1 - player;
+      } else if (white.getFirstContact() == null) {
+        foulMade = true;
+        foulMessage = NOHIT;
+        player = 1 - player;
+      } else if (!white.getFirstContact().getType().equals("striped")) {
+        foulMade = true;
+        foulMessage = NOSTRIPEDHIT;
+        player = 1 - player;
+      } else if (numNewPotted[0] + numNewPotted[1] == 0 && numHitRail == 0 && !white.hitRail) {
+        foulMade = true;
+        foulMessage = SOFTHIT;
+        player = 1 - player;
+      } else if (numNewPotted[0] == 0) {
+        player = 1 - player;
+      }
+    } else { // player has solids
+      if (numOldPotted[1] == 7) { // allowed to pot 8 ball
+        if (balls[indexOf8].isPotted) {
+          if (white.isPotted) {
+            winner = 1 - player;
+            foulMade = true;
+            foulMessage = CUEPLUS8;
+          } else if (!white.getFirstContact().getType().equals("eight")) {
+            winner = 1 - player;
+            foulMade = true;
+            foulMessage = BADPOT8;
+          } else {
+            winner = player;
+            foulMade = true;
+            foulMessage = WIN;
+          }
+        } else if (white.isPotted) {
+          foulMade = true;
+          foulMessage = POTCUE;
+          player = 1 - player;
+        } else if (white.getFirstContact() == null) {
+          foulMade = true;
+          foulMessage = NOHIT;
+          player = 1 - player;
+        } else if (!white.getFirstContact().getType().equals("eight")) {
+          foulMade = true;
+          foulMessage = NO8HIT;
+          player = 1 - player;
+        } else if (numNewPotted[0] + numNewPotted[1] == 0 && numHitRail == 0 && !white.hitRail) {
+          foulMade = true;
+          foulMessage = SOFTHIT;
+          player = 1 - player;
+        } else {
+          player = 1 - player;
+        }
+      } else if (balls[indexOf8].isPotted) {
+        winner = 1 - player;
+        foulMade = true;
+        foulMessage = POT8;
+      } else if (white.isPotted) {
+        foulMade = true;
+        foulMessage = POTCUE;
+        player = 1 - player;
+      } else if (white.getFirstContact() == null) {
+        foulMade = true;
+        foulMessage = NOHIT;
+        player = 1 - player;
+      } else if (!white.getFirstContact().getType().equals("solid")) {
+        foulMade = true;
+        foulMessage = NOSOLIDHIT;
+        player = 1 - player;
+      } else if (numNewPotted[0] + numNewPotted[1] == 0 && numHitRail == 0 && !white.hitRail) {
+        foulMade = true;
+        foulMessage = SOFTHIT;
+        player = 1 - player;
+      } else if (numNewPotted[1] == 0) {
+        player = 1 - player;
+      }
+    }
+  }
+  
+  resetVariables();
+}
+
+void resetVariables() { // after processing of rules
+  numOldPotted[0] += numNewPotted[0];
+  numOldPotted[1] += numNewPotted[1];
+  numNewPotted[0] = 0;
+  numNewPotted[1] = 0;
+  
+  for (Ball b : balls) {
+    b.hitRail = false;
+  }
+  numHitRail = 0;
+  
+  white.setFirstContact(null);
+  white.setFirstPot(null);
+  
+  processingDone = true;
 }
 
 void drawRack() {
