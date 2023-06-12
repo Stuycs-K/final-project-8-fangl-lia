@@ -64,6 +64,7 @@ of their group, or before groups have been decided
 
 ## Updated Prototype
 ### Updated UML
+![alt text](https://imgur.com/a/xirv4fT.png)
 
 ### Updated Description
 There is gameplay and rules for two players. As part of this, the game will
