@@ -137,18 +137,18 @@ public class CueStick {
         strokeWeight(1.5);
         stroke(240);
         noFill();
-        
+
         boolean good;
-        if(stripeOwner == -1) {
+        if (stripeOwner == -1) {
           good = !c.getType().equals("eight");
-        } else if(stripeOwner == player) {
-          if(numOldPotted[0] == 7) {
+        } else if (stripeOwner == player) {
+          if (numOldPotted[0] == 7) {
             good = c.getType().equals("eight");
           } else {
             good = c.getType().equals("striped");
           }
         } else {
-          if(numOldPotted[1] == 7) {
+          if (numOldPotted[1] == 7) {
             good = c.getType().equals("eight");
           } else {
             good = c.getType().equals("solid");
@@ -157,27 +157,35 @@ public class CueStick {
 
         //from cue ball to ball
         line(white.position.x, white.position.y, white.position.x + out.x, white.position.y + out.y);
-        
-        //circle
-        circle(white.position.x + out.x, white.position.y + out.y, Ball.size);
 
-        //into ball
-        PVector outer = white.position.copy().add(out.copy());
-        PVector in = c.position.copy().sub(outer.copy());
-        line(outer.x, outer.y, outer.x + in.x * -2 * cos(largeAngle), outer.y + in.y * -2 * cos(largeAngle));
+        if (good) {
+          //circle
+          circle(white.position.x + out.x, white.position.y + out.y, Ball.size);
 
-        //perpendicular
-        //check farther
-        PVector test1 = in.copy().rotate(PI/2).add(outer.copy());
-        PVector test2 = in.copy().rotate(-1 * PI/2).add(outer.copy());
-        PVector normal;
-        if (dist(white.position.x, white.position.y, test1.x, test1.y) >= dist(white.position.x, white.position.y, test2.x, test2.y)) {
-          normal = test1;
+          //into ball
+          PVector outer = white.position.copy().add(out.copy());
+          PVector in = c.position.copy().sub(outer.copy());
+          line(outer.x, outer.y, outer.x + in.x * -2 * cos(largeAngle), outer.y + in.y * -2 * cos(largeAngle));
+
+          //perpendicular
+          //check farther
+          PVector test1 = in.copy().rotate(PI/2).add(outer.copy());
+          PVector test2 = in.copy().rotate(-1 * PI/2).add(outer.copy());
+          PVector normal;
+          if (dist(white.position.x, white.position.y, test1.x, test1.y) >= dist(white.position.x, white.position.y, test2.x, test2.y)) {
+            normal = test1;
+          } else {
+            normal = test2;
+          }
+
+          line(outer.x, outer.y, outer.x + (normal.x - outer.x) * 2 * sin(largeAngle), outer.y + (normal.y - outer.y) * 2 * sin(largeAngle));
         } else {
-          normal = test2;
+          //circle
+          stroke(255, 0, 0);
+          circle(white.position.x + out.x, white.position.y + out.y, Ball.size);
+          line(white.position.x + out.x - Ball.size/2/sqrt(2), white.position.y + out.y - Ball.size/2/sqrt(2),
+          white.position.x + out.x + Ball.size/2/sqrt(2), white.position.y + out.y + Ball.size/2/sqrt(2));
         }
-
-        line(outer.x, outer.y, outer.x + (normal.x - outer.x) * 2 * sin(largeAngle), outer.y + (normal.y - outer.y) * 2 * sin(largeAngle));
       }
     }
   }
