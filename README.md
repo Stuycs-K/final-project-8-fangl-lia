@@ -52,7 +52,6 @@ A foul is committed if any one of these occur during/after a shot:
 - No colored balls are struck
 - If groups are determined, the cue ball's first contact is NOT of the same
 group as the shooting player
-- The shot clock for the player runs out before they make a shot
 
 Players may also lose at any point in the game. These are called automatic
 losses. They occur if any of these occur during a shot:
