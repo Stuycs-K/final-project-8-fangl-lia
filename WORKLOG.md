@@ -47,6 +47,9 @@ Made giant outline of rules in Google Docs. Introduced arrays to store the numbe
 ### 06-09
 Finished helper methods for turns and fouls. Added all turn and foul rules in Turns branch. Added win screen and win text.
 
+## 06-11
+Added glowing avatars to represent players. Added announcement text to announce which player has stripes and solids. Added display of stripes and solids for each player using 'mini racks' next to each player.
+
 ## Andrew Li
 
 ### 05-22
