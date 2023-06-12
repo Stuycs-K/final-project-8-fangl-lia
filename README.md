@@ -9,6 +9,11 @@ movement of billiard balls. The game simulates collisions and potting balls.
 It also includes animations and sound. Standard 8-ball pool rules are implemented.
 
 ## Instructions
+**Important**: Our sketch utilizes sounds. As a result, you *must* import the
+Sound library. To do so, Navigate to Sketch -> Import Library... -> Manage
+Libraries... and search for Sound. Download the library that is authored
+by The Processing Foundation. Then, you may run the sketch.
+
 Past the starting screen, the game is played with typical 8 ball pool rules. A
 description of these rules is given at the end of these instructions.
 
