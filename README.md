@@ -64,7 +64,7 @@ of their group, or before groups have been decided
 
 ## Updated Prototype
 ### Updated UML
-![alt text](https://imgur.com/a/xirv4fT.png)
+![image](https://github.com/Stuycs-K/final-project-8-fangl-lia/assets/113153934/1820a703-4f7e-4c45-8fb8-5feff93f682c)
 
 ### Updated Description
 There is gameplay and rules for two players. As part of this, the game will
