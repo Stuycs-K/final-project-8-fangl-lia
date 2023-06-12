@@ -155,10 +155,9 @@ public class CueStick {
           }
         }
 
-        //from cue ball to ball
-        line(white.position.x, white.position.y, white.position.x + out.x, white.position.y + out.y);
-
         if (good) {
+          //from cue ball to ball
+          line(white.position.x, white.position.y, white.position.x + out.x, white.position.y + out.y);
           //circle
           circle(white.position.x + out.x, white.position.y + out.y, Ball.size);
 
@@ -180,11 +179,16 @@ public class CueStick {
 
           line(outer.x, outer.y, outer.x + (normal.x - outer.x) * 2 * sin(largeAngle), outer.y + (normal.y - outer.y) * 2 * sin(largeAngle));
         } else {
+          if (out.mag() >= Ball.size/2) {
+            out.setMag(out.mag() - Ball.size/2);
+            line(white.position.x, white.position.y, white.position.x + out.x, white.position.y + out.y);
+            out.setMag(out.mag() + Ball.size/2);
+          }
           //circle
           stroke(255, 0, 0);
           circle(white.position.x + out.x, white.position.y + out.y, Ball.size);
           line(white.position.x + out.x - Ball.size/2/sqrt(2), white.position.y + out.y - Ball.size/2/sqrt(2),
-          white.position.x + out.x + Ball.size/2/sqrt(2), white.position.y + out.y + Ball.size/2/sqrt(2));
+            white.position.x + out.x + Ball.size/2/sqrt(2), white.position.y + out.y + Ball.size/2/sqrt(2));
         }
       }
     }
