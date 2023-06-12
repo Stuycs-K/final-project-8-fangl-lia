@@ -99,6 +99,8 @@ float borderBrightness; //to indicate the border of moving the WhiteBall
 import processing.sound.*;
 SoundFile ballToBall;
 SoundFile pot;
+SoundFile begin;
+SoundFile turnEnd;
 
 void setup() {
   // basic pool table dimensions layout
@@ -221,6 +223,8 @@ void setup() {
   //sounds
   ballToBall = new SoundFile(this, "BallToBall.mp3");
   pot = new SoundFile(this, "Pot.mp3");
+  begin = new SoundFile(this, "Begin.mp3");
+  turnEnd = new SoundFile(this, "TurnEnd.mp3");
 }
 
 void draw() {
@@ -404,6 +408,7 @@ void draw() {
       }
       
       if (extend <= -5 && allDone && !processingDone) {
+        turnEnd.play();
         process();
       }
       
@@ -471,11 +476,13 @@ void mouseClicked() {
       if (mouseX > (width - newButtonWidth) / 2 && mouseX < (width + newButtonWidth) / 2
         && mouseY > ((height - newButtonHeight) / 2 + buttonOffset) && mouseY < ((height + newButtonHeight) / 2 + buttonOffset)) {
         screen = PLAY;
+        begin.play();
       }
     } else {
       if (mouseX > (width - buttonWidth) / 2 && mouseX < (width + buttonWidth) / 2
         && mouseY > ((height - buttonHeight) / 2 + buttonOffset) && mouseY < ((height + buttonHeight) / 2 + buttonOffset)) {
         screen = PLAY;
+        begin.play();
       }
     }
   }
