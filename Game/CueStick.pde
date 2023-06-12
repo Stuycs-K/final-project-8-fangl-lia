@@ -137,10 +137,29 @@ public class CueStick {
         strokeWeight(1.5);
         stroke(240);
         noFill();
+        
+        boolean good;
+        if(stripeOwner == -1) {
+          good = !c.getType().equals("eight");
+        } else if(stripeOwner == player) {
+          if(numOldPotted[0] == 7) {
+            good = c.getType().equals("eight");
+          } else {
+            good = c.getType().equals("striped");
+          }
+        } else {
+          if(numOldPotted[1] == 7) {
+            good = c.getType().equals("eight");
+          } else {
+            good = c.getType().equals("solid");
+          }
+        }
 
         //from cue ball to ball
-        circle(white.position.x + out.x, white.position.y + out.y, Ball.size);
         line(white.position.x, white.position.y, white.position.x + out.x, white.position.y + out.y);
+        
+        //circle
+        circle(white.position.x + out.x, white.position.y + out.y, Ball.size);
 
         //into ball
         PVector outer = white.position.copy().add(out.copy());
