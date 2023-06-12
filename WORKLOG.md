@@ -165,3 +165,6 @@ but doing so involves recursion and combining most of the main code we have,
 which there is not enough time for.
 
 ### 06-11
+Last day!!
+Added two more sounds and implemented logic to change the guideline
+symbol based on which ball, which player, and which group is assigned.
