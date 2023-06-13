@@ -203,8 +203,7 @@ moving at a high speed may not accurately reflect off of another ball.
 moved too close to the edge of the table, or outside the pool table. However,
 the cue ball also may not be moved inside a colored ball. Since this second
 criteria overrides the first, if a colored ball is sufficiently close to the
-edge of the border, it may push the white ball slightly outside of the border.
-
+edge of the border, it may push the white ball slightly outside of the border.  
 Additionally, if two colored balls are sufficiently close to one another, trying
 to move the cue ball around one will cause it to phase through the other. However,
 upon shooting the cue ball, it is offset away from the colored ball, preventing
@@ -220,7 +219,7 @@ out for a foul, instead of rolling down the rack like the rest of the balls.
 
 ## Resources
 We found the following articles about collisions to be helpful:
-- https://www.gamedeveloper.com/programming/pool-hall-lessons-fast-accurate-collision-detection-between-circles-or-spheres
+- https://www.gamedeveloper.com/programming/pool-hall-lessons-fast-accurate-collision-detection-between-circles-or-spheres (Thank you Mr. Konstantinovich)
 - https://processing.org/examples/circlecollision.html
 - https://happycoding.io/tutorials/processing/collision-detection
 We found the following articles about billiard balls to be helpful:
