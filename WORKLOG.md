@@ -222,6 +222,7 @@ We found the following articles about collisions to be helpful:
 - https://www.gamedeveloper.com/programming/pool-hall-lessons-fast-accurate-collision-detection-between-circles-or-spheres (Thank you Mr. Konstantinovich)
 - https://processing.org/examples/circlecollision.html
 - https://happycoding.io/tutorials/processing/collision-detection
+
 We found the following articles about billiard balls to be helpful:
 - https://billiards.colostate.edu/faq/physics/physical-properties/
 - https://billiards.colostate.edu/physics/
