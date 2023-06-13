@@ -185,9 +185,9 @@ the contact ball and whether or not hitting a ball results in a foul.
 ball around the table\*\*\* before breaking or after a foul.
 - Rules of 8 ball pool account for winning, losing, fouling, and
 determining groups.
-- Player icons glow, and respective racks are outlined based on whose turn it is.
-- Racks near player icons fill and empty based on the determined groups and
-what balls have been potted already.
+- Player avatars glow, and respective racks are outlined based on whose turn it is.
+- A cue stick that adjusts rotation and position in real time and glows in sync with the player avatars.
+- Racks near player avatars fill and empty based on the determined groups and what balls have been potted already.
 - Sounds indicate the start of a game, ball collisions, potting balls,
 and the end of each turn.
 
@@ -210,7 +210,6 @@ upon shooting the cue ball, it is offset away from the colored ball, preventing
 long-term damage to the game.
 
 ### Visual Bugs
-- The cue stick glows. Honestly this could be a feature.
 - If multiple colored balls are potted in a short period of time, they may
 appear to overlap when sliding down the rack on the right side. However, upon
 reaching the bottom, they reset positions to stack correctly on top of one another.
@@ -226,3 +225,7 @@ We found the following articles about collisions to be helpful:
 We found the following articles about billiard balls to be helpful:
 - https://billiards.colostate.edu/faq/physics/physical-properties/
 - https://billiards.colostate.edu/physics/
+
+We found the following articles about the rules of pool to be helpful:
+- https://www.rulesofsport.com/sports/pool.html
+- https://tribilliards.com/information/official-8-ball-rules.html
