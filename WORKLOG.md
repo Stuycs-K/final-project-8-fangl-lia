@@ -189,10 +189,34 @@ determining groups.
 - Racks near player icons fill and empty based on the determined groups and
 what balls have been potted already
 - Sounds indicate the start of a game, ball collisions, potting balls,
-and the end of each turn. 
+and the end of each turn.
 
 ## Broken Features and Bugs
 
+### Disruptive Bugs
+- \*Collisions with the edges of the table are not perfect collisions; they are
+offset per frame, meaning that a ball moving at a high speed may bounce off of
+a wall with a slight inaccuracy.
+- \*\*Collisions between balls are also calculated per frame, meaning that a ball
+moving at a high speed may not accurately reflect off of another ball.
+- \*\*\*When the cue ball is in hand, a border should prevent the ball from being
+moved too close to the edge of the table, or outside the pool table. However,
+the cue ball also may not be moved inside a colored ball. Since this second
+criteria overrides the first, if a colored ball is sufficiently close to the
+edge of the border, it may push the white ball slightly outside of the border.
+
+Additionally, if two colored balls are sufficiently close to one another, trying
+to move the cue ball around one will cause it to phase through the other. However,
+upon shooting the cue ball, it is offset away from the colored ball, preventing
+long-term damage to the game.
+
+### Visual Bugs
+- The cue stick glows. Honestly this could be a feature.
+- If multiple colored balls are potted in a short period of time, they may
+appear to overlap when sliding down the rack on the right side. However, upon
+reaching the bottom, they reset positions to stack correctly on top of one another.
+- If the cue ball is potted, it will stay inside the pocket until it is taken
+out for a foul, instead of rolling down the rack like the rest of the balls.
 
 ## Resources
 
