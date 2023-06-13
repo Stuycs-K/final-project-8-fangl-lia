@@ -226,5 +226,3 @@ We found the following articles about collisions to be helpful:
 We found the following articles about billiard balls to be helpful:
 - https://billiards.colostate.edu/faq/physics/physical-properties/
 - https://billiards.colostate.edu/physics/
-
-## Possible Improvements
