@@ -171,3 +171,30 @@ which there is not enough time for.
 Last day!!
 Added two more sounds and implemented logic to change the guideline
 symbol based on which ball, which player, and which group is assigned.
+
+# Dev Log
+
+## Working Features
+- Balls collide with the edges of the table, including diagonal ones\*
+- Balls collide with each other\*\*
+- The mouse controls aim of the cue stick, with adjustable power
+- Balls are potted into a rack
+- Guidelines coming out of the cue stick describe the trajectory\*\* of
+the contact ball and whether or not hitting a ball results in a foul
+- Ball-in-hand fouls are handled, with players being able to move the cue
+ball around the table\*\*\* before breaking or after a foul
+- Rules of 8 ball pool account for winning, losing, fouling, and
+determining groups.
+- Player icons glow, and respective racks are outlined based on whose turn it is.
+- Racks near player icons fill and empty based on the determined groups and
+what balls have been potted already
+- Sounds indicate the start of a game, ball collisions, potting balls,
+and the end of each turn. 
+
+## Broken Features and Bugs
+
+
+## Resources
+
+
+## Possible Improvements
