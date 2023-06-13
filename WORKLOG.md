@@ -219,6 +219,12 @@ reaching the bottom, they reset positions to stack correctly on top of one anoth
 out for a foul, instead of rolling down the rack like the rest of the balls.
 
 ## Resources
-
+We found the following articles about collisions to be helpful:
+- https://www.gamedeveloper.com/programming/pool-hall-lessons-fast-accurate-collision-detection-between-circles-or-spheres
+- https://processing.org/examples/circlecollision.html
+- https://happycoding.io/tutorials/processing/collision-detection
+We found the following articles about billiard balls to be helpful:
+- https://billiards.colostate.edu/faq/physics/physical-properties/
+- https://billiards.colostate.edu/physics/
 
 ## Possible Improvements
